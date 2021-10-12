@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
@@ -38,13 +39,31 @@ export default function CustomTable(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                {prop.map((prop, key) => {
+                {/* {prop.map((prop, key) => {
                   return (
                     <TableCell className={classes.tableCell} key={key}>
                       {prop}
                     </TableCell>
                   );
-                })}
+                })} */}
+                <TableCell className={classes.tableCell} key={key}>
+                      {prop.id}
+                </TableCell>
+                <TableCell className={classes.tableCell} key={key}>
+                      {prop.fecha} / {prop.hora}
+                </TableCell>
+                <TableCell className={classes.tableCell} key={key}>
+                      {prop.cantGLP}
+                </TableCell>
+                <TableCell className={classes.tableCell} key={key}>
+                      {prop.plazo}
+                </TableCell>
+                <TableCell className={classes.tableCell} key={key}>
+                      {prop.tiempoEst}
+                </TableCell>
+                <TableCell className={classes.tableCell} key={key}>
+                      {prop.estado}
+                </TableCell>
               </TableRow>
             );
           })}
