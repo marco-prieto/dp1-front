@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 /* import React,{useState} from "react"; */
 import * as React from 'react'
+=======
+import React from "react";
+>>>>>>> b8f7795f88a928c03f9a8bb6b15a75f6511b4603
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 // core components
@@ -12,12 +16,16 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+<<<<<<< HEAD
 import { Modal } from "@material-ui/core";
 import { Box } from '@material-ui/core';
 import { Typography } from '@material-ui/core';
 import { useForm } from "react-hook-form";
 /* import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography'; */
+=======
+import { Link } from "react-router-dom";
+>>>>>>> b8f7795f88a928c03f9a8bb6b15a75f6511b4603
 
 const styles = {
   cardCategoryWhite: {
@@ -156,7 +164,12 @@ export default function TableList() {
           </CardHeader>
           <GridContainer>
             <GridItem xs={12} sm={12} md={3}>
-              <button color="primary" >Mapa</button>
+              <Link
+                to="/mapa"
+
+              >
+              <button color="primary">Ver Mapa</button>
+              </Link>
             </GridItem>
             <GridItem xs={12} sm={12} md={3}>
               <button color="primary" onClick={handleOpen}>Nuevo</button>
