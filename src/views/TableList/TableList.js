@@ -80,6 +80,14 @@ export default function TableList() {
               Here is a subtitle for this table
             </p> */}
           </CardHeader>
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={3}>
+              <button color="primary">Mapa</button>
+            </GridItem>
+            <GridItem xs={12} sm={12} md={3}>
+              <button color="primary">Nuevo</button>
+            </GridItem>
+          </GridContainer>          
           <CardBody>
             <Table
               tableHeaderColor="primary"
