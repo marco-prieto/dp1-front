@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Sketch from "react-p5";
 //LUEGO y -> 50-y
 import mockPedidos from "./mock/mockPedidos.js";
 import mockBloqueos from "./mock/mockBloqueos.js";
+import mockAverias from "./mock/mockAverias.js";
 import plantaPrincipalImg from "../assets/map/plantaPrincipal.png";
 import plantaSecundariaImg from "../assets/map/plantaSecundaria.png";
 import camionCisternaImg from "../assets/map/camionCisterna.png";
 import clientWarehouseImg from "../assets/map/clientWarehouse.png";
 import roadblockImg from "../assets/map/roadblock.png";
+import averiaImg from "../assets/map/averia.png";
 
 const Map = (blockSize_p) => {
-  const [blockSize] = useState(blockSize_p.blockSize_p);
+  const blockSize = blockSize_p.blockSize_p;
   var imgPlantaPrincipal;
   var imgPlantaSecundaria;
   var imgCamionCisterna;
   var imgClientWarehouse;
   var imgRoadblock;
+  var imgAveria;
+  const truckScalingFactor = 26;
   //Usar la misma imagen para el camion
-
-  useEffect(() => {
-    //location.reload();
-  });
 
   const setup = (p5, canvasParentRef) => {
     p5.createCanvas(blockSize * 70, blockSize * 50).parent(canvasParentRef);
@@ -43,6 +43,9 @@ const Map = (blockSize_p) => {
 
     p5.loadImage(roadblockImg, (c) => {
       imgRoadblock = c;
+    });
+    p5.loadImage(averiaImg, (c) => {
+      imgAveria = c;
     });
   };
 
@@ -152,7 +155,6 @@ const Map = (blockSize_p) => {
       }
     }
 
-    const truckScalingFactor = 26;
     var xFactor =
       ((rightDirection + leftDirection) *
         (distance - curNode * 1000) *
@@ -227,16 +229,49 @@ const Map = (blockSize_p) => {
     }
   };
 
-  const draw = (p5) => {
-    p5.background(255);
-    renderGrid(p5);
-    //Renderizar Bloqueos
-    for (var i = 0; i < mockBloqueos.length; i++) {
-      renderRoadBlock(p5, mockBloqueos[i]);
+  const renderAveria = (p5, av) => {
+    const startDate = new Date(av.startDate);
+    const endDate = startDate + 1 * 60 * 60 * 1000; //Averias duran 1 hora
+    const dateNow = Date.now();
+    const node = av.node;
+
+    if (startDate < dateNow || endDate > dateNow) return;
+
+    //Camion mirando a la derecha
+    const sx = 0;
+    const sy = 1018;
+    const sw = 710;
+    const sh = 402;
+
+    p5.stroke(p5.color("red"));
+    p5.strokeWeight(1);
+
+    if (imgCamionCisterna && sw != 0 && sh != 0) {
+      p5.image(
+        imgCamionCisterna,
+        node["x"] * blockSize - sw / (2 * truckScalingFactor),
+        node["y"] * blockSize - sh / (2 * truckScalingFactor),
+        sw / truckScalingFactor,
+        sh / truckScalingFactor,
+        sx,
+        sy,
+        sw,
+        sh
+      );
     }
 
-    //Renderizar Plantas
-    //if p5.image(image, x, y, w, h)
+    if (imgAveria) {
+      p5.image(
+        imgAveria,
+        node["x"] * blockSize - 11,
+        node["y"] * blockSize - 11,
+        22,
+        22
+      );
+    }
+  };
+
+  const renderPlantas = (p5) => {
     if (imgPlantaPrincipal) {
       p5.image(
         imgPlantaPrincipal,
@@ -266,14 +301,30 @@ const Map = (blockSize_p) => {
         25
       );
     }
+  };
+  const draw = (p5) => {
+    p5.background(255);
+    renderGrid(p5);
 
-    for (var j = 0; j < mockPedidos.length; j++) {
-      renderTruck(p5, mockPedidos[j]);
+    //Renderizar Bloqueos
+    for (var i = 0; i < mockBloqueos.length; i++) {
+      renderRoadBlock(p5, mockBloqueos[i]);
+    }
+
+    //Averias
+    for (var j = 0; j < mockAverias.length; j++) {
+      renderAveria(p5, mockAverias[j]);
+    }
+
+    //Renderizar Plantas
+    renderPlantas(p5);
+
+    for (var k = 0; k < mockPedidos.length; k++) {
+      renderTruck(p5, mockPedidos[k]);
     }
   };
-  if (blockSize !== null) {
-    return <Sketch setup={setup} draw={draw} />;
-  }
+
+  return <Sketch setup={setup} draw={draw} />;
 };
 
 export default Map;

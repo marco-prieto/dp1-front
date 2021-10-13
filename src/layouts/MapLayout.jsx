@@ -2,8 +2,13 @@ import React from "react";
 // creates a beautiful scrollbar
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
+
 import { makeStyles } from "@material-ui/core/styles";
 import Footer from "components/Footer/Footer.js";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import Button from "@material-ui/core/Button";
+import { Link } from "react-router-dom";
+
 // core components
 import Sidebar from "components/Sidebar/Sidebar.js";
 import routes from "routes.js";
@@ -43,10 +48,22 @@ export default function Admin({ ...rest }) {
         {...rest}
       />
 
-      <h3 className="d-flex justify-content-center">Pedidos en Tiempo Real</h3>
-      <div className="d-flex justify-content-center overflow-auto">
-        <Map blockSize_p={20} />
+      <div className={classes.mainPanel}>
+        <div className={classes.layPadding}>
+          <Link to="/admin/pedidos" style={{ textDecoration: "none" }}>
+            <Button variant="text" startIcon={<ArrowBackIcon />}>
+              Atrás
+            </Button>
+          </Link>
+
+          <div className="ms-5">
+            <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
+          </div>
+
+          <Map blockSize_p={20} />
+        </div>
       </div>
+
       <Footer />
     </div>
   );
