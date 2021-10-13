@@ -31,6 +31,9 @@ const appStyle = (theme) => ({
   map: {
     marginTop: "70px",
   },
+  layPadding: {
+    marginLeft:"50px",
+  },
 });
 
 export default appStyle;
