@@ -3,6 +3,7 @@ import React from "react";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import Footer from "components/Footer/Footer.js";
 // core components
 import Sidebar from "components/Sidebar/Sidebar.js";
 import routes from "routes.js";
@@ -43,9 +44,10 @@ export default function Admin({ ...rest }) {
       />
 
       <h3 className="d-flex justify-content-center">Pedidos en Tiempo Real</h3>
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-center overflow-auto">
         <Map blockSize_p={20} />
       </div>
+      <Footer />
     </div>
   );
 }

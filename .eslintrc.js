@@ -17,7 +17,7 @@ module.exports = {
     'prettier/prettier': 0,
   },
   extends: [
-    "eslint:recommended",
+    //"eslint:recommended",
     "plugin:react/recommended",
   ],
 };

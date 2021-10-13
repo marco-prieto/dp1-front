@@ -150,14 +150,14 @@ export default function TableList() {
           <CardHeader plain color="primary">
             <h4 className={classes.cardTitleWhite}>Pedidos recibidos</h4>
             <div className="d-flex">
-              <Link to="/mapa">
+              <a href="/mapa">
                 <button color="primary">Ver Mapa</button>
-              </Link>
+              </a>
               <button color="primary" onClick={handleOpen}>
                 Nuevo
               </button>
             </div>
-            
+
             {/* <p className={classes.cardCategoryWhite}>
               Here is a subtitle for this table
             </p> */}
@@ -195,6 +195,7 @@ export default function TableList() {
         </Box> */}
         <Box sx={style2}>
           <h3>Agregar Pedido</h3>
+          <br />
           <form onSubmit={handleSubmit(onSubmit)}>
             <label>ID Cliente</label>
             <br />
@@ -215,81 +216,99 @@ export default function TableList() {
               </span>
             )}
             <br />
-            <label>Fecha</label>
-            <br />
-            <input
-              type="date"
-              name="fecha"
-              {...register("fecha", {
-                required: {
-                  value: true,
-                  message: "Fecha requerida",
-                },
-              })}
-            />
-            <br />
-            {errors.fecha && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.fecha.message}
-              </span>
-            )}
-            <br />
-            <label>Hora</label>
-            <br />
-            <input
-              type="time"
-              name="hora"
-              {...register("hora", {
-                required: {
-                  value: true,
-                  message: "Hora requerida",
-                },
-              })}
-            />
-            <br />
-            {errors.hora && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.hora.message}
-              </span>
-            )}
-            <br />
-            <label>Coordenada X</label>
-            <br />
-            <input
-              type="number"
-              name="ubicacionX"
-              {...register("ubicacionX", {
-                required: {
-                  value: true,
-                  message: "Coordenada X requerida",
-                },
-              })}
-            />
-            <br />
-            {errors.ubicacionX && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.ubicacionX.message}
-              </span>
-            )}
-            <br />
-            <label>Coordenada Y</label>
-            <br />
-            <input
-              type="number"
-              name="ubicacionY"
-              {...register("UbicacionY", {
-                required: {
-                  value: true,
-                  message: "Coordenada Y requerida",
-                },
-              })}
-            />
-            <br />
-            {errors.UbicacionY && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.UbicacionY.message}
-              </span>
-            )}
+            <div className="row">
+              <div className="col-6">
+                <label>Fecha</label>
+                <br />
+                <input
+                  type="date"
+                  name="fecha"
+                  {...register("fecha", {
+                    required: {
+                      value: true,
+                      message: "Fecha requerida",
+                    },
+                  })}
+                />
+                {errors.fecha && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.fecha.message}
+                  </span>
+                )}
+              </div>
+              <br />
+
+              <br />
+              
+                <div className="col-6">
+                  <label>Hora</label>
+                  <br />
+                  <input
+                    type="time"
+                    name="hora"
+                    {...register("hora", {
+                      required: {
+                        value: true,
+                        message: "Hora requerida",
+                      },
+                    })}
+                  />
+                  {errors.hora && (
+                    <span className="text-danger text-small d-block mb-2">
+                      {errors.hora.message}
+                    </span>
+                  )}
+
+                </div>
+              <br />
+              
+              <div className="col-6">
+              <br />
+                <label>Coordenada X</label>
+                
+                <input
+                  type="number"
+                  name="ubicacionX"
+                  {...register("ubicacionX", {
+                    required: {
+                      value: true,
+                      message: "Coordenada X requerida",
+                    },
+                  })}
+                />
+                <br />
+                {errors.ubicacionX && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.ubicacionX.message}
+                  </span>
+                )}
+              </div>
+              
+              <br />
+              <div className="col-6">
+              <br />
+                <label>Coordenada Y</label>
+                <br />
+                <input
+                  type="number"
+                  name="ubicacionY"
+                  {...register("UbicacionY", {
+                    required: {
+                      value: true,
+                      message: "Coordenada Y requerida",
+                    },
+                  })}
+                />
+                <br />
+                {errors.UbicacionY && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.UbicacionY.message}
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="row">
+            <div className="col-6">
             <br />
             <label>Cantidad de GLP</label>
             <br />
@@ -309,6 +328,8 @@ export default function TableList() {
                 {errors.cantGLP.message}
               </span>
             )}
+            </div>
+            <div className="col-6">
             <br />
             <label>Plazo</label>
             <br />
@@ -328,8 +349,12 @@ export default function TableList() {
                 {errors.plazo.message}
               </span>
             )}
+            </div>
+            </div>
             <br />
-            <button>Agregar pedido</button>
+            <br />
+            <div className="d-flex justify-content-end"> <br /><button>Agregar pedido</button></div>
+            
           </form>
         </Box>
       </Modal>

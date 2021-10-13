@@ -30,7 +30,7 @@ ReactDOM.render(
     <Switch>
       <Route path="/admin" component={Admin} />
       <Route path="/mapa" component={MapLayout} />
-      <Redirect from="/" to="/admin/dashboard" />
+      <Redirect from="/" to="/admin/pedidos" />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")
