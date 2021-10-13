@@ -110,6 +110,8 @@ export default function OrderList() {
     formState: { errors },
   } = useForm();
 
+  /* *************************************************************************************************************  */
+  //Para hacer el post.. creo q queda comentar ese setpedidos
   const onSubmit = (data, e) => {
     setId(id + 1);
     data.id = id;
@@ -117,8 +119,26 @@ export default function OrderList() {
     data.estado = "Enrutado";
     console.log(data);
     setPedidos([...pedidos, data]);
+    /* axios.post(``,data)
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    }) */
+    //obtenerPedidos()
     e.target.reset();
   };
+  
+  //Solo falta insertar API creo xD
+  
+  /* React.useEffect(() =>{
+    obtenerPedidos()
+  })
+  
+  const ObtenerPedidos = () =>{
+    axios.get('').then(resp => setPedidos(resp.data))
+  } */
+  
+  /* *************************************************************************************************************  */
 
   return (
     <GridContainer>
