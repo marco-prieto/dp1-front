@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Sketch from "react-p5";
 //LUEGO y -> 50-y
 import mockPedidos from "./mock/mockPedidos.js";
@@ -10,13 +10,17 @@ import clientWarehouseImg from "../assets/map/clientWarehouse.png";
 import roadblockImg from "../assets/map/roadblock.png";
 
 const Map = (blockSize_p) => {
-  const blockSize = blockSize_p.blockSize_p;
+  const [blockSize] = useState(blockSize_p.blockSize_p);
   var imgPlantaPrincipal;
   var imgPlantaSecundaria;
   var imgCamionCisterna;
   var imgClientWarehouse;
   var imgRoadblock;
   //Usar la misma imagen para el camion
+
+  useEffect(() => {
+    //location.reload();
+  });
 
   const setup = (p5, canvasParentRef) => {
     p5.createCanvas(blockSize * 70, blockSize * 50).parent(canvasParentRef);
@@ -253,12 +257,23 @@ const Map = (blockSize_p) => {
       );
     }
 
+    if (imgPlantaSecundaria) {
+      p5.image(
+        imgPlantaSecundaria,
+        63 * blockSize - 15,
+        3 * blockSize - 12.5,
+        30,
+        25
+      );
+    }
+
     for (var j = 0; j < mockPedidos.length; j++) {
       renderTruck(p5, mockPedidos[j]);
     }
   };
-
-  return <Sketch setup={setup} draw={draw} />;
+  if (blockSize !== null) {
+    return <Sketch setup={setup} draw={draw} />;
+  }
 };
 
 export default Map;

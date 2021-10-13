@@ -21,7 +21,6 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // core components
 import Admin from "layouts/Admin.js";
-import RTL from "layouts/RTL.js";
 import MapLayout from "layouts/MapLayout.jsx";
 
 import "assets/css/material-dashboard-react.css?v=1.10.0";
@@ -30,9 +29,8 @@ ReactDOM.render(
   <BrowserRouter>
     <Switch>
       <Route path="/admin" component={Admin} />
-      <Route path="/rtl" component={RTL} />
       <Route path="/mapa" component={MapLayout} />
-      <Redirect from="/" to="/admin/dashboard" />
+      <Redirect from="/" to="/admin/pedidos" />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")
