@@ -20,7 +20,11 @@
 // import Person from "@material-ui/icons/Person";
 // import DashboardPage from "views/Dashboard/Dashboard.js";
 // import UserProfile from "views/UserProfile/UserProfile.js";
-import TableList from "views/TableList/TableList.js";
+
+//Antigua tablelist
+/* import TableList from "views/TableList/TableList.js"; */
+import OrderList from "views/TableList/OrderList";
+
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
 // import BubbleChart from "@material-ui/icons/BubbleChart";
 // import LocationOn from "@material-ui/icons/LocationOn";
@@ -118,7 +122,7 @@ const sagRoutes = [
     path: "/pedidos",
     name: "Lista de Pedidos",
     icon: "content_paste",
-    component: TableList,
+    component: OrderList,
     layout: "/admin",
   }
 ];

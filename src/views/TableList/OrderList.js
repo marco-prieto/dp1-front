@@ -65,7 +65,7 @@ const style2 = {
 
 const useStyles = makeStyles(styles);
 
-export default function TableList() {
+export default function OrderList() {
   const classes = useStyles();
 
   const pedid2 = [
@@ -149,12 +149,13 @@ export default function TableList() {
       <GridItem xs={12} sm={12} md={12}>
         <Card plain>
           <CardHeader plain color="primary">
+          {/* <CardHeader plain className="bg-danger"> */}
             <h4 className={classes.cardTitleWhite}>Pedidos recibidos</h4>
-            <div className="d-flex">
-              <a href="/mapa">
-                <button color="primary">Ver Mapa</button>
+            <div className="d-flex justify-content-end">
+              <a href="/mapa" className="mx-2">
+                <button className="btn btn-light btn-sm">Ver Mapa</button>
               </a>
-              <button color="primary" onClick={handleOpen}>
+              <button className="btn btn-light btn-sm" onClick={handleOpen}>
                 Nuevo
               </button>
             </div>
@@ -354,7 +355,7 @@ export default function TableList() {
             </div>
             <br />
             <br />
-            <div className="d-flex justify-content-end"> <br /><button>Agregar pedido</button></div>
+            <div className="d-flex justify-content-end"> <br /><button className="btn btn-primary">Agregar pedido</button></div>
             
           </form>
         </Box>
