@@ -50,19 +50,19 @@ export default function CustomTable(props) {
                       {prop.id}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.fecha} / {prop.hora}
+                      {prop.fechaPedido.replace('@', ' ')}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.cantGLP}
+                      {prop.cantidadGLP}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.plazo}
+                      {prop.plazoEntrega}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.tiempoEst}
+                      {prop.fechaEntrega.replace('@', ' ')}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.estado}
+                      {prop.estadoPedido}
                 </TableCell>
               </TableRow>
             );

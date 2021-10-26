@@ -24,7 +24,7 @@
 //Antigua tablelist
 /* import TableList from "views/TableList/TableList.js"; */
 import OrderList from "views/TableList/OrderList";
-import SimulacionLayout from "layouts/SimulacionLayout.jsx";
+import Simulacion from "views/Simulacion/Simulacion.jsx";
 
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
 // import BubbleChart from "@material-ui/icons/BubbleChart";
@@ -124,6 +124,13 @@ const sagRoutes = [
     name: "Lista de Pedidos",
     icon: "content_paste",
     component: OrderList,
+    layout: "/admin",
+  },
+  {
+    path: "/simulacion",
+    name: "Simulación",
+    icon: "content_paste",
+    component: Simulacion,
     layout: "/admin",
   },
 

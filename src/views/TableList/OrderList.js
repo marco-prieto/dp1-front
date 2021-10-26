@@ -19,6 +19,8 @@ import { Typography } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 /* import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography'; */
+import axios from 'axios';
+import url from "../../config";
 import { Link } from "react-router-dom";
 
 const styles = {
@@ -71,33 +73,43 @@ export default function OrderList() {
   const pedid2 = [
     {
       id: 1,
-      fecha: "06-09-2021",
+      fechaPedido: "06-09-2021",
       hora: "10:28",
-      cantGLP: 25,
-      plazo: 4,
+      cantidadGLP: 25,
+      plazoEntrega: 4,
       tiempoEst: 3,
-      estado: "Enrutado",
+      estadoPedido: "Enrutado",
     },
     {
       id: 2,
-      fecha: "06-09-2021",
+      fechaPedido: "06-09-2021",
       hora: "10:28",
-      cantGLP: 25,
-      plazo: 4,
+      cantidadGLP: 25,
+      plazoEntrega: 4,
       tiempoEst: 3,
-      estado: "Enrutado",
+      estadoPedido: "Enrutado",
     },
     {
       id: 3,
-      fecha: "06-09-2021",
+      fechaPedido: "06-09-2021",
       hora: "10:28",
-      cantGLP: 25,
-      plazo: 4,
+      cantidadGLP: 25,
+      plazoEntrega: 4,
       tiempoEst: 3,
-      estado: "Enrutado",
+      estadoPedido: "Enrutado",
+    },
+    {
+      id: 4,
+      fechaPedido: "06-09-2021",
+      hora: "10:28",
+      cantidadGLP: 25,
+      plazoEntrega: 4,
+      tiempoEst: 3,
+      estadoPedido: "Enrutado",
     },
   ];
-  const [pedidos, setPedidos] = React.useState(pedid2);
+  const [pedidos, setPedidos] = React.useState(null);
+  //var pedidos = null;
   const [id, setId] = React.useState(4);
 
   const [open, setOpen] = React.useState(false);
@@ -116,9 +128,9 @@ export default function OrderList() {
     setId(id + 1);
     data.id = id;
     data.tiempoEst = 24;
-    data.estado = "Enrutado";
+    data.estadoPedido = "Enrutado";
     console.log(data);
-    setPedidos([...pedidos, data]);
+    //setPedidos([...pedidos, data]);
     /* axios.post(``,data)
     .then(res => {
       console.log(res);
@@ -130,42 +142,21 @@ export default function OrderList() {
   
   //Solo falta insertar API creo xD
   
-  /* React.useEffect(() =>{
+  React.useEffect(() =>{
     obtenerPedidos()
-  })
+  }, [])
   
-  const ObtenerPedidos = () =>{
-    axios.get('').then(resp => setPedidos(resp.data))
-  } */
+  const obtenerPedidos = () =>{
+    axios.get(`${url}/pedido/listarPedidos`).then((resp)=>{
+      console.log(resp.data)
+      setPedidos(resp.data)
+    })
+  }
   
   /* *************************************************************************************************************  */
 
   return (
     <GridContainer>
-      {/* <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Simple Table</h4>
-            <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
-            </p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["Name", "Country", "City", "Salary"]}
-              tableData={[
-                ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-                ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
-                ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
-                ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
-                ["Doris Greene", "Malawi", "Feldkirchen in Kärnten", "$63,542"],
-                ["Mason Porter", "Chile", "Gloucester", "$78,615"],
-              ]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem> */}
       <GridItem xs={12} sm={12} md={12}>
         <Card plain>
           <CardHeader plain color="primary">
@@ -186,18 +177,20 @@ export default function OrderList() {
           </CardHeader>
 
           <CardBody>
+            {pedidos&&
             <Table
               tableHeaderColor="primary"
               tableHead={[
                 "ID",
                 "Fecha de Recepción",
                 "Cantidad GLP (m3)",
-                "Plazo",
-                "Tiempo Estimado",
+                "Plazo de Entrega (hr)",
+                "Fecha de Entrega",
                 "Estado",
               ]}
               tableData={pedidos}
             />
+            }
           </CardBody>
         </Card>
       </GridItem>
@@ -240,21 +233,21 @@ export default function OrderList() {
             <br />
             <div className="row">
               <div className="col-6">
-                <label>Fecha</label>
+                <label>fechaPedido</label>
                 <br />
                 <input
                   type="date"
-                  name="fecha"
-                  {...register("fecha", {
+                  name="fechaPedido"
+                  {...register("fechaPedido", {
                     required: {
                       value: true,
-                      message: "Fecha requerida",
+                      message: "fechaPedido requerida",
                     },
                   })}
                 />
-                {errors.fecha && (
+                {errors.fechaPedido && (
                   <span className="text-danger text-small d-block mb-2">
-                    {errors.fecha.message}
+                    {errors.fechaPedido.message}
                   </span>
                 )}
               </div>
@@ -336,8 +329,8 @@ export default function OrderList() {
             <br />
             <input
               type="number"
-              name="cantGLP"
-              {...register("cantGLP", {
+              name="cantidadGLP"
+              {...register("cantidadGLP", {
                 required: {
                   value: true,
                   message: "Cantidad de GLP requerida",
@@ -345,30 +338,30 @@ export default function OrderList() {
               })}
             />
             <br />
-            {errors.cantGLP && (
+            {errors.cantidadGLP && (
               <span className="text-danger text-small d-block mb-2">
-                {errors.cantGLP.message}
+                {errors.cantidadGLP.message}
               </span>
             )}
             </div>
             <div className="col-6">
             <br />
-            <label>Plazo</label>
+            <label>plazoEntrega</label>
             <br />
             <input
               type="number"
-              name="plazo"
-              {...register("plazo", {
+              name="plazoEntrega"
+              {...register("plazoEntrega", {
                 required: {
                   value: true,
-                  message: "Plazo requerido",
+                  message: "plazoEntrega requerido",
                 },
               })}
             />
             <br />
-            {errors.plazo && (
+            {errors.plazoEntrega && (
               <span className="text-danger text-small d-block mb-2">
-                {errors.plazo.message}
+                {errors.plazoEntrega.message}
               </span>
             )}
             </div>
@@ -383,3 +376,4 @@ export default function OrderList() {
     </GridContainer>
   );
 }
+
