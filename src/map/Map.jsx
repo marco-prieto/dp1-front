@@ -47,6 +47,10 @@ const Map = (blockSize_p) => {
     p5.loadImage(averiaImg, (c) => {
       imgAveria = c;
     });
+
+    //Funcion periodica
+    var delay = 1000; //ms
+    setInterval(()=>{console.log('si')}, delay)
   };
 
   const renderGrid = (p5) => {

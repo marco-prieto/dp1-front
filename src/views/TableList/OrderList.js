@@ -109,8 +109,6 @@ export default function OrderList() {
     },
   ];
   const [pedidos, setPedidos] = React.useState(null);
-  //var pedidos = null;
-  const [id, setId] = React.useState(4);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -125,19 +123,17 @@ export default function OrderList() {
   /* *************************************************************************************************************  */
   //Para hacer el post.. creo q queda comentar ese setpedidos
   const onSubmit = (data, e) => {
-    setId(id + 1);
-    data.id = id;
-    data.tiempoEst = 24;
-    data.estadoPedido = "Enrutado";
     console.log(data);
     //setPedidos([...pedidos, data]);
-    /* axios.post(``,data)
+    axios.post(`${url}/pedido/registrarPedidoNuevo`,data)
     .then(res => {
-      console.log(res);
+      //console.log(res);
       console.log(res.data);
-    }) */
-    //obtenerPedidos()
+    }) 
+    obtenerPedidos()
     e.target.reset();
+    //handleClose();
+    alert('El registro fue exitoso')
   };
   
   //Solo falta insertar API creo xD
@@ -212,28 +208,9 @@ export default function OrderList() {
           <h3>Agregar Pedido</h3>
           <br />
           <form onSubmit={handleSubmit(onSubmit)}>
-            <label>ID Cliente</label>
-            <br />
-            <input
-              type="number"
-              name="idCliente"
-              {...register("idCliente", {
-                required: {
-                  value: true,
-                  message: "ID del cliente requerido",
-                },
-              })}
-            />
-            <br />
-            {errors.idCliente && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.idCliente.message}
-              </span>
-            )}
-            <br />
             <div className="row">
               <div className="col-6">
-                <label>fechaPedido</label>
+                <label>Fecha de Pedido</label>
                 <br />
                 <input
                   type="date"
@@ -261,6 +238,7 @@ export default function OrderList() {
                   <input
                     type="time"
                     name="hora"
+                    step="1"
                     {...register("hora", {
                       required: {
                         value: true,
@@ -307,7 +285,7 @@ export default function OrderList() {
                 <input
                   type="number"
                   name="ubicacionY"
-                  {...register("UbicacionY", {
+                  {...register("ubicacionY", {
                     required: {
                       value: true,
                       message: "Coordenada Y requerida",
