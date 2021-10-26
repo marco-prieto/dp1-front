@@ -24,6 +24,7 @@
 //Antigua tablelist
 /* import TableList from "views/TableList/TableList.js"; */
 import OrderList from "views/TableList/OrderList";
+import BloqueosList from "views/TableList/BloqueosList";
 import Simulacion from "views/Simulacion/Simulacion.jsx";
 
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
@@ -121,7 +122,7 @@ import Simulacion from "views/Simulacion/Simulacion.jsx";
 const sagRoutes = [
   {
     path: "/pedidos",
-    name: "Lista de Pedidos",
+    name: "Pedidos",
     icon: "content_paste",
     component: OrderList,
     layout: "/admin",
@@ -131,6 +132,20 @@ const sagRoutes = [
     name: "Simulación",
     icon: "content_paste",
     component: Simulacion,
+    layout: "/admin",
+  },
+  {
+    path: "/bloqueos",
+    name: "Bloqueos",
+    icon: "content_paste",
+    component: BloqueosList,
+    layout: "/admin",
+  },
+  {
+    path: "/averias",
+    name: "Averías",
+    icon: "content_paste",
+    component: BloqueosList,
     layout: "/admin",
   },
 

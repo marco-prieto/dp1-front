@@ -32,7 +32,6 @@ ReactDOM.render(
       <Route path="/admin" component={Admin} />
       <Route path="/mapa" component={MapLayout} />
       <Route path="/simulacionMap" component={SimulacionMapLayout} />
-      
       <Redirect from="/" to="/admin/pedidos" />
     </Switch>
   </BrowserRouter>,
