@@ -16,11 +16,11 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/sag/sagLogo.svg";
 
-import Map from "map/Map.jsx";
+import SimulationMap from "map/SimulationMap.jsx";
 
 const useStyles = makeStyles(styles);
 
-export default function Mapa({ ...rest }) {
+export default function Simulacion({ ...rest }) {
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -35,7 +35,7 @@ export default function Mapa({ ...rest }) {
     setMobileOpen(!mobileOpen);
   };
 
-  return (
+   return (
     <div className={classes.wrapper}>
       <Sidebar
         routes={routes}
@@ -57,14 +57,15 @@ export default function Mapa({ ...rest }) {
           </Link>
 
           <div className="ms-5">
-            <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
+            <h3 className="my-2 pb-2">Simulación</h3>
           </div>
 
-          <Map blockSize_p={12} />
+          <SimulationMap blockSize_p={12} />
         </div>
+        
       </div>
 
-      <Footer />
+
     </div>
   );
 }
