@@ -34,7 +34,7 @@ const Map = (blockSize_p) => {
     var startDate = date.join('-')+"@"+today[1]; //formato para el back
 
     //console.log(startDate);
-    obtenerRutaPedidos(startDate);
+    //obtenerRutaPedidos(startDate);
   }, [])
 
   const obtenerRutaPedidos = (startDate) =>{

@@ -24,6 +24,7 @@ import Button from "@material-ui/core/Button";
 import axios from 'axios';
 import url from "../../config";
 import { Link } from "react-router-dom";
+import { RvHookup } from "@material-ui/icons";
 
 const styles = {
   cardCategoryWhite: {
@@ -122,6 +123,77 @@ export default function OrderList() {
 //       setPedidos(resp.data)
 //     })
 //   }
+
+const onInputClick = (event) => {
+  event.target.value = ''
+}
+
+const handleUploadFile = e => {
+  try {
+      const file = e.target.files[0];
+      if (!file) return;
+  
+      var nameFile = file.name;
+
+      nameFile = nameFile.replace("bloqueos", "")
+      nameFile = nameFile.replace(".txt", "")
+      var date = parseInt(nameFile);
+
+      var year = Math.trunc(date / 100).toString();
+      var month = (date - year * 100).toString();
+  
+      const reader = new FileReader();
+  
+      reader.onload = evt => {
+  
+          var content = evt.target.result;
+          var lines = content.split('\n');
+          
+          var roadblocks = [];
+
+          for (var i = 0; i < lines.length; i++) {
+              var line = lines[i].replace('\r', '');
+
+              var rb = {};
+              var nodes = [];
+
+              var data = line.split(',');
+              var dates = data[0].split('-');
+              
+              
+              //Parseo de fechas
+              rb['fechaInicio'] = year+'-'+month+'-'+dates[0].slice(0,2)+'@'+dates[0].slice(3,5)+':'+dates[0].slice(6,8)+":00";
+              rb['fechaFin'] = year+'-'+month+'-'+dates[1].slice(0,2)+'@'+dates[1].slice(3,5)+':'+dates[1].slice(6,8)+":00";
+
+              //Nodos
+              const nodes_ = data.slice(1);
+              
+              
+              for(let j=0;j<nodes_.length;j=j+2){
+                var dummyNode = {};
+                dummyNode['x'] = nodes_[j];
+                dummyNode['y'] = nodes_[j+1];
+                nodes.push(dummyNode);
+              }
+
+              rb['nodes'] = nodes;
+
+              roadblocks.push(rb);
+          }
+          
+          console.log(roadblocks);
+          /*cargaMasiva(objetos).then(() => {
+          readPedidos()
+          //aquí myuestras la notificacion
+          }).catch(err => {
+          //aquí notificacion de error
+          });*/
+      };
+      reader.readAsText(file);
+  } catch (error) {
+      console.log("error");
+  }
+};
   
   /* *************************************************************************************************************  */
 
@@ -182,8 +254,9 @@ export default function OrderList() {
             <div className="row my-3">
                 <div className="col-9">(*) Suba el archivo txt con la información de los bloqueos en el formato: dd:hh:mm-dd:hh:mm,x1,y1,x2,y2,x3,y3,x4,y4......xn,yn</div>
                 <div className="col-3">
-                <Button variant="contained">
+                <Button variant="contained" component="label">
                     Subir Archivo
+                    <input type="file" hidden onChange={handleUploadFile}/>
                 </Button>
                 </div>
             </div>
