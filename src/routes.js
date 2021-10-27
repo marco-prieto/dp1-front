@@ -25,6 +25,7 @@
 /* import TableList from "views/TableList/TableList.js"; */
 import OrderList from "views/TableList/OrderList";
 import BloqueosList from "views/TableList/BloqueosList";
+import AveriasList from "views/TableList/AveriasList";
 import Simulacion from "views/Simulacion/Simulacion.jsx";
 
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
@@ -145,7 +146,7 @@ const sagRoutes = [
     path: "/averias",
     name: "Averías",
     icon: "content_paste",
-    component: BloqueosList,
+    component: AveriasList,
     layout: "/admin",
   },
 

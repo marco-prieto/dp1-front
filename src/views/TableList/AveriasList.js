@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
+import TableAverias from "components/Table/TableAverias.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -19,6 +19,8 @@ import { Typography } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 /* import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography'; */
+import Button from "@material-ui/core/Button";
+//import UploadFileIcon from '@material-ui/icons/UploadFile';
 import axios from 'axios';
 import url from "../../config";
 import { Link } from "react-router-dom";
@@ -54,15 +56,15 @@ const styles = {
 };
 
 const style2 = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 600,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 600,
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
 };
 
 const useStyles = makeStyles(styles);
@@ -70,45 +72,25 @@ const useStyles = makeStyles(styles);
 export default function OrderList() {
   const classes = useStyles();
 
-  const pedid2 = [
+  const mockListarAverias = [
     {
-      id: 1,
-      fechaPedido: "06-09-2021",
-      hora: "10:28",
-      cantidadGLP: 25,
-      plazoEntrega: 4,
-      tiempoEst: 3,
-      estadoPedido: "Enrutado",
+        id: 1,
+        codigoCamion: "TA01",
+        fechaInicio: "16-10-2021",
+        horaInicio: "09:45",
+        fechaFin: "18-10-2021",
+        horaFin: "09:45",
     },
     {
-      id: 2,
-      fechaPedido: "06-09-2021",
-      hora: "10:28",
-      cantidadGLP: 25,
-      plazoEntrega: 4,
-      tiempoEst: 3,
-      estadoPedido: "Enrutado",
-    },
-    {
-      id: 3,
-      fechaPedido: "06-09-2021",
-      hora: "10:28",
-      cantidadGLP: 25,
-      plazoEntrega: 4,
-      tiempoEst: 3,
-      estadoPedido: "Enrutado",
-    },
-    {
-      id: 4,
-      fechaPedido: "06-09-2021",
-      hora: "10:28",
-      cantidadGLP: 25,
-      plazoEntrega: 4,
-      tiempoEst: 3,
-      estadoPedido: "Enrutado",
+        id: 2,
+        codigoCamion: "TD02",
+        fechaInicio: "02-11-2021",
+        horaInicio: "09:34",
+        fechaFin: "04-11-2021",
+        horaFin: "09:34",
     },
   ];
-  const [pedidos, setPedidos] = React.useState(null);
+  const [averias, setAverias] = React.useState(null);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -120,35 +102,34 @@ export default function OrderList() {
     formState: { errors },
   } = useForm();
 
-  /* *************************************************************************************************************  */
-  //Para hacer el post.. creo q queda comentar ese setpedidos
+  /* *************************************************************************************************************  */  
   const onSubmit = (data, e) => {
     console.log(data);
-    //setPedidos([...pedidos, data]);
-    axios.post(`${url}/pedido/registrarPedidoNuevo`,data)
-    .then(res => {
-      //console.log(res);
-      console.log(res.data);
-      obtenerPedidos()
-      alert('El registro fue exitoso')
-      e.target.reset();
-      handleClose();
-    }).catch(err=>{alert('Ocurrió un error en el registro del pedido')})
-    
+    e.target.reset();
+    // //setPedidos([...pedidos, data]);
+    // axios.post(`${url}/pedido/registrarPedidoNuevo`,data)
+    // .then(res => {
+    //   //console.log(res);
+    //   console.log(res.data);
+    // }) 
+    // obtenerAverias()
+    // e.target.reset();
+    // //handleClose();
+    // alert('El registro fue exitoso')
   };
   
-  //Solo falta insertar API creo xD
-  
   React.useEffect(() =>{
-    obtenerPedidos()
+    //obtenerAverias();
+
+    setAverias(mockListarAverias);
   }, [])
   
-  const obtenerPedidos = () =>{
-    axios.get(`${url}/pedido/listarPedidos`).then((resp)=>{
-      console.log(resp.data)
-      setPedidos(resp.data)
-    })
-  }
+//   const obtenerAverias = () =>{
+//     axios.get(`${url}/`).then((resp)=>{
+//       console.log(resp.data)
+//       setPedidos(resp.data)
+//     })
+//   }
   
   /* *************************************************************************************************************  */
 
@@ -158,11 +139,8 @@ export default function OrderList() {
         <Card plain>
           <CardHeader plain color="primary">
           {/* <CardHeader plain className="bg-danger"> */}
-            <h4 className={classes.cardTitleWhite}>Pedidos recibidos</h4>
+            <h4 className={classes.cardTitleWhite}>Averías Activas</h4>
             <div className="d-flex justify-content-end">
-              <a href="/mapa" className="mx-2">
-                <button className="btn btn-light btn-sm">Ver Mapa</button>
-              </a>
               <button className="btn btn-light btn-sm" onClick={handleOpen}>
                 Nuevo
               </button>
@@ -174,18 +152,18 @@ export default function OrderList() {
           </CardHeader>
 
           <CardBody>
-            {pedidos&&
-            <Table
+            {averias&&
+            <TableAverias
               tableHeaderColor="primary"
               tableHead={[
                 "ID",
-                "Fecha de Recepción",
-                "Cantidad GLP (m3)",
-                "Plazo de Entrega (hr)",
-                "Fecha de Entrega",
-                "Estado",
+                "Código del Camión",
+                "Fecha de Inicio",
+                "Hora de Inicio",
+                "Fecha de Fin",
+                "Hora de Fin",
               ]}
-              tableData={pedidos}
+              tableData={averias}
             />
             }
           </CardBody>
@@ -206,9 +184,26 @@ export default function OrderList() {
           </Typography>
         </Box> */}
         <Box sx={style2}>
-          <h3>Agregar Pedido</h3>
+          <h3>Agregar Bloqueo</h3>
           <br />
           <form onSubmit={handleSubmit(onSubmit)}>
+            <div>
+                <div>
+                    <label>ID del camión</label>
+                    <br/>
+                    <input
+                    type="number"
+                    name="idCamion"
+                    {...register("idCamion", {
+                        required: {
+                        value: true,
+                        message: "id camión requerido",
+                        },
+                    })}
+                    />
+                </div>
+                <br/>
+            </div>
             <div className="row">
               <div className="col-6">
                 <label>Fecha de Pedido</label>
@@ -216,10 +211,10 @@ export default function OrderList() {
                 <input
                   type="date"
                   name="fechaPedido"
-                  {...register("fechaPedido", {
+                  {...register("fecha", {
                     required: {
                       value: true,
-                      message: "fechaPedido requerida",
+                      message: "fecha requerida",
                     },
                   })}
                 />
@@ -301,53 +296,8 @@ export default function OrderList() {
                 )}
               </div>
             </div>
-            <div className="row">
-            <div className="col-6">
-            <br />
-            <label>Cantidad de GLP</label>
-            <br />
-            <input
-              type="number"
-              name="cantidadGLP"
-              {...register("cantidadGLP", {
-                required: {
-                  value: true,
-                  message: "Cantidad de GLP requerida",
-                },
-              })}
-            />
-            <br />
-            {errors.cantidadGLP && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.cantidadGLP.message}
-              </span>
-            )}
-            </div>
-            <div className="col-6">
-            <br />
-            <label>Plazo de Entrega</label>
-            <br />
-            <input
-              type="number"
-              name="plazoEntrega"
-              {...register("plazoEntrega", {
-                required: {
-                  value: true,
-                  message: "plazoEntrega requerido",
-                },
-              })}
-            />
-            <br />
-            {errors.plazoEntrega && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.plazoEntrega.message}
-              </span>
-            )}
-            </div>
-            </div>
-            <br />
-            <br />
-            <div className="d-flex justify-content-end"> <br /><button className="btn btn-primary">Agregar pedido</button></div>
+            
+            <div className="d-flex justify-content-end mt-5"> <br /><button className="btn btn-primary">Agregar pedido</button></div>
             
           </form>
         </Box>
