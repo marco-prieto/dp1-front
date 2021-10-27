@@ -41,10 +41,13 @@ export default function Mapa({ ...rest }) {
 
   const generarRutas=()=>{
     var dateNow = new Date(Date.now());
-    var today = dateNow.toLocaleString('es-ES').toString().split(" "); //[date, time]
+    var options = {hour:"2-digit", minute:"2-digit", second:"2-digit", year:'numeric', month:'2-digit', day:"2-digit"};
+    var today = dateNow.toLocaleString('es-ES',options).toString().split(" "); //[date, time]
+    console.log(today);
     var date = today[0].split('/').reverse()
     var startDate = date.join('-')+"@"+today[1]; //formato para el back
     var data = {"fecha":startDate};
+    console.log(data);
     axios.post(`${url}/algoritmo/generarSolucion`,data)
     .then(res => {
       console.log(res.data);
@@ -81,7 +84,7 @@ export default function Mapa({ ...rest }) {
             <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
             
           </div>
-          <button className="mb-3" onClick={()=>{console.log(generarRutas())}}>Correr Algoritmo</button>
+          <button className="mb-3" onClick={()=>{(generarRutas())}}>Correr Algoritmo</button>
           <Map blockSize_p={12} />
         </div>
       </div>

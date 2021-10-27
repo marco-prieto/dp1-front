@@ -325,7 +325,7 @@ export default function OrderList() {
             </div>
             <div className="col-6">
             <br />
-            <label>plazoEntrega</label>
+            <label>Plazo de Entrega</label>
             <br />
             <input
               type="number"

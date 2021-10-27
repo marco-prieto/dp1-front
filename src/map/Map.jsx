@@ -29,16 +29,16 @@ const Map = (blockSize_p) => {
   const [truckNextOrder, setTruckNextOrder] = useState([]); //Pedido que atiende cada camion
   const [truckDirection, setTruckDirection] = useState([]); //Camion atiende pedido o si esta parado atendiendo
 
-  //var pedidos = null;
   var pedidos = null;
+  var bloqueos = null;
   
   useEffect(() =>{
     //console.log(startDate);
-    obtenerRutaPedidos(100);
+    obtenerRutaPedidos(50); //speed
+    obtenerBloqueos();
   }, [])
 
   const obtenerRutaPedidos = (speed) =>{
-
     const data = {"velocidad":speed};
     axios.post(`${url}/algoritmo/obtenerRutas`,data)
     .then(res => {
@@ -47,6 +47,17 @@ const Map = (blockSize_p) => {
       initFlags();
     }).catch(error=>{
       alert("Ocurrió un error al traer la información del mapa");
+      console.log(error);
+    })
+  }
+
+  const obtenerBloqueos = () =>{
+    axios.get(`${url}/bloqueo/listarBloqueos`)
+    .then(res => {
+      //console.log(res.data);
+      bloqueos=res.data;
+    }).catch(error=>{
+      alert("Ocurrió un error al traer la información de los bloqueos");
       console.log(error);
     })
   }
@@ -281,12 +292,15 @@ const Map = (blockSize_p) => {
 
   const renderRoadBlock = (p5, rb) => {
     var dateNow = Date.now();
-    var startDate = new Date(rb.startDate);
-    var endDate = new Date(rb.endDate);
-
+    try{
+      var startDate = new Date(rb.startDate);
+      var endDate = new Date(rb.endDate);
+    }catch(error){
+      console.log(error)
+    }
     //Si aun no empieza o ya termino, retornar
     if (startDate > dateNow || endDate < dateNow) return;
-
+    
     var path = rb.path;
     var rbImageSize = 25;
 
@@ -399,10 +413,11 @@ const Map = (blockSize_p) => {
     renderGrid(p5);
 
     //Renderizar Bloqueos
-    for (var i = 0; i < mockBloqueos.length; i++) {
-      renderRoadBlock(p5, mockBloqueos[i]);
+    if(bloqueos){
+      for (var i = 0; i < mockBloqueos.length; i++) {
+        renderRoadBlock(p5, bloqueos[i]);
+      }
     }
-
     //Averias
     for (var j = 0; j < mockAverias.length; j++) {
       renderAveria(p5, mockAverias[j]);
