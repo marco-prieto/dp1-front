@@ -129,11 +129,12 @@ export default function OrderList() {
     .then(res => {
       //console.log(res);
       console.log(res.data);
-    }) 
-    obtenerPedidos()
-    e.target.reset();
-    //handleClose();
-    alert('El registro fue exitoso')
+      obtenerPedidos()
+      alert('El registro fue exitoso')
+      e.target.reset();
+      handleClose();
+    }).catch(err=>{alert('Ocurrió un error en el registro del pedido')})
+    
   };
   
   //Solo falta insertar API creo xD

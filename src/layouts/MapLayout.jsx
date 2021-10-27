@@ -18,6 +18,9 @@ import logo from "assets/sag/sagLogo.svg";
 
 import Map from "map/Map.jsx";
 
+import axios from 'axios';
+import url from "../config";
+
 const useStyles = makeStyles(styles);
 
 export default function Mapa({ ...rest }) {
@@ -34,6 +37,24 @@ export default function Mapa({ ...rest }) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+
+  const generarRutas=()=>{
+    var dateNow = new Date(Date.now());
+    var today = dateNow.toLocaleString('es-ES').toString().split(" "); //[date, time]
+    var date = today[0].split('/').reverse()
+    var startDate = date.join('-')+"@"+today[1]; //formato para el back
+    var data = {"fecha":startDate};
+    axios.post(`${url}/algoritmo/generarSolucion`,data)
+    .then(res => {
+      console.log(res.data);
+      location.reload();
+    }).catch(error=>{
+      alert("Ocurrió un error al traer la información del mapa");
+      console.log(error);
+    })
+
+  }
 
   return (
     <div className={classes.wrapper}>
@@ -58,8 +79,9 @@ export default function Mapa({ ...rest }) {
 
           <div className="ms-5">
             <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
+            
           </div>
-
+          <button className="mb-3" onClick={()=>{console.log(generarRutas())}}>Correr Algoritmo</button>
           <Map blockSize_p={12} />
         </div>
       </div>

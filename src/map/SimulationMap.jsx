@@ -342,3 +342,9 @@ const SimulationMap = (blockSize_p) => {
 };
 
 export default SimulationMap;
+
+
+// var dateNow = new Date(Date.now());
+//     var today = dateNow.toLocaleString('es-ES').toString().split(" "); //[date, time]
+//     var date = today[0].split('/').reverse()
+//     var startDate = date.join('-')+"@"+today[1]; //formato para el back

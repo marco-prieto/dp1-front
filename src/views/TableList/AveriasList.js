@@ -105,16 +105,17 @@ export default function OrderList() {
   /* *************************************************************************************************************  */  
   const onSubmit = (data, e) => {
     console.log(data);
-    //setPedidos([...pedidos, data]);
-    axios.post(`${url}/pedido/registrarPedidoNuevo`,data)
-    .then(res => {
-      //console.log(res);
-      console.log(res.data);
-    }) 
-    obtenerPedidos()
     e.target.reset();
-    //handleClose();
-    alert('El registro fue exitoso')
+    // //setPedidos([...pedidos, data]);
+    // axios.post(`${url}/pedido/registrarPedidoNuevo`,data)
+    // .then(res => {
+    //   //console.log(res);
+    //   console.log(res.data);
+    // }) 
+    // obtenerAverias()
+    // e.target.reset();
+    // //handleClose();
+    // alert('El registro fue exitoso')
   };
   
   React.useEffect(() =>{
@@ -193,7 +194,7 @@ export default function OrderList() {
                     <input
                     type="number"
                     name="idCamion"
-                    {...register("fecha", {
+                    {...register("idCamion", {
                         required: {
                         value: true,
                         message: "id camión requerido",
