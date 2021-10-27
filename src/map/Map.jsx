@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import Sketch from "react-p5";
 //LUEGO y -> 50-y
 import mockPedidos from "./mock/mockPedidos.js";
@@ -11,6 +11,9 @@ import clientWarehouseImg from "../assets/map/clientWarehouse.png";
 import roadblockImg from "../assets/map/roadblock.png";
 import averiaImg from "../assets/map/averia.png";
 
+import axios from 'axios';
+import url from "../config";
+
 const Map = (blockSize_p) => {
   const blockSize = blockSize_p.blockSize_p;
   var imgPlantaPrincipal;
@@ -21,6 +24,28 @@ const Map = (blockSize_p) => {
   var imgAveria;
   const truckScalingFactor = 26;
   //Usar la misma imagen para el camion
+
+  var pedidos = null;
+  
+  useEffect(() =>{
+    var dateNow = new Date(Date.now());
+    var today = dateNow.toLocaleString('es-ES').toString().split(" "); //[date, time]
+    var date = today[0].split('/').reverse()
+    var startDate = date.join('-')+"@"+today[1]; //formato para el back
+
+    //console.log(startDate);
+    obtenerRutaPedidos(startDate);
+  }, [])
+
+  const obtenerRutaPedidos = (startDate) =>{
+
+    const data = {"fecha":startDate};
+    axios.post(`${url}/algoritmo/generarSolucion`,data)
+    .then(res => {
+      console.log(res.data);
+      pedidos=res.data;
+    })
+  }
 
   const setup = (p5, canvasParentRef) => {
     p5.createCanvas(blockSize * 70, blockSize * 50).parent(canvasParentRef);
@@ -49,8 +74,10 @@ const Map = (blockSize_p) => {
     });
 
     //Funcion periodica
-    var delay = 1000; //ms
-    setInterval(()=>{console.log('si')}, delay)
+    // var delay = 1000; //ms
+    // setInterval(()=>{
+    //   //console.log('si')
+    // }, delay)
   };
 
   const renderGrid = (p5) => {
@@ -83,7 +110,6 @@ const Map = (blockSize_p) => {
 
       //Almacen del cliente destino
       if (Object.keys(path[i]).length > 2) {
-        console.log(path[i]["pedido"]);
         if (path[i]["pedido"] >= 0) {
           if (imgClientWarehouse)
             p5.image(
@@ -101,8 +127,8 @@ const Map = (blockSize_p) => {
   const renderTruck = (p5, route) => {
     var dateNow = Date.now();
     var startDate = new Date(route.startDate);
-    //var velocity = 13.888;
-    var velocity = 3000;
+    //var velocity = 13.8888;
+    var velocity = 300;
 
     if (startDate > dateNow) return;
 
@@ -310,6 +336,7 @@ const Map = (blockSize_p) => {
     p5.background(255);
     renderGrid(p5);
 
+
     //Renderizar Bloqueos
     for (var i = 0; i < mockBloqueos.length; i++) {
       renderRoadBlock(p5, mockBloqueos[i]);
@@ -323,8 +350,10 @@ const Map = (blockSize_p) => {
     //Renderizar Plantas
     renderPlantas(p5);
 
-    for (var k = 0; k < mockPedidos.length; k++) {
-      renderTruck(p5, mockPedidos[k]);
+    if(pedidos){
+      for (var k = 0; k < pedidos.length; k++) {
+        renderTruck(p5, pedidos[k]);
+      }
     }
   };
 

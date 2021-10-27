@@ -1,7 +1,7 @@
 export default [
     {
         id: 1,
-        startDate: "2021-10-13 20:07:40",
+        startDate: "2021-10-26 16:45:00",
         path: [
             {x:12,y:8}, //A la hora start date, estare aqui
             {x:12,y:9},
@@ -25,7 +25,7 @@ export default [
     },
     {
         id: 2,
-        startDate: "2021-10-13 20:05:00",
+        startDate: "2021-10-26 16:45:00",
         path: [
             {x:12,y:8}, //A la hora start date, estare aqui
             {x:13,y:8},
