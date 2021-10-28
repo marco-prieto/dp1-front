@@ -183,7 +183,7 @@ export default function SimulacionLayout({ ...rest }) {
               activo ?
               (
                 <div>
-                  <a href="/mapa" className="btn btn-primary btn-lg" role="button" >               
+                  <a href="/simulacionMap" className="btn btn-primary btn-lg" role="button" >               
                   Simular
                   </a>
                   {/* <Stack sx={{ width: '100%' }} spacing={2}>
