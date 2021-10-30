@@ -9,7 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import TableAverias from "components/Table/TableAverias.js";
+import TableCamiones from "components/Table/TableCamiones.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -139,7 +139,7 @@ export default function OrderList() {
         <Card plain>
           <CardHeader plain color="primary">
           {/* <CardHeader plain className="bg-danger"> */}
-            <h4 className={classes.cardTitleWhite}>Averías Activas</h4>
+            <h4 className={classes.cardTitleWhite}>Camiones Cisterna en la Flota</h4>
             <div className="d-flex justify-content-end">
               <button className="btn btn-light btn-sm" onClick={handleOpen}>
                 Nuevo
@@ -153,7 +153,7 @@ export default function OrderList() {
 
           <CardBody>
             {averias&&
-            <TableAverias
+            <TableCamiones
               tableHeaderColor="primary"
               tableHead={[
                 "ID",
@@ -175,14 +175,6 @@ export default function OrderList() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {/* <Box sx={style2}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box> */}
         <Box sx={style2}>
           <h3>Agregar Bloqueo</h3>
           <br />

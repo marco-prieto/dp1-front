@@ -50,16 +50,16 @@ export default function CustomTable(props) {
                       {prop.id}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.fechaInicio}
+                      {prop.startDate.split('T')[0]}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.horaInicio}
+                      {prop.startDate.split('T')[1]}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.fechaFin}
+                      {prop.endDate.split('T')[0]}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.horaFin}
+                      {prop.endDate.split('T')[1]}
                 </TableCell>
               </TableRow>
             );

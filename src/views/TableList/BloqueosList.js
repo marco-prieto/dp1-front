@@ -112,17 +112,15 @@ export default function OrderList() {
   /* *************************************************************************************************************  */  
   
   React.useEffect(() =>{
-    //obtenerBloqueos();
-
-    setBloqueos(mockListarBloqueos);
+    obtenerBloqueos();
   }, [])
   
-//   const obtenerBloqueos = () =>{
-//     axios.get(`${url}/`).then((resp)=>{
-//       console.log(resp.data)
-//       setPedidos(resp.data)
-//     })
-//   }
+  const obtenerBloqueos = () =>{
+    axios.get(`${url}/bloqueo/listarBloqueos`).then((resp)=>{
+      console.log(resp.data)
+      setBloqueos(resp.data)
+    })
+  }
 
 const onInputClick = (event) => {
   event.target.value = ''
