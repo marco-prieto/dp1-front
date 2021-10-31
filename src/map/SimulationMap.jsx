@@ -142,12 +142,52 @@ const SimulationMap = (blockSize_p) => {
         setTruckDirection(truckDirectionAux);
     }
 
+    var tiempoTramo;
+    var distancia;
+    var velocidadTramo;
+
+
+    if (truckDirection[index]==0){
+      //Planta principal al primer pedido
+      if(truckNextOrder[index]==0){
+        tiempoTramo = (new Date(orders[truckNextOrder[index]].deliveryDate) - startDate)/1000;
+        velocidadTramo = (orders[truckNextOrder[index]].indexRoute*1000) / tiempoTramo; 
+      }
+      //regresando a planta principal
+      else if(truckNextOrder[index]==orders.length){
+        tiempoTramo = (endDate - new Date(orders[truckNextOrder[index]-1].leftDate))/1000;
+        distancia = (route.length - orders[truckNextOrder[index]-1].indexRoute - 1)*1000;
+        velocidadTramo = distancia/tiempoTramo;
+      }
+      //de pedido i a pedido i+1
+      else{
+        tiempoTramo = (new Date(orders[truckNextOrder[index]].deliveryDate) - new Date(orders[truckNextOrder[index]-1].leftDate))/1000;
+        distancia = (orders[truckNextOrder[index]].indexRoute - orders[truckNextOrder[index]-1].indexRoute-1)*1000;
+        velocidadTramo = distancia/tiempoTramo;
+        console.log(tiempoTramo,distancia,velocidadTramo);
+      }
+    }
+    else{
+      velocidadTramo=0;
+    }
+
+    //New
+    var transTime;
+    if (truckNextOrder[index]!=0){
+      transTime =(Date.now() - new Date(orders[truckNextOrder[index]-1].leftDate))/1000;
+    }
+    else{
+      transTime =(Date.now()-startDate)/1000;
+    }
+
+    var distance = transTime*velocidadTramo;
+
+    if(truckNextOrder[index]!=0){
+      distance = distance + orders[truckNextOrder[index]-1].indexRoute*1000;
+    }
     
-    var transTime = (Date.now() - startDate) / 1000; //in seconds
-    var distance = transTime * velocity - truckNextOrder[index]*attentionTime*velocity; 
     var curNode;
 
-    
     if(truckDirection[index]==0){
         curNode = Math.trunc(distance / 1000);
     }
@@ -156,7 +196,6 @@ const SimulationMap = (blockSize_p) => {
     }
 
     if(curNode >= routeLength) return;
-
     var leftDirection = 0;
     var rightDirection = 0;
     var upDirection = 0;
@@ -228,10 +267,12 @@ const SimulationMap = (blockSize_p) => {
     //Dibujar la ruta
     renderRoute(p5, curNode, route, xFactor, yFactor);
 
+
     xFactor = xFactor - sw / (2 * truckScalingFactor);
     yFactor = yFactor - sh / (2 * truckScalingFactor);
-
+    
     if (imgCamionCisterna && sw != 0 && sh != 0) {
+      
       p5.image(
         imgCamionCisterna,
         route[curNode]["x"] * blockSize + xFactor,

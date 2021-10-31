@@ -149,6 +149,13 @@ const sagRoutes = [
     component: CamionesList,
     layout: "/admin",
   },
+  {
+    path: "/mantenimientoPreventivo",
+    name: "Mantenimientos Programados",
+    icon: "content_paste",
+    component: CamionesList,
+    layout: "/admin",
+  },
 
 ];
 

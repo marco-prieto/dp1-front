@@ -1,19 +1,19 @@
 export const orderList = [
     {
-        startDate: "2021-10-27 18:11:00",
-        endDate: "2021-10-27 18:12:16", //1 nodo = 2 segundos
+        startDate: "2021-10-30 19:30:00",
+        endDate: "2021-10-30 19:31:16", //1 nodo = 2 segundos
         attentionTime: 30,
         velocity: 500,
         orders:[
             {
                 indexRoute: 2,
-                deliveryDate: "2021-10-27 18:11:04",
-                leftDate: "2021-10-27 18:12:34",    
+                deliveryDate: "2021-10-30 19:30:04",
+                leftDate: "2021-10-30 19:30:34",    
             },
             {
                 indexRoute: 6,
-                deliveryDate: "2021-10-27 18:11:42",
-                leftDate: "2021-10-27 18:12:12",
+                deliveryDate: "2021-10-30 19:30:42",
+                leftDate: "2021-10-30 19:31:12",
             },
         ],
         route:[

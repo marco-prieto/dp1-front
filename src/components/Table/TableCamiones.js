@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import Button from "@material-ui/core/Button";
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 
@@ -39,30 +40,32 @@ export default function CustomTable(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                {/* {prop.map((prop, key) => {
-                  return (
-                    <TableCell className={classes.tableCell} key={key}>
-                      {prop}
-                    </TableCell>
-                  );
-                })} */}
                 <TableCell className={classes.tableCell} key={key}>
                       {prop.id}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.codigoCamion}
+                      {prop.tipoCamion}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.fechaInicio}
+                      {prop.taraCamion}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.horaInicio}
+                      {prop.capacidadPetroleo}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.fechaFin}
+                      {prop.capacidadGLP}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.horaFin}
+                      {prop.estadoCamion}
+                </TableCell>
+                <TableCell className={classes.tableCell} key={key}>
+                  {prop.estadoCamion == 'Operativo' &&
+                  <Button variant="outlined" component="label" size="small"
+                          onClick={()=>{console.log(prop.id)}}> 
+                      Avería
+                  </Button>
+                  }
+                  {/* //Api de averia en back */}
                 </TableCell>
               </TableRow>
             );

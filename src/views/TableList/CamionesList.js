@@ -72,25 +72,33 @@ const useStyles = makeStyles(styles);
 export default function OrderList() {
   const classes = useStyles();
 
-  const mockListarAverias = [
+  const mockListarCamiones = [
     {
         id: 1,
-        codigoCamion: "TA01",
-        fechaInicio: "16-10-2021",
-        horaInicio: "09:45",
-        fechaFin: "18-10-2021",
-        horaFin: "09:45",
+        tipoCamion: "A",
+        taraCamion: "5",
+        capacidadPetroleo: "25",
+        capacidadGLP: "25",
+        estadoCamion: "Operativo",
     },
     {
         id: 2,
-        codigoCamion: "TD02",
-        fechaInicio: "02-11-2021",
-        horaInicio: "09:34",
-        fechaFin: "04-11-2021",
-        horaFin: "09:34",
+        tipoCamion: "D",
+        taraCamion: "1",
+        capacidadPetroleo: "25",
+        capacidadGLP: "5",
+        estadoCamion: "Operativo",
     },
+    {
+      id: 3,
+      tipoCamion: "D",
+      taraCamion: "1",
+      capacidadPetroleo: "25",
+      capacidadGLP: "5",
+      estadoCamion: "Mantenimiento Correctivo",
+  },
   ];
-  const [averias, setAverias] = React.useState(null);
+  const [camiones, setCamiones] = React.useState(null);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -121,7 +129,7 @@ export default function OrderList() {
   React.useEffect(() =>{
     //obtenerAverias();
 
-    setAverias(mockListarAverias);
+    setCamiones(mockListarCamiones);
   }, [])
   
 //   const obtenerAverias = () =>{
@@ -152,18 +160,19 @@ export default function OrderList() {
           </CardHeader>
 
           <CardBody>
-            {averias&&
+            {camiones&&
             <TableCamiones
               tableHeaderColor="primary"
               tableHead={[
                 "ID",
-                "Código del Camión",
-                "Fecha de Inicio",
-                "Hora de Inicio",
-                "Fecha de Fin",
-                "Hora de Fin",
+                "Tipo Camión",
+                "TARA Camión",
+                "Capacidad de Petróleo (m3)",
+                "Capacidad GLP (m3)",
+                "Estado",
+                "Acción",
               ]}
-              tableData={averias}
+              tableData={camiones}
             />
             }
           </CardBody>
@@ -176,37 +185,20 @@ export default function OrderList() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style2}>
-          <h3>Agregar Bloqueo</h3>
+          <h3>Agregar Camión Cisterna</h3>
           <br />
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div>
-                <div>
-                    <label>ID del camión</label>
-                    <br/>
-                    <input
-                    type="number"
-                    name="idCamion"
-                    {...register("idCamion", {
-                        required: {
-                        value: true,
-                        message: "id camión requerido",
-                        },
-                    })}
-                    />
-                </div>
-                <br/>
-            </div>
             <div className="row">
               <div className="col-6">
-                <label>Fecha de Pedido</label>
+                <label>Tipo Camión</label>
                 <br />
                 <input
-                  type="date"
-                  name="fechaPedido"
-                  {...register("fecha", {
+                  type="number"
+                  name="tipoCamion"
+                  {...register("tipoCamion", {
                     required: {
                       value: true,
-                      message: "fecha requerida",
+                      message: "Tipo Camión requerido",
                     },
                   })}
                 />
@@ -221,16 +213,15 @@ export default function OrderList() {
               <br />
               
                 <div className="col-6">
-                  <label>Hora</label>
+                  <label>TARA</label>
                   <br />
                   <input
-                    type="time"
-                    name="hora"
-                    step="1"
-                    {...register("hora", {
+                    type="number"
+                    name="taraCamion"
+                    {...register("taraCamion", {
                       required: {
                         value: true,
-                        message: "Hora requerida",
+                        message: "TARA requerida",
                       },
                     })}
                   />
@@ -245,15 +236,15 @@ export default function OrderList() {
               
               <div className="col-6">
               <br />
-                <label>Coordenada X</label>
+                <label>Capacidad de Petróleo (m3)</label>
                 
                 <input
                   type="number"
-                  name="ubicacionX"
-                  {...register("ubicacionX", {
+                  name="capacidadPetroleo"
+                  {...register("capacidadPetroleo", {
                     required: {
                       value: true,
-                      message: "Coordenada X requerida",
+                      message: "Capacidad Petróleo requerida",
                     },
                   })}
                 />
@@ -268,15 +259,15 @@ export default function OrderList() {
               <br />
               <div className="col-6">
               <br />
-                <label>Coordenada Y</label>
+                <label>Capacidad de GLP (m3)</label>
                 <br />
                 <input
                   type="number"
-                  name="ubicacionY"
-                  {...register("ubicacionY", {
+                  name="capacidadGLP"
+                  {...register("capacidadGLP", {
                     required: {
                       value: true,
-                      message: "Coordenada Y requerida",
+                      message: "Capacidad GLP requerida",
                     },
                   })}
                 />
@@ -287,9 +278,22 @@ export default function OrderList() {
                   </span>
                 )}
               </div>
+              
+              <div>
+              <br/>
+                <div>
+                    <label>Estado</label>
+                    <br/>
+                    <select className="form-select" style={{width:'auto',height:'45px'}} {...register("estadoCamion")}>
+                      <option value={1} defaultValue>Operativo</option>
+                      <option value={2}>Mantenimiento Correctivo</option>
+                      <option value={3}>Mantenimiento Preventivo</option>
+                    </select>
+                </div>
+            </div>
             </div>
             
-            <div className="d-flex justify-content-end mt-5"> <br /><button className="btn btn-primary">Agregar pedido</button></div>
+            <div className="d-flex justify-content-end mt-3"> <br /><button className="btn btn-primary">Registrar Camión</button></div>
             
           </form>
         </Box>
