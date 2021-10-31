@@ -26,8 +26,8 @@ const Map = (blockSize_p) => {
   //Usar la misma imagen para el camion
 
   //Variables para el manejo de estados
-  const [truckNextOrder, setTruckNextOrder] = useState([]); //Pedido que atiende cada camion
-  const [truckDirection, setTruckDirection] = useState([]); //Camion atiende pedido o si esta parado atendiendo
+  var truckNextOrder = []; //Pedido que atiende cada camion
+  var truckDirection = []; //Camion atiende pedido o si esta parado atendiendo
 
   var pedidos = null;
   var bloqueos = null;
@@ -64,6 +64,8 @@ const Map = (blockSize_p) => {
 
   const initFlags=()=>{
     if(pedidos){
+      truckNextOrder = [];
+      truckDirection = [];
       pedidos.forEach(()=>{
         truckNextOrder.push(0); 
         truckDirection.push(0); //0: Movimiento, 1:Atendiendo un pedido
@@ -169,23 +171,16 @@ const Map = (blockSize_p) => {
         var leftDate = new Date(orders[truckNextOrder[index]].leftDate);
 
         if(truckDirection[index]==0 && Date.now()>deliveryDate){ //Estaba en movimiento y ya debe atender el pedido
-            var truckDirectionAux = truckDirection;
-            truckDirectionAux[index] = 1; //Atender el pedido
-            setTruckDirection(truckDirectionAux);
+            truckDirection[index] = 1; //Atender el pedido
         }
         if(truckDirection[index]==1 && Date.now()>leftDate){ //Estaba atendiendo y debe pasar a movimiento
-            var truckDirectionAux = truckDirection;
-            var truckNextOderAux = truckNextOrder;
-            truckDirectionAux[index] = 0;
-            truckNextOderAux[index] = truckNextOderAux[index] + 1;
-            setTruckDirection(truckDirectionAux);
-            setTruckNextOrder(truckNextOderAux);
+            truckDirection[index] = 0;
+            truckNextOrder[index] = truckNextOrder[index] + 1;
+
         }
     }
     else{ //Regresando a planta principal
-        var truckDirectionAux = truckDirection;
-        truckDirectionAux[index] = 0;
-        setTruckDirection(truckDirectionAux);
+        truckDirection[index] = 0;
     }
 
     var tiempoTramo;
@@ -210,7 +205,6 @@ const Map = (blockSize_p) => {
         tiempoTramo = (new Date(orders[truckNextOrder[index]].deliveryDate) - new Date(orders[truckNextOrder[index]-1].leftDate))/1000;
         distancia = (orders[truckNextOrder[index]].indexRoute - orders[truckNextOrder[index]-1].indexRoute-1)*1000;
         velocidadTramo = distancia/tiempoTramo;
-        console.log(tiempoTramo,distancia,velocidadTramo);
       }
     }
     else{
