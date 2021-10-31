@@ -22,6 +22,7 @@ const Map = (blockSize_p) => {
   var imgClientWarehouse;
   var imgRoadblock;
   var imgAveria;
+  const requestInterval = 15*1000;
   const truckScalingFactor = 26;
   //Usar la misma imagen para el camion
 
@@ -36,6 +37,13 @@ const Map = (blockSize_p) => {
     //console.log(startDate);
     obtenerRutaPedidos(50); //speed
     obtenerBloqueos();
+
+    const interval = setInterval(() => {
+      console.log('hola');
+      //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
+
+    }, requestInterval)
+    return () => clearInterval(interval);
   }, [])
 
   const obtenerRutaPedidos = (speed) =>{
