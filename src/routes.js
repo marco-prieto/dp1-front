@@ -26,7 +26,9 @@
 import OrderList from "views/TableList/OrderList";
 import BloqueosList from "views/TableList/BloqueosList";
 import CamionesList from "views/TableList/CamionesList";
+import MantenimientoPreventivoList from "views/TableList/MantenimientoPreventivoList";
 import Simulacion from "views/Simulacion/Simulacion.jsx";
+
 
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
 // import BubbleChart from "@material-ui/icons/BubbleChart";
@@ -153,7 +155,7 @@ const sagRoutes = [
     path: "/mantenimientoPreventivo",
     name: "Mantenimientos Programados",
     icon: "content_paste",
-    component: CamionesList,
+    component: MantenimientoPreventivoList,
     layout: "/admin",
   },
 
