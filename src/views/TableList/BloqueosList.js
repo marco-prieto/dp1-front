@@ -173,8 +173,50 @@ const handleUploadFile = e => {
                 dummyNode['y'] = nodes_[j+1];
                 nodes.push(dummyNode);
               }
-
-              rb['nodes'] = nodes;
+              
+              //Encontrar nodos intermedios
+              var aux_nodes = [];
+              for(let k=0;k<nodes.length-1;k++){
+                aux_nodes.push({
+                  "x": parseInt(nodes[k]["x"]),
+                  "y": parseInt(nodes[k]["y"]),
+                });
+                var x0 = parseInt(nodes[k]['x']);
+                var y0 = parseInt(nodes[k]['y']);
+                var x1 = parseInt(nodes[k+1]['x']);
+                var y1 = parseInt(nodes[k+1]['y']);
+                
+                //Evaluar si es incremento en x o en y
+                if(Math.abs(x0-x1)>=2){
+                  if(x1 > x0){
+                    for(let q=1;q<Math.abs(x0-x1);q++){
+                      aux_nodes.push({"x":x0+q,"y":y0});
+                    }
+                  }
+                  else if(x1<x0){
+                    for(let q=1;q<Math.abs(x0-x1);q++){
+                      aux_nodes.push({"x":x0-q,"y":y0});
+                    }
+                  }
+                }
+                else if(Math.abs(y0-y1)>=2){
+                  if(y1 > y0){
+                    for(let q=1;q<Math.abs(y0-y1);q++){
+                      aux_nodes.push({"x":x0,"y":y0+q});
+                    }
+                  }
+                  else if(y1<y0){
+                    for(let q=1;q<Math.abs(y0-y1);q++){
+                      aux_nodes.push({"x":x0,"y":y0-q});
+                    }
+                  }
+                }
+              }
+              aux_nodes.push({
+                "x": parseInt(nodes[nodes.length-1]["x"]),
+                "y": parseInt(nodes[nodes.length-1]["y"]),
+              });
+              rb['nodes'] = aux_nodes;
 
               roadblocks.push(rb);
           }
