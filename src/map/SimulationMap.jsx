@@ -12,6 +12,9 @@ import clientWarehouseImg from "../assets/map/clientWarehouse.png";
 import roadblockImg from "../assets/map/roadblock.png";
 import averiaImg from "../assets/map/averia.png";
 
+import axios from 'axios';
+import url from "../config";
+
 const SimulationMap = (blockSize_p) => {
   const blockSize = blockSize_p.blockSize_p;
   var imgPlantaPrincipal;
@@ -21,16 +24,41 @@ const SimulationMap = (blockSize_p) => {
   var imgRoadblock;
   var imgAveria;
   const truckScalingFactor = 26;
+  const requestInterval = 20*1000; //en segundos
   //Usar la misma imagen para el camion
-
+  var pedidos = null;
+  var bloqueos = null;
 
   //Variables para la simulacion
   var truckNextOrder = []; //Pedido que atiende cada camion
   var truckDirection = []; //Camion atiende pedido o si esta parado atendiendo
 
   useEffect(() =>{
-    initFlags;
+    //console.log(startDate);
+    obtenerRutaPedidos(100); //speed de parametro
+    //obtenerBloqueos(); luego ver como usar bloqueos
+
+    const interval = setInterval(() => {
+      //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
+      obtenerRutaPedidos(100);
+
+    }, requestInterval)
+    return () => clearInterval(interval);
   }, [])
+
+  const obtenerRutaPedidos = (speed) =>{
+    const data = {"velocidad":speed, "tipo":2}; //tipo 2 es simulacion 3 dias
+    axios.post(`${url}/algoritmo/obtenerRutas`,data) //flag sera 2 si hay colapso
+    .then(res => {
+      
+      pedidos=res.data['routes'];
+      console.log(pedidos);
+      initFlags();
+    }).catch(error=>{
+      alert("Ocurrió un error al traer la información del mapa");
+      console.log(error);
+    })
+  }
 
   const initFlags=()=>{
     if(pedidos){
@@ -381,8 +409,10 @@ const SimulationMap = (blockSize_p) => {
     //Renderizar Plantas
     renderPlantas(p5);
 
-    for (var k = 0; k < orderList.length; k++) {
-      renderTruck(p5, orderList[k], k);
+    if(pedidos){
+      for (var k = 0; k < pedidos.length; k++) {
+        renderTruck(p5, pedidos[k], k);
+      }
     }
   };
 

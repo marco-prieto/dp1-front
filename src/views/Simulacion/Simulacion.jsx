@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 // creates a beautiful scrollbar
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
@@ -7,10 +7,7 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import {Stack} from '@material-ui/core/'; */
 import { makeStyles } from "@material-ui/core/styles";
 
-import Footer from "components/Footer/Footer.js";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Button from "@material-ui/core/Button";
-import { Link } from "react-router-dom";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
@@ -20,11 +17,10 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 import bgImage from "assets/img/sidebar-2.jpg";
 import { Modal } from "@material-ui/core";
 import { Box } from "@material-ui/core";
-import logo from "assets/sag/sagLogo.svg";
-import axios from "axios"
-
 import SimulationMap from "map/SimulationMap.jsx";
-import { useForm } from "react-hook-form";
+import axios from 'axios';
+import url from "../../config";
+
 
 const useStyles = makeStyles(styles);
 
@@ -33,14 +29,11 @@ export default function SimulacionLayout({ ...rest }) {
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
 
-  // states and functions
-  const [image] = React.useState(bgImage);
-  const [color] = React.useState("blue");
   const [open, setOpen] = React.useState(false);
+  const [flagSimulation, setFlagSimulation] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const style2 = {
     position: "absolute",
@@ -56,22 +49,26 @@ export default function SimulacionLayout({ ...rest }) {
   };
 
 
-
   //Variables para el back
-  var globalOrders;
-  var globalVelocity;
+  const [globalOrders, setGlobalOrders] = useState([]);
+  //var globalOrders=[];
+  var globalVelocity=[];
 
+  const handleStartSimulacion3dias = () =>{
+    var data = globalOrders;
+    axios.post(`${url}/algoritmo/simulacionTresDias`,data) //flag sera 2 si hay colapso
+    .then(res => {
+    }).catch(error=>{
+      alert("ERROR al ejecutar la simulación de 3 días");
+      console.log(error);
+    })
+  };
 
-  /* const onSubmit = (data,e) => {
-    const file = data.simulacion[0]
-    console.log(file)    
-    
-  } */
-
-  /* const onChange = (e) => {
-    const file = e.target.files[0];    
-    console.log(file)
-  } */
+  const parseElement = (el) => {
+    el = el.toString();
+    el = el.length >= 2 ? el:"0"+el;
+    return el;
+  };
 
   const handleUploadFile = e => {
     try {
@@ -119,35 +116,26 @@ export default function SimulacionLayout({ ...rest }) {
                 var y = parseInt(parts[2]);
                 var demandGLP = parseFloat(parts[3]);
                 var slack = parseInt(parts[4]);
-        
+
+
+                month = parseElement(month);
+                day = parseElement(day);
+                hour = parseElement(hour);
+                minute = parseElement(minute);
+
                 var order = {
-                    "ubicacionX": x,
-                    "ubicacionY": y,
-                    "fechaPedido": year+"-"+month+"-"+day,
-                    "hora": hour+":"+minute+":00", 
+                    "fechaPedido": year+"-"+month+"-"+day+"@"+ hour +":"+minute+":00",
+                    "estadoPedido": "Nuevo",
                     "cantidadGLP": demandGLP,
-                    "plazoEntrega": slack
+                    "plazoEntrega": slack,
+                    "nodo": {"coordenadaX":x,"coordenadaY":y}
                 }
                 //console.log(order)
     
                 orders.push(order);
             }
             
-            /* setSimulacion(order)
-            console.log(simulacion) */
-
-
-            /* axios.post(`${url}/pedido/registrarPedidoNuevo`,orders)
-            .then(res => {
-              
-              console.log(orders);
-            }) 
-             */
-            globalOrders = orders;
-            console.log(globalOrders);
-            setActivo(true)
-
-
+            setGlobalOrders(orders);
             
             /*cargaMasiva(objetos).then(() => {
             readPedidos()
@@ -170,8 +158,11 @@ return (
         {/* <CardHeader plain className="bg-danger"> */}
           <h4 className={classes.cardTitleWhite}>Registrar Simulación de Pedidos</h4>
           <div className="d-flex justify-content-end">
-            <button className="btn btn-light btn-sm" onClick={handleOpen}>
+            <button className="btn btn-light btn-sm" onClick={()=>{setFlagSimulation(false);handleOpen()}}>
               Simulación de 3 días
+            </button>
+            <button className="btn btn-light btn-sm ms-3" onClick={()=>{setFlagSimulation(!flagSimulation)}}>
+              Ver Mapa
             </button>
           </div>
 
@@ -194,13 +185,20 @@ return (
           </select>
         </div>
         <div>
-          <Button variant="contained" component="label" color="primary">
+          <Button variant="contained" component="label" color="primary" onClick={()=>{
+            if(globalOrders.length>0){
+              handleStartSimulacion3dias();
+              setFlagSimulation(true);
+            }
+          }}>
             Empezar Simulación
           </Button>
         </div>
       </div>
       <div className="ms-4">
-        <SimulationMap blockSize_p={12} />
+        {flagSimulation&&
+          <SimulationMap blockSize_p={12} />
+        }
       </div>
       
     </GridItem>
@@ -213,7 +211,7 @@ return (
       <Box sx={style2}>
         <h3>Subir archivo de Simulación</h3>
         <br />
-        <form>
+        <div>
           
           <div className="row my-3">
               <div className="col-9">(*) Suba el archivo txt con la información de los pedidos, siguiendo el formato: día, hora de recepción, coordenada x, coordenada y, cantidad de combustible y plazo.</div>
@@ -226,9 +224,9 @@ return (
           </div>
           <br/><br/>
           
-          <div className="d-flex justify-content-end"> <br /><button className="btn btn-primary">Confirmar</button></div>
+          <div className="d-flex justify-content-end"> <br /><button className="btn btn-primary" onClick={handleClose}>Confirmar</button></div>
           
-        </form>
+        </div>
       </Box>
     </Modal>
     

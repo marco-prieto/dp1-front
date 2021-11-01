@@ -84,7 +84,6 @@ export default function Mapa({ ...rest }) {
             <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
             
           </div>
-          <button className="mb-3" onClick={()=>{(generarRutas())}}>Correr Algoritmo</button>
           <Map blockSize_p={12} />
         </div>
       </div>

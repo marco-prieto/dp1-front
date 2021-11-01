@@ -22,7 +22,7 @@ const Map = (blockSize_p) => {
   var imgClientWarehouse;
   var imgRoadblock;
   var imgAveria;
-  const requestInterval = 15*1000;
+  const requestInterval = 20*1000; //en segundos
   const truckScalingFactor = 26;
   //Usar la misma imagen para el camion
 
@@ -35,23 +35,23 @@ const Map = (blockSize_p) => {
   
   useEffect(() =>{
     //console.log(startDate);
-    obtenerRutaPedidos(50); //speed
+    obtenerRutaPedidos(10); //speed
     obtenerBloqueos();
 
     const interval = setInterval(() => {
-      console.log('hola');
       //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
+      obtenerRutaPedidos(10);
 
     }, requestInterval)
     return () => clearInterval(interval);
   }, [])
 
   const obtenerRutaPedidos = (speed) =>{
-    const data = {"velocidad":speed};
-    axios.post(`${url}/algoritmo/obtenerRutas`,data)
+    const data = {"velocidad":speed, "tipo":1}; //tipo 1 es dia a dia,
+    axios.post(`${url}/algoritmo/obtenerRutas`,data) //flag sera 2 si hay colapso
     .then(res => {
       console.log(res.data);
-      pedidos=res.data;
+      pedidos=res.data['routes'];
       initFlags();
     }).catch(error=>{
       alert("Ocurrió un error al traer la información del mapa");
