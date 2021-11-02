@@ -15,8 +15,9 @@ import averiaImg from "../assets/map/averia.png";
 import axios from 'axios';
 import url from "../config";
 
-const SimulationMap = (blockSize_p) => {
-  const blockSize = blockSize_p.blockSize_p;
+const SimulationMap = ({blockSize_p, speed_p}) => {
+  const blockSize = blockSize_p;
+  const speed = speed_p;
   var imgPlantaPrincipal;
   var imgPlantaSecundaria;
   var imgCamionCisterna;
@@ -35,12 +36,12 @@ const SimulationMap = (blockSize_p) => {
 
   useEffect(() =>{
     //console.log(startDate);
-    obtenerRutaPedidos(100); //speed de parametro
+    obtenerRutaPedidos(speed); //speed de parametro
     //obtenerBloqueos(); luego ver como usar bloqueos
 
     const interval = setInterval(() => {
       //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
-      obtenerRutaPedidos(100);
+      obtenerRutaPedidos(speed);
 
     }, requestInterval)
     return () => clearInterval(interval);

@@ -3,8 +3,7 @@ import React, {useState, useEffect} from "react";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 
-/* import {Alert} from '@material-ui/core/';
-import {Stack} from '@material-ui/core/'; */
+
 import { makeStyles } from "@material-ui/core/styles";
 
 import Button from "@material-ui/core/Button";
@@ -52,7 +51,7 @@ export default function SimulacionLayout({ ...rest }) {
   //Variables para el back
   const [globalOrders, setGlobalOrders] = useState([]);
   //var globalOrders=[];
-  var globalVelocity=[];
+  const [globalVelocity,setGlobalVelocity]=useState(1);
 
   const handleStartSimulacion3dias = () =>{
     var data = globalOrders;
@@ -174,7 +173,7 @@ return (
       <div className="d-flex justify-content-between">
         <div className="d-flex align-items-center mb-3">
           <label className='me-2'>Velocidad de Simulación:</label>
-          <select className="form-select" style={{width:'80px',height:'45px'}} onChange={(e)=>{globalVelocity=e.target.value,console.log(globalVelocity)}}>
+          <select value={globalVelocity} className="form-select" style={{width:'80px',height:'45px'}} onChange={(e)=>{setGlobalVelocity(e.target.value)}}>
             <option value={1} defaultValue>1x</option>
             <option value={2}>2x</option>
             <option value={5}>5x</option>
@@ -197,7 +196,7 @@ return (
       </div>
       <div className="ms-4">
         {flagSimulation&&
-          <SimulationMap blockSize_p={12} />
+          <SimulationMap blockSize_p={12} speed_p={globalVelocity}/>
         }
       </div>
       

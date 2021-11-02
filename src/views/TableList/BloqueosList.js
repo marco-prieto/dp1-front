@@ -97,34 +97,54 @@ export default function OrderList() {
         horaFin: "21:00",
     },
   ];
-  const [bloqueos, setBloqueos] = React.useState(null);
+const [bloqueos, setBloqueos] = React.useState(null);
+const [globalRoadblocks, setGlobalRoadblocks] = React.useState([]);
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+const [open, setOpen] = React.useState(false);
+const handleOpen = () => setOpen(true);
+const handleClose = () => setOpen(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm();
 
-  /* *************************************************************************************************************  */  
-  
-  React.useEffect(() =>{
+/* *************************************************************************************************************  */  
+
+React.useEffect(() =>{
+  obtenerBloqueos();
+}, [])
+
+const obtenerBloqueos = () =>{
+  axios.get(`${url}/bloqueo/listarBloqueos`).then((resp)=>{
+    console.log(resp.data)
+    setBloqueos(resp.data)
+  })
+}
+
+const handleSubmitBloqueos = () =>{
+  var data = globalRoadblocks;
+  console.log(data);
+  axios.post(`${url}/bloqueo/registarBloqueos`,data) //flag sera 2 si hay colapso
+  .then(res => {
+    alert("Los bloqueos se registraron correctamente");
     obtenerBloqueos();
-  }, [])
-  
-  const obtenerBloqueos = () =>{
-    axios.get(`${url}/bloqueo/listarBloqueos`).then((resp)=>{
-      console.log(resp.data)
-      setBloqueos(resp.data)
-    })
-  }
+  }).catch(error=>{
+    alert("ERROR al registrar el archivo de bloqueos");
+    console.log(error);
+  })
+};
 
 const onInputClick = (event) => {
   event.target.value = ''
 }
+
+const parseElement = (el) => {
+  el = el.toString();
+  el = el.length >= 2 ? el:"0"+el;
+  return el;
+};
 
 const handleUploadFile = e => {
   try {
@@ -156,12 +176,17 @@ const handleUploadFile = e => {
               var nodes = [];
 
               var data = line.split(',');
-              var dates = data[0].split('-');
-              
+              var datesStart = data[0].split('-')[0];
+              var datesEnd = data[0].split('-')[1];
+
+              var startDate = datesStart.split(":");
+              var endDate = datesEnd.split(":");
               
               //Parseo de fechas
-              rb['fechaInicio'] = year+'-'+month+'-'+dates[0].slice(0,2)+'@'+dates[0].slice(3,5)+':'+dates[0].slice(6,8)+":00";
-              rb['fechaFin'] = year+'-'+month+'-'+dates[1].slice(0,2)+'@'+dates[1].slice(3,5)+':'+dates[1].slice(6,8)+":00";
+              rb['startDate'] = year+'-'+parseElement(month)+'-'+parseElement(startDate[0])+'@'+
+                parseElement(startDate[1])+":"+parseElement(startDate[2])+":00";
+              rb['endDate'] = year+'-'+parseElement(month)+'-'+parseElement(endDate[0])+'@'+
+                parseElement(endDate[1])+":"+parseElement(endDate[2])+":00";
 
               //Nodos
               const nodes_ = data.slice(1);
@@ -216,12 +241,12 @@ const handleUploadFile = e => {
                 "x": parseInt(nodes[nodes.length-1]["x"]),
                 "y": parseInt(nodes[nodes.length-1]["y"]),
               });
-              rb['nodes'] = aux_nodes;
+              rb['path'] = aux_nodes;
 
               roadblocks.push(rb);
           }
-          
-          console.log(roadblocks);
+          setGlobalRoadblocks(roadblocks);
+          //console.log(roadblocks);
           /*cargaMasiva(objetos).then(() => {
           readPedidos()
           //aquí myuestras la notificacion
@@ -289,7 +314,7 @@ const handleUploadFile = e => {
         <Box sx={style2}>
           <h3>Agregar Bloqueo</h3>
           <br />
-          <form>
+          <div>
             
             <div className="row my-3">
                 <div className="col-9">(*) Suba el archivo txt con la información de los bloqueos en el formato: dd:hh:mm-dd:hh:mm,x1,y1,x2,y2,x3,y3,x4,y4......xn,yn</div>
@@ -302,9 +327,13 @@ const handleUploadFile = e => {
             </div>
             <br/><br/>
             
-            <div className="d-flex justify-content-end"> <br /><button className="btn btn-primary">Confirmar</button></div>
+            <div className="d-flex justify-content-end"> <br />
+              <button className="btn btn-primary" onClick={()=>{handleSubmitBloqueos()}}>
+                Confirmar
+              </button>
+            </div>
             
-          </form>
+          </div>
         </Box>
       </Modal>
     </GridContainer>

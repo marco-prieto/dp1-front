@@ -50,16 +50,16 @@ export default function CustomTable(props) {
                       {prop.id}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.startDate.split('T')[0]}
+                      {prop.startDate.split('@')[0]}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.startDate.split('T')[1]}
+                      {prop.startDate.split('@')[1]}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.endDate.split('T')[0]}
+                      {prop.endDate.split('@')[0]}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.endDate.split('T')[1]}
+                      {prop.endDate.split('@')[1]}
                 </TableCell>
               </TableRow>
             );

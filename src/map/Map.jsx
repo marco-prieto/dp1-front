@@ -41,7 +41,7 @@ const Map = (blockSize_p) => {
     const interval = setInterval(() => {
       //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
       obtenerRutaPedidos(10);
-
+      
     }, requestInterval)
     return () => clearInterval(interval);
   }, [])
@@ -459,7 +459,7 @@ const Map = (blockSize_p) => {
 
     //Renderizar Bloqueos
     if(bloqueos){
-      for (var i = 0; i < mockBloqueos.length; i++) {
+      for (var i = 0; i < bloqueos.length; i++) {
         renderRoadBlock(p5, bloqueos[i]);
       }
     }

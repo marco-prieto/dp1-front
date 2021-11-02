@@ -193,7 +193,7 @@ export default function OrderList() {
                 <label>Tipo Camión</label>
                 <br />
                 <input
-                  type="number"
+                  
                   name="tipoCamion"
                   {...register("tipoCamion", {
                     required: {
