@@ -25,6 +25,7 @@ import axios from 'axios';
 import url from "../../config";
 import { Link } from "react-router-dom";
 import { RvHookup } from "@material-ui/icons";
+import { number } from "prop-types";
 
 const styles = {
   cardCategoryWhite: {
@@ -113,7 +114,7 @@ export default function OrderList() {
 //   const obtenerMantenimientoPreventivo = () =>{
 //     axios.get(`${url}/bloqueo/listarBloqueos`).then((resp)=>{
 //       console.log(resp.data)
-//       setBloqueos(resp.data)
+//       setMantenimientos(resp.data)
 //     })
 //   }
 
@@ -128,12 +129,12 @@ const handleUploadFile = e => {
   
       var nameFile = file.name;
 
-      nameFile = nameFile.replace("bloqueos", "")
+      /* nameFile = nameFile.replace("bloqueos", "")
       nameFile = nameFile.replace(".txt", "")
       var date = parseInt(nameFile);
 
       var year = Math.trunc(date / 100).toString();
-      var month = (date - year * 100).toString();
+      var month = (date - year * 100).toString(); */
   
       const reader = new FileReader();
   
@@ -141,40 +142,52 @@ const handleUploadFile = e => {
   
           var content = evt.target.result;
           var lines = content.split('\n');
+          //console.log(lines)
           
-          var roadblocks = [];
+          var maintenance = [];
 
-          for (var i = 0; i < lines.length; i++) {
+          for (var i = 0; i < lines.length -1; i++) {
               var line = lines[i].replace('\r', '');
+              //console.log(line);
 
-              var rb = {};
-              var nodes = [];
+              var parts = []
+              parts = line.split(":");
 
-              var data = line.split(',');
-              var dates = data[0].split('-');
-              
-              
-              //Parseo de fechas
-              rb['fechaInicio'] = year+'-'+month+'-'+dates[0].slice(0,2)+'@'+dates[0].slice(3,5)+':'+dates[0].slice(6,8)+":00";
-              rb['fechaFin'] = year+'-'+month+'-'+dates[1].slice(0,2)+'@'+dates[1].slice(3,5)+':'+dates[1].slice(6,8)+":00";
+              if(parts.length!==2){
+                console.log("archivo equivocado")
+                return;
+            }
 
-              //Nodos
-              const nodes_ = data.slice(1);
-              
-              
-              for(let j=0;j<nodes_.length;j=j+2){
-                var dummyNode = {};
-                dummyNode['x'] = nodes_[j];
-                dummyNode['y'] = nodes_[j+1];
-                nodes.push(dummyNode);
+              var date = parseInt(parts[0])
+              var year = Math.trunc(date/10000)
+              var monthAux = date - year*10000
+              var month = Math.trunc(monthAux/100)
+              var day = monthAux - month*100
+
+              var type = "";
+              var numberStr = "";
+
+              var cad = parts[1]
+
+              for(var j = 0; j < 2; j++){
+                type = type + cad[j]
+                numberStr = numberStr + cad[j+2]
+              }
+              var number = parseInt(numberStr)
+
+              var mant = {
+                "fecha" : year+"-"+month+"-"+day,
+                "tipo" : type,
+                "numero" : number
               }
 
-              rb['nodes'] = nodes;
-
-              roadblocks.push(rb);
+              maintenance.push(mant)
+              console.log(mant)
           }
           
-          console.log(roadblocks);
+          console.log(maintenance);
+          setMantenimientos(maintenance)
+          /* console.log(mantenimientos) */
           /*cargaMasiva(objetos).then(() => {
           readPedidos()
           //aquí myuestras la notificacion
@@ -249,7 +262,7 @@ const handleUploadFile = e => {
                 <div className="col-3">
                 <Button variant="contained" component="label">
                     Subir Archivo
-                    <input type="file" hidden onChange={()=>{}}/>
+                    <input type="file" hidden onChange={handleUploadFile}/>
                 </Button>
                 </div>
             </div>
