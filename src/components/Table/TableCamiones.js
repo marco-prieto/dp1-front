@@ -9,6 +9,13 @@ import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import Button from "@material-ui/core/Button";
+
+import axios from 'axios';
+import url from "../../config";
+
+
+
+
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 
@@ -44,7 +51,7 @@ export default function CustomTable(props) {
                       {prop.id}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.tipoCamion}
+                      {prop.codigoCamion}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
                       {prop.taraCamion}
@@ -61,7 +68,7 @@ export default function CustomTable(props) {
                 <TableCell className={classes.tableCell} key={key}>
                   {prop.estadoCamion == 'Operativo' &&
                   <Button variant="outlined" component="label" size="small"
-                          onClick={()=>{console.log(prop.id)}}> 
+                          onClick={()=>{props.registrarAveria(prop.id)}}> 
                       Avería
                   </Button>
                   }

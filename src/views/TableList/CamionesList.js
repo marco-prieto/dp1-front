@@ -75,7 +75,7 @@ export default function OrderList() {
   const mockListarCamiones = [
     {
         id: 1,
-        tipoCamion: "A",
+        codigoCamion: "TA-01",
         taraCamion: "5",
         capacidadPetroleo: "25",
         capacidadGLP: "25",
@@ -83,7 +83,7 @@ export default function OrderList() {
     },
     {
         id: 2,
-        tipoCamion: "D",
+        codigoCamion: "TD-01",
         taraCamion: "1",
         capacidadPetroleo: "25",
         capacidadGLP: "5",
@@ -91,16 +91,18 @@ export default function OrderList() {
     },
     {
       id: 3,
-      tipoCamion: "D",
+      codigoCamion: "TD-02",
       taraCamion: "1",
       capacidadPetroleo: "25",
       capacidadGLP: "5",
       estadoCamion: "Mantenimiento Correctivo",
   },
   ];
-  const [camiones, setCamiones] = React.useState(null);
 
   const [open, setOpen] = React.useState(false);
+  const [camiones, setCamiones]  = React.useState(null);
+
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -115,29 +117,62 @@ export default function OrderList() {
     console.log(data);
     e.target.reset();
     // //setPedidos([...pedidos, data]);
-    // axios.post(`${url}/pedido/registrarPedidoNuevo`,data)
-    // .then(res => {
-    //   //console.log(res);
-    //   console.log(res.data);
-    // }) 
-    // obtenerAverias()
-    // e.target.reset();
-    // //handleClose();
-    // alert('El registro fue exitoso')
+    axios.post(`${url}/camion/registrarCamionNuevo`,data)
+    .then(res => {
+      //console.log(res);
+      console.log(res.data);
+      e.target.reset();
+      obtenerCamiones()
+    }).catch((err)=>{console.log(err)});
+    
+    
+    //handleClose();
+    alert('El registro fue exitoso')
   };
   
   React.useEffect(() =>{
-    //obtenerAverias();
-
-    setCamiones(mockListarCamiones);
+    obtenerCamiones();
   }, [])
   
-//   const obtenerAverias = () =>{
-//     axios.get(`${url}/`).then((resp)=>{
-//       console.log(resp.data)
-//       setPedidos(resp.data)
-//     })
-//   }
+  const obtenerCamiones = () =>{
+    axios.get(`${url}/camion/listarCamiones`).then((resp)=>{
+      console.log(resp.data)
+      setCamiones(resp.data)
+    })
+  }
+
+  const parseElement = (el) => {
+    el = el.toString();
+    el = el.length >= 2 ? el:"0"+el;
+    return el;
+  };
+
+  const registrarAveria = (id) => {
+
+    var dateNow = new Date(Date.now());
+    var today = dateNow.toLocaleString('es-ES').toString().split(" "); //[date, time]
+    var date = today[0].split('/').reverse()
+    var time = today[1].split(":");
+
+    for(var i=0;i<date.length;i++){
+      date[i] = parseElement(date[i]);
+    }
+
+    var startDate = date.join('-')+"@"+parseElement(time[0])+":"+parseElement(time[1])+":"+parseElement(time[2]); //formato para el back
+  
+    var data = {"idCamion":id,"fecha":startDate};
+  
+    console.log(data);
+    
+    axios.post(`${url}/averia/registrarAveriaNueva`,data)
+    .then(res => {
+      alert("La avería se registró correctamente"); //hacer notificacion bonita
+      console.log(res.data);
+      obtenerCamiones()
+      
+    }).catch(err=>{alert('Ocurrió un error en el registro de la avería')})
+    
+  };
   
   /* *************************************************************************************************************  */
 
@@ -165,7 +200,7 @@ export default function OrderList() {
               tableHeaderColor="primary"
               tableHead={[
                 "ID",
-                "Tipo Camión",
+                "Código del Camión",
                 "TARA Camión",
                 "Capacidad de Petróleo (m3)",
                 "Capacidad GLP (m3)",
@@ -173,6 +208,7 @@ export default function OrderList() {
                 "Acción",
               ]}
               tableData={camiones}
+              registrarAveria={registrarAveria}
             />
             }
           </CardBody>
@@ -190,15 +226,15 @@ export default function OrderList() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="row">
               <div className="col-6">
-                <label>Tipo Camión</label>
+                <label>Código del Camión</label>
                 <br />
                 <input
                   
-                  name="tipoCamion"
-                  {...register("tipoCamion", {
+                  name="codigoCamion"
+                  {...register("codigoCamion", {
                     required: {
                       value: true,
-                      message: "Tipo Camión requerido",
+                      message: "Código del Camión requerido",
                     },
                   })}
                 />
@@ -213,41 +249,19 @@ export default function OrderList() {
               <br />
               
                 <div className="col-6">
-                  <label>TARA</label>
-                  <br />
-                  <input
-                    type="number"
-                    name="taraCamion"
-                    {...register("taraCamion", {
-                      required: {
-                        value: true,
-                        message: "TARA requerida",
-                      },
-                    })}
-                  />
-                  {errors.hora && (
-                    <span className="text-danger text-small d-block mb-2">
-                      {errors.hora.message}
-                    </span>
-                  )}
-
                 </div>
               <br />
               
               <div className="col-6">
               <br />
-                <label>Capacidad de Petróleo (m3)</label>
+                <label>Tipo de Camión</label>
                 
-                <input
-                  type="number"
-                  name="capacidadPetroleo"
-                  {...register("capacidadPetroleo", {
-                    required: {
-                      value: true,
-                      message: "Capacidad Petróleo requerida",
-                    },
-                  })}
-                />
+                <select className="form-select" style={{width:'190px',height:'40px'}} {...register("tipoCamion")}>
+                    <option value={1} defaultValue>A</option>
+                    <option value={2}>B</option>
+                    <option value={3}>C</option>
+                    <option value={4}>D</option>
+                  </select>
                 <br />
                 {errors.ubicacionX && (
                   <span className="text-danger text-small d-block mb-2">
@@ -259,15 +273,16 @@ export default function OrderList() {
               <br />
               <div className="col-6">
               <br />
-                <label>Capacidad de GLP (m3)</label>
+                <label>Velocidad del Camión</label>
                 <br />
                 <input
+                  className="mt-1"
                   type="number"
-                  name="capacidadGLP"
-                  {...register("capacidadGLP", {
+                  name="velocidadCamion"
+                  {...register("velocidadCamion", {
                     required: {
                       value: true,
-                      message: "Capacidad GLP requerida",
+                      message: "Velocidad del Camión requerida",
                     },
                   })}
                 />
@@ -280,16 +295,7 @@ export default function OrderList() {
               </div>
               
               <div>
-              <br/>
-                <div>
-                    <label>Estado</label>
-                    <br/>
-                    <select className="form-select" style={{width:'auto',height:'45px'}} {...register("estadoCamion")}>
-                      <option value={1} defaultValue>Operativo</option>
-                      <option value={2}>Mantenimiento Correctivo</option>
-                      <option value={3}>Mantenimiento Preventivo</option>
-                    </select>
-                </div>
+
             </div>
             </div>
             

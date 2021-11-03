@@ -173,7 +173,7 @@ return (
       <div className="d-flex justify-content-between">
         <div className="d-flex align-items-center mb-3">
           <label className='me-2'>Velocidad de Simulación:</label>
-          <select value={globalVelocity} className="form-select" style={{width:'80px',height:'45px'}} onChange={(e)=>{setGlobalVelocity(e.target.value)}}>
+          <select value={globalVelocity} className="form-select" style={{width:'90px',height:'45px'}} onChange={(e)=>{setGlobalVelocity(e.target.value)}}>
             <option value={1} defaultValue>1x</option>
             <option value={2}>2x</option>
             <option value={5}>5x</option>
