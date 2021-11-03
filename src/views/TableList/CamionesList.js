@@ -140,6 +140,39 @@ export default function OrderList() {
       setCamiones(resp.data)
     })
   }
+
+  const parseElement = (el) => {
+    el = el.toString();
+    el = el.length >= 2 ? el:"0"+el;
+    return el;
+  };
+
+  const registrarAveria = (id) => {
+
+    var dateNow = new Date(Date.now());
+    var today = dateNow.toLocaleString('es-ES').toString().split(" "); //[date, time]
+    var date = today[0].split('/').reverse()
+    var time = today[1].split(":");
+
+    for(var i=0;i<date.length;i++){
+      date[i] = parseElement(date[i]);
+    }
+
+    var startDate = date.join('-')+"@"+parseElement(time[0])+":"+parseElement(time[1])+":"+parseElement(time[2]); //formato para el back
+  
+    var data = {"idCamion":id,"fecha":startDate};
+  
+    console.log(data);
+    
+    axios.post(`${url}/averia/registrarAveriaNueva`,data)
+    .then(res => {
+      alert("La avería se registró correctamente"); //hacer notificacion bonita
+      console.log(res.data);
+      obtenerCamiones()
+      
+    }).catch(err=>{alert('Ocurrió un error en el registro de la avería')})
+    
+  };
   
   /* *************************************************************************************************************  */
 
@@ -175,6 +208,7 @@ export default function OrderList() {
                 "Acción",
               ]}
               tableData={camiones}
+              registrarAveria={registrarAveria}
             />
             }
           </CardBody>

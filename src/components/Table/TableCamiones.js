@@ -14,28 +14,7 @@ import axios from 'axios';
 import url from "../../config";
 
 
-const registrarAveria = (id) => {
 
-  var dateNow = new Date(Date.now());
-  var today = dateNow.toLocaleString('es-ES').toString().split(" "); //[date, time]
-  var date = today[0].split('/').reverse()
-  var startDate = date.join('-')+"@"+today[1]; //formato para el back
-
-  var data = {"idCamion":id,"fecha":startDate};
-
-  console.log(data);
-  
-  // axios.post(`${url}/pedido/registrarPedidoNuevo`,data)
-  // .then(res => {
-  //   //console.log(res);
-  //   console.log(res.data);
-  //   obtenerPedidos()
-  //   alert('El registro fue exitoso')
-  //   e.target.reset();
-  //   handleClose();
-  // }).catch(err=>{alert('Ocurrió un error en el registro del pedido')})
-  
-};
 
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
@@ -89,7 +68,7 @@ export default function CustomTable(props) {
                 <TableCell className={classes.tableCell} key={key}>
                   {prop.estadoCamion == 'Operativo' &&
                   <Button variant="outlined" component="label" size="small"
-                          onClick={()=>{registrarAveria(prop.id)}}> 
+                          onClick={()=>{props.registrarAveria(prop.id)}}> 
                       Avería
                   </Button>
                   }
