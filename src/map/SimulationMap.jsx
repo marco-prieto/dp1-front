@@ -25,9 +25,11 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
   var imgRoadblock;
   var imgAveria;
   const truckScalingFactor = 26;
-  const requestInterval = 20*1000; //en segundos
+  const requestInterval = 10*1000; //en segundos
   //Usar la misma imagen para el camion
   var pedidos = null;
+  var flagRender = true;
+
   var bloqueos = null;
 
   //Variables para la simulacion
@@ -41,7 +43,10 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
 
     const interval = setInterval(() => {
       //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
+      
+      flagRender = false;
       obtenerRutaPedidos(speed);
+      flagRender = true;
 
     }, requestInterval)
     return () => clearInterval(interval);
@@ -51,8 +56,7 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
     const data = {"velocidad":speed, "tipo":2}; //tipo 2 es simulacion 3 dias
     axios.post(`${url}/algoritmo/obtenerRutas`,data) //flag sera 2 si hay colapso
     .then(res => {
-      
-      pedidos=res.data['routes'];
+      pedidos=res.data['routes']
       console.log(pedidos);
       initFlags();
     }).catch(error=>{
@@ -126,10 +130,10 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
           ? path[i]["x"] * blockSize + xFactor
           : path[i]["x"] * blockSize,
         i == curNode
-          ? path[i]["y"] * blockSize + yFactor
-          : path[i]["y"] * blockSize,
+          ? (50-path[i]["y"]) * blockSize + yFactor
+          : (50-path[i]["y"]) * blockSize,
         path[i + 1]["x"] * blockSize,
-        path[i + 1]["y"] * blockSize
+        (50-path[i + 1]["y"]) * blockSize
       );
 
       //Almacen del cliente destino
@@ -139,7 +143,7 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
             p5.image(
               imgClientWarehouse,
               path[i]["x"] * blockSize - 10,
-              path[i]["y"] * blockSize - 10,
+              (50-path[i]["y"]) * blockSize - 10,
               20,
               20
             );
@@ -264,17 +268,18 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
             }
             else if (route[curNode]["y"] < route[curNode + 1]["y"]) {
             // v 710,0,402,710
-            downDirection = 1;
-            sx = 710;
-            sy = 0;
-            sw = 402;
-            sh = 710;
-            }
-            else if (route[curNode]["y"] > route[curNode + 1]["y"]) {
-            // ^ 710,710,402,710
             upDirection = -1;
             sx = 710;
             sy = 710;
+            sw = 402;
+            sh = 710;
+
+            }
+            else if (route[curNode]["y"] > route[curNode + 1]["y"]) {
+            // ^ 710,710,402,710
+            downDirection = 1;
+            sx = 710;
+            sy = 0;
             sw = 402;
             sh = 710;
             }
@@ -312,7 +317,7 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
       p5.image(
         imgCamionCisterna,
         route[curNode]["x"] * blockSize + xFactor,
-        route[curNode]["y"] * blockSize + yFactor,
+        (50-route[curNode]["y"]) * blockSize + yFactor,
         sw / truckScalingFactor,
         sh / truckScalingFactor,
         sx,
@@ -324,14 +329,16 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
   };
 
   const renderRoadBlock = (p5, rb) => {
-
     var dateNow = Date.now();
-    var startDate = new Date(rb.startDate);
-    var endDate = new Date(rb.endDate);
-
+    try{
+      var startDate = new Date(rb.startDate);
+      var endDate = new Date(rb.endDate);
+    }catch(error){
+      console.log(error)
+    }
     //Si aun no empieza o ya termino, retornar
     if (startDate > dateNow || endDate < dateNow) return;
-
+    
     var path = rb.path;
     var rbImageSize = 25;
 
@@ -340,16 +347,16 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
     for (var i = 0; i < path.length - 1; i++) {
       p5.line(
         path[i]["x"] * blockSize,
-        path[i]["y"] * blockSize,
+        (50-path[i]["y"]) * blockSize,
         path[i + 1]["x"] * blockSize,
-        path[i + 1]["y"] * blockSize
+        (50-path[i + 1]["y"]) * blockSize
       );
 
       if (imgRoadblock) {
         p5.image(
           imgRoadblock,
           path[i]["x"] * blockSize - rbImageSize / 2,
-          path[i]["y"] * blockSize - rbImageSize / 2,
+          (50-path[i]["y"]) * blockSize - rbImageSize / 2,
           rbImageSize,
           rbImageSize
         );
@@ -359,7 +366,7 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
       p5.image(
         imgRoadblock,
         path[path.length - 1]["x"] * blockSize - rbImageSize / 2,
-        path[path.length - 1]["y"] * blockSize - rbImageSize / 2,
+        (50-path[path.length - 1]["y"]) * blockSize - rbImageSize / 2,
         rbImageSize,
         rbImageSize
       );
@@ -372,7 +379,7 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
       p5.image(
         imgPlantaPrincipal,
         12 * blockSize - 20,
-        8 * blockSize - 40,
+        (50-8) * blockSize - 40,
         40,
         70
       );
@@ -382,7 +389,7 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
       p5.image(
         imgPlantaSecundaria,
         42 * blockSize - 15,
-        42 * blockSize - 12.5,
+        (50-42) * blockSize - 12.5,
         30,
         25
       );
@@ -392,12 +399,13 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
       p5.image(
         imgPlantaSecundaria,
         63 * blockSize - 15,
-        3 * blockSize - 12.5,
+        (50-3) * blockSize - 12.5,
         30,
         25
       );
     }
   };
+
   const draw = (p5) => {
     p5.background(255);
     renderGrid(p5);
@@ -410,7 +418,7 @@ const SimulationMap = ({blockSize_p, speed_p}) => {
     //Renderizar Plantas
     renderPlantas(p5);
 
-    if(pedidos){
+    if(pedidos && flagRender){
       for (var k = 0; k < pedidos.length; k++) {
         renderTruck(p5, pedidos[k], k);
       }

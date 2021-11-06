@@ -18,7 +18,9 @@ import logo from "assets/sag/sagLogo.svg";
 
 import Map from "map/Map.jsx";
 
-import axios from 'axios';
+import AccordionHojaRutas from "components/CustomAccordion/AccordionHojaRutas";
+
+import axios from "axios";
 import url from "../config";
 
 const useStyles = makeStyles(styles);
@@ -38,26 +40,33 @@ export default function Mapa({ ...rest }) {
     setMobileOpen(!mobileOpen);
   };
 
-
-  const generarRutas=()=>{
+  const generarRutas = () => {
     var dateNow = new Date(Date.now());
-    var options = {hour:"2-digit", minute:"2-digit", second:"2-digit", year:'numeric', month:'2-digit', day:"2-digit"};
-    var today = dateNow.toLocaleString('es-ES',options).toString().split(" "); //[date, time]
+    var options = {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    };
+    var today = dateNow.toLocaleString("es-ES", options).toString().split(" "); //[date, time]
     console.log(today);
-    var date = today[0].split('/').reverse()
-    var startDate = date.join('-')+"@"+today[1]; //formato para el back
-    var data = {"fecha":startDate};
+    var date = today[0].split("/").reverse();
+    var startDate = date.join("-") + "@" + today[1]; //formato para el back
+    var data = { fecha: startDate };
     console.log(data);
-    axios.post(`${url}/algoritmo/generarSolucion`,data)
-    .then(res => {
-      console.log(res.data);
-      location.reload();
-    }).catch(error=>{
-      alert("Ocurrió un error al traer la información del mapa");
-      console.log(error);
-    })
-
-  }
+    axios
+      .post(`${url}/algoritmo/generarSolucion`, data)
+      .then((res) => {
+        console.log(res.data);
+        location.reload();
+      })
+      .catch((error) => {
+        alert("Ocurrió un error al traer la información del mapa");
+        console.log(error);
+      });
+  };
 
   return (
     <div className={classes.wrapper}>
@@ -82,9 +91,13 @@ export default function Mapa({ ...rest }) {
 
           <div className="ms-5">
             <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
-            
           </div>
-          <Map blockSize_p={12} />
+          <div className="d-flex">
+            <Map blockSize_p={12} />
+            <div className="ms-4">
+              <AccordionHojaRutas />
+            </div>
+          </div>
         </div>
       </div>
 

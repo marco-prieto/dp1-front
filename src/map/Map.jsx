@@ -138,10 +138,10 @@ const Map = (blockSize_p) => {
           ? path[i]["x"] * blockSize + xFactor
           : path[i]["x"] * blockSize,
         i == curNode
-          ? path[i]["y"] * blockSize + yFactor
-          : path[i]["y"] * blockSize,
+          ? (50-path[i]["y"]) * blockSize + yFactor
+          : (50-path[i]["y"]) * blockSize,
         path[i + 1]["x"] * blockSize,
-        path[i + 1]["y"] * blockSize
+        (50-path[i + 1]["y"]) * blockSize
       );
 
       //Almacen del cliente destino
@@ -151,7 +151,7 @@ const Map = (blockSize_p) => {
             p5.image(
               imgClientWarehouse,
               path[i]["x"] * blockSize - 10,
-              path[i]["y"] * blockSize - 10,
+              (50-path[i]["y"]) * blockSize - 10,
               20,
               20
             );
@@ -276,17 +276,18 @@ const Map = (blockSize_p) => {
             }
             else if (route[curNode]["y"] < route[curNode + 1]["y"]) {
             // v 710,0,402,710
-            downDirection = 1;
-            sx = 710;
-            sy = 0;
-            sw = 402;
-            sh = 710;
-            }
-            else if (route[curNode]["y"] > route[curNode + 1]["y"]) {
-            // ^ 710,710,402,710
             upDirection = -1;
             sx = 710;
             sy = 710;
+            sw = 402;
+            sh = 710;
+
+            }
+            else if (route[curNode]["y"] > route[curNode + 1]["y"]) {
+            // ^ 710,710,402,710
+            downDirection = 1;
+            sx = 710;
+            sy = 0;
             sw = 402;
             sh = 710;
             }
@@ -324,7 +325,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgCamionCisterna,
         route[curNode]["x"] * blockSize + xFactor,
-        route[curNode]["y"] * blockSize + yFactor,
+        (50-route[curNode]["y"]) * blockSize + yFactor,
         sw / truckScalingFactor,
         sh / truckScalingFactor,
         sx,
@@ -354,16 +355,16 @@ const Map = (blockSize_p) => {
     for (var i = 0; i < path.length - 1; i++) {
       p5.line(
         path[i]["x"] * blockSize,
-        path[i]["y"] * blockSize,
+        (50-path[i]["y"]) * blockSize,
         path[i + 1]["x"] * blockSize,
-        path[i + 1]["y"] * blockSize
+        (50-path[i + 1]["y"]) * blockSize
       );
 
       if (imgRoadblock) {
         p5.image(
           imgRoadblock,
           path[i]["x"] * blockSize - rbImageSize / 2,
-          path[i]["y"] * blockSize - rbImageSize / 2,
+          (50-path[i]["y"]) * blockSize - rbImageSize / 2,
           rbImageSize,
           rbImageSize
         );
@@ -373,7 +374,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgRoadblock,
         path[path.length - 1]["x"] * blockSize - rbImageSize / 2,
-        path[path.length - 1]["y"] * blockSize - rbImageSize / 2,
+        (50-path[path.length - 1]["y"]) * blockSize - rbImageSize / 2,
         rbImageSize,
         rbImageSize
       );
@@ -401,7 +402,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgCamionCisterna,
         node["x"] * blockSize - sw / (2 * truckScalingFactor),
-        node["y"] * blockSize - sh / (2 * truckScalingFactor),
+        (50-node["y"]) * blockSize - sh / (2 * truckScalingFactor),
         sw / truckScalingFactor,
         sh / truckScalingFactor,
         sx,
@@ -415,7 +416,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgAveria,
         node["x"] * blockSize - 11,
-        node["y"] * blockSize - 11,
+        (50-node["y"]) * blockSize - 11,
         22,
         22
       );
@@ -427,7 +428,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgPlantaPrincipal,
         12 * blockSize - 20,
-        8 * blockSize - 40,
+        (50-8) * blockSize - 40,
         40,
         70
       );
@@ -437,7 +438,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgPlantaSecundaria,
         42 * blockSize - 15,
-        42 * blockSize - 12.5,
+        (50-42) * blockSize - 12.5,
         30,
         25
       );
@@ -447,7 +448,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgPlantaSecundaria,
         63 * blockSize - 15,
-        3 * blockSize - 12.5,
+        (50-3) * blockSize - 12.5,
         30,
         25
       );

@@ -23,6 +23,7 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import Admin from "layouts/Admin.js";
 import MapLayout from "layouts/MapLayout.jsx";
 import SimulacionMapLayout from "layouts/SimulacionMapLayout.jsx";
+import AccordionHojaRutas from "components/CustomAccordion/AccordionHojaRutas"
 
 import "assets/css/material-dashboard-react.css?v=1.10.0";
 
@@ -31,6 +32,7 @@ ReactDOM.render(
     <Switch>
       <Route path="/admin" component={Admin} />
       <Route path="/mapa" component={MapLayout} />
+      <Route path="/dev" component={AccordionHojaRutas} />
       <Route path="/simulacionMap" component={SimulacionMapLayout} />
       <Redirect from="/" to="/admin/pedidos" />
     </Switch>
