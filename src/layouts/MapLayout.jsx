@@ -25,6 +25,59 @@ import url from "../config";
 
 const useStyles = makeStyles(styles);
 
+const hojaRuta = [
+  {
+    id: 1,
+    codigoCamion: "TA-01",
+    numPedidos: 2,
+    horaSalida: "14:03:12",
+    horaLlegada: "14:10:23",
+    cantPetroleoActual: 12,
+    cantGlpActual: 20,
+    pedidos: [
+      {
+        idPedido: 1,
+        cantidadGLP: 3,
+        horaLlegada: "14:04:15",
+        horaDeFinAtencion: "14:04:45",
+        ubicacion: { x: 12, y: 24 },
+      },
+      {
+        idPedido: 2,
+        cantidadGLP: 2,
+        horaLlegada: "14:06:35",
+        horaDeFinAtencion: "14:07:05",
+        ubicacion: { x: 24, y: 18 },
+      },
+    ],
+  },
+  {
+    id: 2,
+    codigoCamion: "TA-01",
+    numPedidos: 2,
+    horaSalida: "14:03:12",
+    horaLlegada: "14:10:23",
+    cantPetroleoActual: 12,
+    cantGlpActual: 20,
+    pedidos: [
+      {
+        idPedido: 3,
+        cantidadGLP: 3,
+        horaLlegada: "14:04:15",
+        horaDeFinAtencion: "14:04:45",
+        ubicacion: { x: 12, y: 24 },
+      },
+      {
+        idPedido: 4,
+        cantidadGLP: 2,
+        horaLlegada: "14:06:35",
+        horaDeFinAtencion: "14:07:05",
+        ubicacion: { x: 24, y: 18 },
+      },
+    ],
+  },
+];
+
 export default function Mapa({ ...rest }) {
   // styles
   const classes = useStyles();
@@ -101,7 +154,7 @@ export default function Mapa({ ...rest }) {
               >
                 Hoja de Rutas
               </h3>
-              <AccordionHojaRutas />
+              <AccordionHojaRutas hojaRuta={hojaRuta} />
             </div>
           </div>
         </div>

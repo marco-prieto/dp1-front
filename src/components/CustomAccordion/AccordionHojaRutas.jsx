@@ -43,7 +43,7 @@ const AccordionDetails = withStyles((theme) => ({
   root: {},
 }))(MuiAccordionDetails);
 
-const AccordionHojaRutas = () => {
+const AccordionHojaRutas = ({ hojaRuta }) => {
   const [expanded, setExpanded] = React.useState("");
 
   const handleChange = (pancamion) => (event, newExpanded) => {
@@ -51,64 +51,17 @@ const AccordionHojaRutas = () => {
   };
 
   //Pasara por props
-  const hojaRuta = [
-    {
-      id: 1,
-      codigoCamion: "TA-01",
-      numPedidos: 2,
-      horaSalida: "14:03:12",
-      horaLlegada: "14:10:23",
-      cantPetroleoActual: 12,
-      cantGlpActual: 20,
-      pedidos: [
-        {
-          idPedido: 1,
-          cantidadGLP: 3,
-          horaLlegada: "14:04:15",
-          horaDeFinAtencion: "14:04:45",
-          ubicacion: { x: 12, y: 24 },
-        },
-        {
-          idPedido: 2,
-          cantidadGLP: 2,
-          horaLlegada: "14:06:35",
-          horaDeFinAtencion: "14:07:05",
-          ubicacion: { x: 24, y: 18 },
-        },
-      ],
-    },
-    {
-      id: 2,
-      codigoCamion: "TA-01",
-      numPedidos: 2,
-      horaSalida: "14:03:12",
-      horaLlegada: "14:10:23",
-      cantPetroleoActual: 12,
-      cantGlpActual: 20,
-      pedidos: [
-        {
-          idPedido: 3,
-          cantidadGLP: 3,
-          horaLlegada: "14:04:15",
-          horaDeFinAtencion: "14:04:45",
-          ubicacion: { x: 12, y: 24 },
-        },
-        {
-          idPedido: 4,
-          cantidadGLP: 2,
-          horaLlegada: "14:06:35",
-          horaDeFinAtencion: "14:07:05",
-          ubicacion: { x: 24, y: 18 },
-        },
-      ],
-    },
-  ];
+  const [hRuta, setHRuta] = useState(null);
+
+  React.useEffect(() => {
+    setHRuta(hojaRuta);
+  }, []);
 
   return (
     <div>
-      <div square className="mx-2" style={{ marginBottom: "-10px" }}>
+      <div square className="mx-2 " style={{ marginBottom: "-10px" }}>
         <div
-          className="row align-items-center px-1"
+          className="row align-items-center ps-4"
           disableGutters="true"
           style={{
             minHeight: "60px",
@@ -156,55 +109,56 @@ const AccordionHojaRutas = () => {
 
         <AccordionDetails></AccordionDetails>
       </div>
-      {hojaRuta.map((camion) => (
-        <div key={camion.id}>
-          <Accordion
-            square
-            expanded={expanded === "pancamion" + `${camion.id}`}
-            onChange={handleChange("pancamion" + `${camion.id}`)}
-          >
-            <AccordionSummary
-              id="pancamion1d-header"
-              className="row"
-              style={{ fontSize: "13px" }}
+      {hRuta &&
+        hRuta.map((camion) => (
+          <div key={camion.id}>
+            <Accordion
+              square
+              expanded={expanded === "pancamion" + `${camion.id}`}
+              onChange={handleChange("pancamion" + `${camion.id}`)}
             >
-              <div className="col-2 d-flex justify-content-center">
-                {camion.codigoCamion}
-              </div>
-              <div className="col-2 d-flex justify-content-center">
-                {camion.numPedidos}
-              </div>
-              <div className="col-2 d-flex justify-content-center">
-                {camion.horaSalida}
-              </div>
-              <div className="col-2 d-flex justify-content-center">
-                {camion.horaLlegada}
-              </div>
-              <div className="col-2 d-flex justify-content-center">
-                {camion.cantPetroleoActual}
-              </div>
-              <div className="col-2 d-flex justify-content-center">
-                {camion.cantGlpActual}
-              </div>
-            </AccordionSummary>
+              <AccordionSummary
+                id="pancamion1d-header"
+                className="row"
+                style={{ fontSize: "13px" }}
+              >
+                <div className="col-2 d-flex justify-content-center">
+                  {camion.codigoCamion}
+                </div>
+                <div className="col-2 d-flex justify-content-center">
+                  {camion.numPedidos}
+                </div>
+                <div className="col-2 d-flex justify-content-center">
+                  {camion.horaSalida}
+                </div>
+                <div className="col-2 d-flex justify-content-center">
+                  {camion.horaLlegada}
+                </div>
+                <div className="col-2 d-flex justify-content-center">
+                  {camion.cantPetroleoActual}
+                </div>
+                <div className="col-2 d-flex justify-content-center">
+                  {camion.cantGlpActual}
+                </div>
+              </AccordionSummary>
 
-            <AccordionDetails>
-              <TableHojaRutas
-                tableHeaderColor="primary"
-                style={{ marginTop: "-5px" }}
-                tableHead={[
-                  "ID",
-                  "Cantidad de GLP",
-                  "Hora de Llegada",
-                  "Hora de Salida",
-                  "Ubicación (x,y)",
-                ]}
-                tableData={camion.pedidos}
-              />
-            </AccordionDetails>
-          </Accordion>
-        </div>
-      ))}
+              <AccordionDetails>
+                <TableHojaRutas
+                  tableHeaderColor="primary"
+                  style={{ marginTop: "-5px" }}
+                  tableHead={[
+                    "ID",
+                    "Cantidad de GLP",
+                    "Hora de Llegada",
+                    "Hora de Salida",
+                    "Ubicación (x,y)",
+                  ]}
+                  tableData={camion.pedidos}
+                />
+              </AccordionDetails>
+            </Accordion>
+          </div>
+        ))}
     </div>
   );
 };
