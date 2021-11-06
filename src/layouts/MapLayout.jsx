@@ -92,9 +92,15 @@ export default function Mapa({ ...rest }) {
           <div className="ms-5">
             <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
           </div>
-          <div className="d-flex">
+          <div className="d-lg-flex d-md-block">
             <Map blockSize_p={12} />
-            <div className="ms-4">
+            <div className="mx-4">
+              <h3
+                className="d-flex justify-content-center"
+                style={{ marginTop: "-55px" }}
+              >
+                Hoja de Rutas
+              </h3>
               <AccordionHojaRutas />
             </div>
           </div>

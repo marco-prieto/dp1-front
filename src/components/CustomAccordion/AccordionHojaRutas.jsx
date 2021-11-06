@@ -28,9 +28,9 @@ const AccordionSummary = withStyles({
     backgroundColor: "rgba(0, 0, 0, .03)",
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
     marginBottom: -1,
-    minHeight: 56,
+    minHeight: 24,
     "&$expanded": {
-      minHeight: 56,
+      minHeight: 24,
     },
   },
   content: {
@@ -106,9 +106,9 @@ const AccordionHojaRutas = () => {
 
   return (
     <div>
-      <div square className="mx-3" style={{ marginBottom: "-10px" }}>
+      <div square className="mx-2" style={{ marginBottom: "-10px" }}>
         <div
-          className="row align-items-center px-5"
+          className="row align-items-center px-1"
           disableGutters="true"
           style={{
             minHeight: "60px",
@@ -163,7 +163,11 @@ const AccordionHojaRutas = () => {
             expanded={expanded === "pancamion" + `${camion.id}`}
             onChange={handleChange("pancamion" + `${camion.id}`)}
           >
-            <AccordionSummary id="pancamion1d-header" className="row">
+            <AccordionSummary
+              id="pancamion1d-header"
+              className="row"
+              style={{ fontSize: "13px" }}
+            >
               <div className="col-2 d-flex justify-content-center">
                 {camion.codigoCamion}
               </div>

@@ -18,10 +18,10 @@ export default function CustomTable(props) {
   const { tableHead, tableData, tableHeaderColor } = props;
   return (
     <div className={classes.tableResponsive}>
-        <h3 className="d-flex justify-content-center" style={{marginTop:"-4px", marginBottom:"10px"}}>Pedidos Atendidos</h3>
+        <h4 className="d-flex justify-content-center" style={{marginBottom:"10px"}}>Pedidos Atendidos</h4>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
-          <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
+          <TableHead className={classes[tableHeaderColor + "TableHeader"]} style={{fontSize:"12px"}}>
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
                 return (
@@ -40,7 +40,7 @@ export default function CustomTable(props) {
         <TableBody>
           {tableData.map((prop, key) => {
             return (
-              <TableRow key={key} className={classes.tableBodyRow}>
+              <TableRow key={key} className={classes.tableBodyRow} style={{fontSize:"10px"}}>
                 <TableCell className={classes.tableCell} key={key} align='center'>
                       {prop.idPedido}
                 </TableCell>
