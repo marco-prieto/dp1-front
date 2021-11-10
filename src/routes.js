@@ -28,6 +28,7 @@ import BloqueosList from "views/TableList/BloqueosList";
 import CamionesList from "views/TableList/CamionesList";
 import MantenimientoPreventivoList from "views/TableList/MantenimientoPreventivoList";
 import Simulacion from "views/Simulacion/Simulacion.jsx";
+import Login from "views/Login/Login"
 
 
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
@@ -158,6 +159,13 @@ const sagRoutes = [
     component: MantenimientoPreventivoList,
     layout: "/admin",
   },
+  /* {
+    path: "/login",
+    name: "Cerrar Cesión",
+    icon: "content_paste",
+    component: Login,
+    layout: "/admin",
+  }, */
 
 ];
 
