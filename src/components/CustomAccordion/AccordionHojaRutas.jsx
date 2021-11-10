@@ -4,7 +4,9 @@ import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
 import TableHojaRutas from "components/Table/TableHojaRutas.js";
-import Typography from "@material-ui/core/Typography";
+
+import axios from "axios";
+import url from "../../config";
 
 const Accordion = withStyles({
   root: {
@@ -52,10 +54,25 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
 
   //Pasara por props
   const [hRuta, setHRuta] = useState(null);
+  const requestInterval = 20 * 1000; //en segundos
 
   React.useEffect(() => {
-    setHRuta(hojaRuta);
+    obtenerHojaRuta();
+
+    const interval = setInterval(() => {
+      //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
+      obtenerHojaRuta();
+    }, requestInterval);
+    return () => clearInterval(interval);
   }, []);
+
+  const obtenerHojaRuta = () => {
+    var data = { tipo: 1 };
+    axios.post(`${url}/algoritmo/obtenerHojaDeRuta`, data).then((resp) => {
+      console.log(resp.data);
+      setHRuta(resp.data);
+    });
+  };
 
   return (
     <div>

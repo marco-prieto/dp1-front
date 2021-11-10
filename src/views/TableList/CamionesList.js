@@ -160,7 +160,7 @@ export default function OrderList() {
 
     var startDate = date.join('-')+"@"+parseElement(time[0])+":"+parseElement(time[1])+":"+parseElement(time[2]); //formato para el back
   
-    var data = {"idCamion":id,"fecha":startDate};
+    var data = {"idCamion":id,"fecha":startDate, "type":1}; //1 = dia a dia
   
     console.log(data);
     

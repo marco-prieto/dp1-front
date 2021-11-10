@@ -58,8 +58,9 @@ export default function CustomTable(props) {
                 <TableCell className={classes.tableCell} key={key}>
                       {prop.plazoEntrega}
                 </TableCell>
+              
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.fechaEntrega.replace('@', ' ')}
+                      {prop.fechaEntrega?prop.fechaEntrega.replace('@', ' '):"En camino"}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
                       {prop.estadoPedido}

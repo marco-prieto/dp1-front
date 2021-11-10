@@ -49,7 +49,7 @@ const tableStyle = (theme) => ({
   tableCell: {
     ...defaultFont,
     lineHeight: "1.42857143",
-    padding: "8px 8px",
+    padding: "12px 8px",
     verticalAlign: "middle",
     fontSize: "0.8125rem",
   },
@@ -59,14 +59,14 @@ const tableStyle = (theme) => ({
     overflowX: "auto",
   },
   tableHeadRow: {
-    height: "45px",
+    height: "54px",
     color: "inherit",
     display: "table-row",
     outline: "none",
     verticalAlign: "middle",
   },
   tableBodyRow: {
-    height: "10px",
+    height: "32px",
     color: "inherit",
     display: "table-row",
     outline: "none",

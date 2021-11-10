@@ -25,7 +25,7 @@ import url from "../config";
 
 const useStyles = makeStyles(styles);
 
-const hojaRuta = [
+const mockHojaRuta = [
   {
     id: 1,
     codigoCamion: "TA-01",
@@ -88,6 +88,8 @@ export default function Mapa({ ...rest }) {
   const [color] = React.useState("blue");
 
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  var hojaRuta = null;
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

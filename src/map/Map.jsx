@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Sketch from "react-p5";
 //LUEGO y -> 50-y
 import mockPedidos from "./mock/mockPedidos.js";
@@ -11,7 +11,7 @@ import clientWarehouseImg from "../assets/map/clientWarehouse.png";
 import roadblockImg from "../assets/map/roadblock.png";
 import averiaImg from "../assets/map/averia.png";
 
-import axios from 'axios';
+import axios from "axios";
 import url from "../config";
 
 const Map = (blockSize_p) => {
@@ -22,7 +22,7 @@ const Map = (blockSize_p) => {
   var imgClientWarehouse;
   var imgRoadblock;
   var imgAveria;
-  const requestInterval = 20*1000; //en segundos
+  const requestInterval = 20 * 1000; //en segundos
   const truckScalingFactor = 26;
   //Usar la misma imagen para el camion
 
@@ -32,55 +32,74 @@ const Map = (blockSize_p) => {
 
   var pedidos = null;
   var bloqueos = null;
-  
-  useEffect(() =>{
+  var averias = null;
+
+  useEffect(() => {
     //console.log(startDate);
-    obtenerRutaPedidos(10); //speed
+    obtenerRutaPedidos(1); //speed
+    obtenerAverias(1); //speed
     obtenerBloqueos();
 
     const interval = setInterval(() => {
       //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
-      obtenerRutaPedidos(10);
-      
-    }, requestInterval)
+      obtenerRutaPedidos(1);
+      obtenerAverias(1);
+    }, requestInterval);
     return () => clearInterval(interval);
-  }, [])
+  }, []);
 
-  const obtenerRutaPedidos = (speed) =>{
-    const data = {"velocidad":speed, "tipo":1}; //tipo 1 es dia a dia,
-    axios.post(`${url}/algoritmo/obtenerRutas`,data) //flag sera 2 si hay colapso
-    .then(res => {
-      console.log(res.data);
-      pedidos=res.data['routes'];
-      initFlags();
-    }).catch(error=>{
-      alert("Ocurrió un error al traer la información del mapa");
-      console.log(error);
-    })
-  }
+  const obtenerRutaPedidos = (speed) => {
+    const data = { velocidad: speed, tipo: 1 }; //tipo 1 es dia a dia,
+    axios
+      .post(`${url}/algoritmo/obtenerRutas`, data) //flag sera 2 si hay colapso
+      .then((res) => {
+        console.log(res.data);
+        pedidos = res.data["routes"];
+        initFlags();
+      })
+      .catch((error) => {
+        alert("Ocurrió un error al traer la información del mapa");
+        console.log(error);
+      });
+  };
 
-  const obtenerBloqueos = () =>{
-    axios.get(`${url}/bloqueo/listarBloqueos`)
-    .then(res => {
-      //console.log(res.data);
-      bloqueos=res.data;
-    }).catch(error=>{
-      alert("Ocurrió un error al traer la información de los bloqueos");
-      console.log(error);
-    })
-  }
+  const obtenerBloqueos = () => {
+    axios
+      .get(`${url}/bloqueo/listarBloqueos`)
+      .then((res) => {
+        //console.log(res.data);
+        bloqueos = res.data;
+      })
+      .catch((error) => {
+        alert("Ocurrió un error al traer la información de los bloqueos");
+        console.log(error);
+      });
+  };
 
-  const initFlags=()=>{
-    if(pedidos){
+  const obtenerAverias = (speed) => {
+    const data = { velocidad: speed, tipo: 1 }; //tipo 1 es dia a dia,
+    axios
+      .post(`${url}/averia/obtenerAverias`, data) //flag sera 2 si hay colapso
+      .then((res) => {
+        console.log("AVERIAS", res.data);
+        averias = res.data;
+      })
+      .catch((error) => {
+        alert("Ocurrió un error al traer las averías del mapa");
+        console.log(error);
+      });
+  };
+
+  const initFlags = () => {
+    if (pedidos) {
       truckNextOrder = [];
       truckDirection = [];
-      pedidos.forEach(()=>{
-        truckNextOrder.push(0); 
+      pedidos.forEach(() => {
+        truckNextOrder.push(0);
         truckDirection.push(0); //0: Movimiento, 1:Atendiendo un pedido
-      })
+      });
     }
-  }
-
+  };
 
   const setup = (p5, canvasParentRef) => {
     p5.createCanvas(blockSize * 70, blockSize * 50).parent(canvasParentRef);
@@ -108,7 +127,6 @@ const Map = (blockSize_p) => {
       imgAveria = c;
     });
 
-    
     //Funcion periodica
     // var delay = 1000; //ms
     // setInterval(()=>{
@@ -138,10 +156,10 @@ const Map = (blockSize_p) => {
           ? path[i]["x"] * blockSize + xFactor
           : path[i]["x"] * blockSize,
         i == curNode
-          ? (50-path[i]["y"]) * blockSize + yFactor
-          : (50-path[i]["y"]) * blockSize,
+          ? (50 - path[i]["y"]) * blockSize + yFactor
+          : (50 - path[i]["y"]) * blockSize,
         path[i + 1]["x"] * blockSize,
-        (50-path[i + 1]["y"]) * blockSize
+        (50 - path[i + 1]["y"]) * blockSize
       );
 
       //Almacen del cliente destino
@@ -151,7 +169,7 @@ const Map = (blockSize_p) => {
             p5.image(
               imgClientWarehouse,
               path[i]["x"] * blockSize - 10,
-              (50-path[i]["y"]) * blockSize - 10,
+              (50 - path[i]["y"]) * blockSize - 10,
               20,
               20
             );
@@ -167,83 +185,96 @@ const Map = (blockSize_p) => {
     var velocity = orderList.velocity;
     var attentionTime = orderList.attentionTime;
     var startDate = new Date(orderList.startDate);
-    var endDate =  new Date(orderList.endDate);
+    var endDate = new Date(orderList.endDate);
 
     //Verificar rango de fechas
-    if(startDate > Date.now() || endDate < Date.now()) return;
-    
+    if (startDate > Date.now() || endDate < Date.now()) return;
 
     //Flags para control de banderas: en movimiento o atendiendo e index de pedido a atender
-    if(truckNextOrder[index] < orders.length){ //Si esta atendiendo un pedido
-        var deliveryDate = new Date(orders[truckNextOrder[index]].deliveryDate);
-        var leftDate = new Date(orders[truckNextOrder[index]].leftDate);
+    if (truckNextOrder[index] < orders.length) {
+      //Si esta atendiendo un pedido
+      var deliveryDate = new Date(orders[truckNextOrder[index]].deliveryDate);
+      var leftDate = new Date(orders[truckNextOrder[index]].leftDate);
 
-        if(truckDirection[index]==0 && Date.now()>deliveryDate){ //Estaba en movimiento y ya debe atender el pedido
-            truckDirection[index] = 1; //Atender el pedido
-        }
-        if(truckDirection[index]==1 && Date.now()>leftDate){ //Estaba atendiendo y debe pasar a movimiento
-            truckDirection[index] = 0;
-            truckNextOrder[index] = truckNextOrder[index] + 1;
-
-        }
-    }
-    else{ //Regresando a planta principal
+      if (truckDirection[index] == 0 && Date.now() > deliveryDate) {
+        //Estaba en movimiento y ya debe atender el pedido
+        truckDirection[index] = 1; //Atender el pedido
+      }
+      if (truckDirection[index] == 1 && Date.now() > leftDate) {
+        //Estaba atendiendo y debe pasar a movimiento
         truckDirection[index] = 0;
+        truckNextOrder[index] = truckNextOrder[index] + 1;
+      }
+    } else {
+      //Regresando a planta principal
+      truckDirection[index] = 0;
     }
 
     var tiempoTramo;
     var distancia;
     var velocidadTramo;
 
-
-    if (truckDirection[index]==0){
+    if (truckDirection[index] == 0) {
       //Planta principal al primer pedido
-      if(truckNextOrder[index]==0){
-        tiempoTramo = (new Date(orders[truckNextOrder[index]].deliveryDate) - startDate)/1000;
-        velocidadTramo = (orders[truckNextOrder[index]].indexRoute*1000) / tiempoTramo; 
+      if (truckNextOrder[index] == 0) {
+        tiempoTramo =
+          (new Date(orders[truckNextOrder[index]].deliveryDate) - startDate) /
+          1000;
+        velocidadTramo =
+          (orders[truckNextOrder[index]].indexRoute * 1000) / tiempoTramo;
       }
       //regresando a planta principal
-      else if(truckNextOrder[index]==orders.length){
-        tiempoTramo = (endDate - new Date(orders[truckNextOrder[index]-1].leftDate))/1000;
-        distancia = (route.length - orders[truckNextOrder[index]-1].indexRoute - 1)*1000;
-        velocidadTramo = distancia/tiempoTramo;
+      else if (truckNextOrder[index] == orders.length) {
+        tiempoTramo =
+          (endDate - new Date(orders[truckNextOrder[index] - 1].leftDate)) /
+          1000;
+        distancia =
+          (route.length - orders[truckNextOrder[index] - 1].indexRoute - 1) *
+          1000;
+        velocidadTramo = distancia / tiempoTramo;
       }
       //de pedido i a pedido i+1
-      else{
-        tiempoTramo = (new Date(orders[truckNextOrder[index]].deliveryDate) - new Date(orders[truckNextOrder[index]-1].leftDate))/1000;
-        distancia = (orders[truckNextOrder[index]].indexRoute - orders[truckNextOrder[index]-1].indexRoute-1)*1000;
-        velocidadTramo = distancia/tiempoTramo;
+      else {
+        tiempoTramo =
+          (new Date(orders[truckNextOrder[index]].deliveryDate) -
+            new Date(orders[truckNextOrder[index] - 1].leftDate)) /
+          1000;
+        distancia =
+          (orders[truckNextOrder[index]].indexRoute -
+            orders[truckNextOrder[index] - 1].indexRoute -
+            1) *
+          1000;
+        velocidadTramo = distancia / tiempoTramo;
       }
-    }
-    else{
-      velocidadTramo=0;
+    } else {
+      velocidadTramo = 0;
     }
 
     //New
     var transTime;
-    if (truckNextOrder[index]!=0){
-      transTime =(Date.now() - new Date(orders[truckNextOrder[index]-1].leftDate))/1000;
-    }
-    else{
-      transTime =(Date.now()-startDate)/1000;
+    if (truckNextOrder[index] != 0) {
+      transTime =
+        (Date.now() - new Date(orders[truckNextOrder[index] - 1].leftDate)) /
+        1000;
+    } else {
+      transTime = (Date.now() - startDate) / 1000;
     }
 
-    var distance = transTime*velocidadTramo;
+    var distance = transTime * velocidadTramo;
 
-    if(truckNextOrder[index]!=0){
-      distance = distance + orders[truckNextOrder[index]-1].indexRoute*1000;
+    if (truckNextOrder[index] != 0) {
+      distance = distance + orders[truckNextOrder[index] - 1].indexRoute * 1000;
     }
-    
+
     var curNode;
 
-    if(truckDirection[index]==0){
-        curNode = Math.trunc(distance / 1000);
-    }
-    else if(truckDirection[index]==1){
-        curNode = orders[truckNextOrder[index]].indexRoute;
+    if (truckDirection[index] == 0) {
+      curNode = Math.trunc(distance / 1000);
+    } else if (truckDirection[index] == 1) {
+      curNode = orders[truckNextOrder[index]].indexRoute;
     }
 
-    if(curNode >= routeLength) return;
+    if (curNode >= routeLength) return;
     var leftDirection = 0;
     var rightDirection = 0;
     var upDirection = 0;
@@ -257,49 +288,43 @@ const Map = (blockSize_p) => {
 
     //Evaluar la direccion segun el siguiente nodo
     if (curNode < route.length - 1) {
-        if(truckDirection[index]==0){
-            if (route[curNode]["x"] < route[curNode + 1]["x"]) {
-            // ->
-            rightDirection = 1;
-            sx = 0;
-            sy = 1018;
-            sw = 710;
-            sh = 402;
-            }
-            else if (route[curNode]["x"] > route[curNode + 1]["x"]) {
-            // <-
-            leftDirection = -1;
-            sx = 0;
-            sy = 0;
-            sw = 710;
-            sh = 402;
-            }
-            else if (route[curNode]["y"] < route[curNode + 1]["y"]) {
-            // v 710,0,402,710
-            upDirection = -1;
-            sx = 710;
-            sy = 710;
-            sw = 402;
-            sh = 710;
-
-            }
-            else if (route[curNode]["y"] > route[curNode + 1]["y"]) {
-            // ^ 710,710,402,710
-            downDirection = 1;
-            sx = 710;
-            sy = 0;
-            sw = 402;
-            sh = 710;
-            }
+      if (truckDirection[index] == 0) {
+        if (route[curNode]["x"] < route[curNode + 1]["x"]) {
+          // ->
+          rightDirection = 1;
+          sx = 0;
+          sy = 1018;
+          sw = 710;
+          sh = 402;
+        } else if (route[curNode]["x"] > route[curNode + 1]["x"]) {
+          // <-
+          leftDirection = -1;
+          sx = 0;
+          sy = 0;
+          sw = 710;
+          sh = 402;
+        } else if (route[curNode]["y"] < route[curNode + 1]["y"]) {
+          // v 710,0,402,710
+          upDirection = -1;
+          sx = 710;
+          sy = 710;
+          sw = 402;
+          sh = 710;
+        } else if (route[curNode]["y"] > route[curNode + 1]["y"]) {
+          // ^ 710,710,402,710
+          downDirection = 1;
+          sx = 710;
+          sy = 0;
+          sw = 402;
+          sh = 710;
         }
-        else{
-            sx = 0;
-            sy = 1018;
-            sw = 710;
-            sh = 402;
-        }
+      } else {
+        sx = 0;
+        sy = 1018;
+        sw = 710;
+        sh = 402;
+      }
     }
-
 
     var xFactor =
       ((rightDirection + leftDirection) *
@@ -312,20 +337,17 @@ const Map = (blockSize_p) => {
         blockSize) /
       1000;
 
-
     //Dibujar la ruta
     renderRoute(p5, curNode, route, xFactor, yFactor);
 
-
     xFactor = xFactor - sw / (2 * truckScalingFactor);
     yFactor = yFactor - sh / (2 * truckScalingFactor);
-    
+
     if (imgCamionCisterna && sw != 0 && sh != 0) {
-      
       p5.image(
         imgCamionCisterna,
         route[curNode]["x"] * blockSize + xFactor,
-        (50-route[curNode]["y"]) * blockSize + yFactor,
+        (50 - route[curNode]["y"]) * blockSize + yFactor,
         sw / truckScalingFactor,
         sh / truckScalingFactor,
         sx,
@@ -338,15 +360,15 @@ const Map = (blockSize_p) => {
 
   const renderRoadBlock = (p5, rb) => {
     var dateNow = Date.now();
-    try{
+    try {
       var startDate = new Date(rb.startDate);
       var endDate = new Date(rb.endDate);
-    }catch(error){
-      console.log(error)
+    } catch (error) {
+      console.log(error);
     }
     //Si aun no empieza o ya termino, retornar
     if (startDate > dateNow || endDate < dateNow) return;
-    
+
     var path = rb.path;
     var rbImageSize = 25;
 
@@ -355,16 +377,16 @@ const Map = (blockSize_p) => {
     for (var i = 0; i < path.length - 1; i++) {
       p5.line(
         path[i]["x"] * blockSize,
-        (50-path[i]["y"]) * blockSize,
+        (50 - path[i]["y"]) * blockSize,
         path[i + 1]["x"] * blockSize,
-        (50-path[i + 1]["y"]) * blockSize
+        (50 - path[i + 1]["y"]) * blockSize
       );
 
       if (imgRoadblock) {
         p5.image(
           imgRoadblock,
           path[i]["x"] * blockSize - rbImageSize / 2,
-          (50-path[i]["y"]) * blockSize - rbImageSize / 2,
+          (50 - path[i]["y"]) * blockSize - rbImageSize / 2,
           rbImageSize,
           rbImageSize
         );
@@ -374,7 +396,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgRoadblock,
         path[path.length - 1]["x"] * blockSize - rbImageSize / 2,
-        (50-path[path.length - 1]["y"]) * blockSize - rbImageSize / 2,
+        (50 - path[path.length - 1]["y"]) * blockSize - rbImageSize / 2,
         rbImageSize,
         rbImageSize
       );
@@ -383,11 +405,11 @@ const Map = (blockSize_p) => {
 
   const renderAveria = (p5, av) => {
     const startDate = new Date(av.startDate);
-    const endDate = startDate + 1 * 60 * 60 * 1000; //Averias duran 1 hora
+    const endDate = new Date(av.endDate); //Averias duran 1 hora
     const dateNow = Date.now();
     const node = av.node;
 
-    if (startDate < dateNow || endDate > dateNow) return;
+    if (dateNow < startDate || dateNow > endDate) return;
 
     //Camion mirando a la derecha
     const sx = 0;
@@ -402,7 +424,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgCamionCisterna,
         node["x"] * blockSize - sw / (2 * truckScalingFactor),
-        (50-node["y"]) * blockSize - sh / (2 * truckScalingFactor),
+        (50 - node["y"]) * blockSize - sh / (2 * truckScalingFactor),
         sw / truckScalingFactor,
         sh / truckScalingFactor,
         sx,
@@ -416,7 +438,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgAveria,
         node["x"] * blockSize - 11,
-        (50-node["y"]) * blockSize - 11,
+        (50 - node["y"]) * blockSize - 11,
         22,
         22
       );
@@ -428,7 +450,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgPlantaPrincipal,
         12 * blockSize - 20,
-        (50-8) * blockSize - 40,
+        (50 - 8) * blockSize - 40,
         40,
         70
       );
@@ -438,7 +460,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgPlantaSecundaria,
         42 * blockSize - 15,
-        (50-42) * blockSize - 12.5,
+        (50 - 42) * blockSize - 12.5,
         30,
         25
       );
@@ -448,7 +470,7 @@ const Map = (blockSize_p) => {
       p5.image(
         imgPlantaSecundaria,
         63 * blockSize - 15,
-        (50-3) * blockSize - 12.5,
+        (50 - 3) * blockSize - 12.5,
         30,
         25
       );
@@ -459,20 +481,22 @@ const Map = (blockSize_p) => {
     renderGrid(p5);
 
     //Renderizar Bloqueos
-    if(bloqueos){
+    if (bloqueos) {
       for (var i = 0; i < bloqueos.length; i++) {
         renderRoadBlock(p5, bloqueos[i]);
       }
     }
     //Averias
-    for (var j = 0; j < mockAverias.length; j++) {
-      renderAveria(p5, mockAverias[j]);
+    if (averias) {
+      for (var j = 0; j < averias.length; j++) {
+        renderAveria(p5, averias[j]);
+      }
     }
 
     //Renderizar Plantas
     renderPlantas(p5);
 
-    if(pedidos){
+    if (pedidos) {
       for (var k = 0; k < pedidos.length; k++) {
         renderTruck(p5, pedidos[k], k);
       }

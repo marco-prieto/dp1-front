@@ -51,7 +51,7 @@ export default function CustomTable(props) {
                       {prop.id}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                      {prop.codigoCamion}
+                      {prop.tipoCamion}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
                       {prop.taraCamion}
@@ -66,7 +66,7 @@ export default function CustomTable(props) {
                       {prop.estadoCamion}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key}>
-                  {prop.estadoCamion == 'Operativo' &&
+                  {(prop.estadoCamion == 'Operativo' || prop.estadoCamion == 'En Ruta') &&
                   <Button variant="outlined" component="label" size="small"
                           onClick={()=>{props.registrarAveria(prop.id)}}> 
                       Avería
