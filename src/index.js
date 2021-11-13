@@ -24,6 +24,7 @@ import Admin from "layouts/Admin.js";
 import MapLayout from "layouts/MapLayout.jsx";
 import SimulacionMapLayout from "layouts/SimulacionMapLayout.jsx";
 import AccordionHojaRutas from "components/CustomAccordion/AccordionHojaRutas"
+import Login from "views/Login/Login"
 
 import "assets/css/material-dashboard-react.css?v=1.10.0";
 
@@ -34,7 +35,8 @@ ReactDOM.render(
       <Route path="/mapa" component={MapLayout} />
       <Route path="/dev" component={AccordionHojaRutas} />
       <Route path="/simulacionMap" component={SimulacionMapLayout} />
-      <Redirect from="/" to="/admin/pedidos" />
+      <Route path="/login" component={Login} />
+      <Redirect from="/" to="/Login" />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")
