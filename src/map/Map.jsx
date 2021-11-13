@@ -22,7 +22,7 @@ const Map = (blockSize_p) => {
   var imgClientWarehouse;
   var imgRoadblock;
   var imgAveria;
-  const requestInterval = 20 * 1000; //en segundos
+  const requestInterval = 10 * 1000; //en segundos
   const truckScalingFactor = 26;
   //Usar la misma imagen para el camion
 
@@ -92,12 +92,21 @@ const Map = (blockSize_p) => {
 
   const initFlags = () => {
     if (pedidos) {
-      truckNextOrder = [];
-      truckDirection = [];
-      pedidos.forEach(() => {
-        truckNextOrder.push(0);
-        truckDirection.push(0); //0: Movimiento, 1:Atendiendo un pedido
-      });
+      let len = truckNextOrder.length;
+      let diff = pedidos.length - len;
+      if (diff >= 0) {
+        for (let i = 0; i < diff; i++) {
+          truckNextOrder.push(0);
+          truckDirection.push(0);
+        }
+      } else {
+        truckNextOrder = [];
+        truckDirection = [];
+        pedidos.forEach(() => {
+          truckNextOrder.push(0);
+          truckDirection.push(0); //0: Movimiento, 1:Atendiendo un pedido
+        });
+      }
     }
   };
 
