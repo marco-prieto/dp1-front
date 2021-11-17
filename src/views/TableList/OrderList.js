@@ -268,6 +268,14 @@ export default function OrderList() {
                       value: true,
                       message: "Coordenada X requerida",
                     },
+                    min: {
+                      value: 0,
+                      message: "El valor debe ser mayor a 0"
+                    },
+                    max: {
+                      value: 70,
+                      message: "El valor debe ser maximo 70"
+                    }
                   })}
                 />
                 <br />
@@ -291,12 +299,20 @@ export default function OrderList() {
                       value: true,
                       message: "Coordenada Y requerida",
                     },
+                    min: {
+                      value: 0,
+                      message: "El valor debe ser mayor a 0"
+                    },
+                    max: {
+                      value: 50,
+                      message: "El valor debe ser maximo 50"
+                    }
                   })}
                 />
                 <br />
-                {errors.UbicacionY && (
+                {errors.ubicacionY && (
                   <span className="text-danger text-small d-block mb-2">
-                    {errors.UbicacionY.message}
+                    {errors.ubicacionY.message}
                   </span>
                 )}
               </div>
@@ -314,6 +330,14 @@ export default function OrderList() {
                   value: true,
                   message: "Cantidad de GLP requerida",
                 },
+                min: {
+                  value: 0,
+                  message: "El valor debe ser mayor a 0"
+                },
+                max: {
+                  value: 40,
+                  message: "El valor debe ser maximo 40"
+                }
               })}
             />
             <br />
@@ -335,6 +359,14 @@ export default function OrderList() {
                   value: true,
                   message: "plazoEntrega requerido",
                 },
+                min: {
+                  value: 0,
+                  message: "El valor debe ser mayor a 0"
+                },
+                max: {
+                  value: 40,
+                  message: "El valor debe ser maximo 40"
+                }
               })}
             />
             <br />
