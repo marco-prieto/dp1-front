@@ -217,6 +217,7 @@ const Map = (blockSize_p) => {
     } else {
       //Regresando a planta principal
       truckDirection[index] = 0;
+      truckNextOrder[index] = orders.length; //medida preventiva
     }
 
     var tiempoTramo;
@@ -505,7 +506,7 @@ const Map = (blockSize_p) => {
     //Renderizar Plantas
     renderPlantas(p5);
 
-    if (pedidos) {
+    if (pedidos && truckNextOrder.length > 0 && truckDirection.length > 0) {
       for (var k = 0; k < pedidos.length; k++) {
         renderTruck(p5, pedidos[k], k);
       }
