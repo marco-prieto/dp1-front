@@ -47,12 +47,13 @@ const SimulationMap = ({
     //console.log(startDate);
     obtenerRutaPedidos(speed); //speed de parametro
     obtenerAverias(speed);
-    //obtenerBloqueos(); luego ver como usar bloqueos
+    obtenerBloqueos(speed); //luego ver como usar bloqueos
 
     const interval = setInterval(() => {
       //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
       obtenerRutaPedidos(speed);
       obtenerAverias(speed);
+      obtenerBloqueos(speed);
     }, requestInterval);
     return () => clearInterval(interval);
   }, []);
@@ -73,6 +74,20 @@ const SimulationMap = ({
       })
       .catch((error) => {
         alert("Ocurrió un error al traer la información del mapa");
+        console.log(error);
+      });
+  };
+
+  const obtenerBloqueos = (speed) => {
+    const data = { velocidad: speed, tipo: 2 }; //tipo 2 es sim 3 dias
+    axios
+      .post(`${url}/bloqueo/listarBloqueos`, data)
+      .then((res) => {
+        console.log("BLOQUEOS", res.data);
+        bloqueos = res.data;
+      })
+      .catch((error) => {
+        alert("Ocurrió un error al traer la información de los bloqueos");
         console.log(error);
       });
   };
@@ -269,16 +284,13 @@ const SimulationMap = ({
 
     //New
     var transTime;
-    try {
-      if (truckNextOrder[index] != 0) {
-        transTime =
-          (Date.now() - new Date(orders[truckNextOrder[index] - 1].leftDate)) /
-          1000;
-      } else {
-        transTime = (Date.now() - startDate) / 1000;
-      }
-    } catch (ex) {
-      console.log("ERROR LEFT DATE", index, orderList, truckNextOrder[index]);
+
+    if (truckNextOrder[index] != 0) {
+      transTime =
+        (Date.now() - new Date(orders[truckNextOrder[index] - 1].leftDate)) /
+        1000;
+    } else {
+      transTime = (Date.now() - startDate) / 1000;
     }
 
     var distance = transTime * velocidadTramo;
@@ -291,6 +303,7 @@ const SimulationMap = ({
 
     if (truckDirection[index] == 0) {
       curNode = Math.trunc(distance / 1000);
+      //console.log(curNode);
     } else if (truckDirection[index] == 1) {
       curNode = orders[truckNextOrder[index]].indexRoute;
     }
@@ -503,25 +516,40 @@ const SimulationMap = ({
     renderGrid(p5);
 
     //Renderizar Bloqueos
-    for (var i = 0; i < mockBloqueos.length; i++) {
-      renderRoadBlock(p5, mockBloqueos[i]);
+    if (bloqueos && bloqueos.length > 0) {
+      for (var i = 0; i < bloqueos.length; i++) {
+        renderRoadBlock(p5, bloqueos[i]);
+      }
     }
 
     //Averias
-    if (averias) {
+    if (averias && averias.length > 0) {
       for (var j = 0; j < averias.length; j++) {
-        renderAveria(p5, averias[j]);
+        try {
+          renderAveria(p5, averias[j]);
+        } catch (ex) {
+          console.log(ex);
+        }
       }
     }
 
     //Renderizar Plantas
     renderPlantas(p5);
 
-    if (pedidos) {
+    if (
+      pedidos &&
+      pedidos.length > 0 &&
+      truckNextOrder.length > 0 &&
+      truckDirection.length > 0
+    ) {
       for (var k = 0; k < pedidos.length; k++) {
         if (pedidos[k]["active"] == 1) {
           // solo renderizar pedidos activos
-          renderTruck(p5, pedidos[k], k);
+          try {
+            renderTruck(p5, pedidos[k], k);
+          } catch (ex) {
+            //console.log(k, ex);
+          }
         }
       }
     }

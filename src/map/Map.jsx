@@ -38,7 +38,7 @@ const Map = (blockSize_p) => {
     //console.log(startDate);
     obtenerRutaPedidos(1); //speed
     obtenerAverias(1); //speed
-    obtenerBloqueos();
+    obtenerBloqueos(1);
 
     const interval = setInterval(() => {
       //Request a obtener ruta pedidos y volver a inicializar las banderas con initFlags()
@@ -63,9 +63,10 @@ const Map = (blockSize_p) => {
       });
   };
 
-  const obtenerBloqueos = () => {
+  const obtenerBloqueos = (speed) => {
+    const data = { velocidad: speed, tipo: 1 }; //tipo 1 es dia a dia,
     axios
-      .get(`${url}/bloqueo/listarBloqueos`)
+      .post(`${url}/bloqueo/listarBloqueos`, data)
       .then((res) => {
         //console.log(res.data);
         bloqueos = res.data;
@@ -497,7 +498,7 @@ const Map = (blockSize_p) => {
       }
     }
     //Averias
-    if (averias) {
+    if (averias && averias.length > 0) {
       for (var j = 0; j < averias.length; j++) {
         renderAveria(p5, averias[j]);
       }
@@ -506,9 +507,20 @@ const Map = (blockSize_p) => {
     //Renderizar Plantas
     renderPlantas(p5);
 
-    if (pedidos && truckNextOrder.length > 0 && truckDirection.length > 0) {
+    if (
+      pedidos &&
+      pedidos.length > 0 &&
+      truckNextOrder.length > 0 &&
+      truckDirection.length > 0
+    ) {
       for (var k = 0; k < pedidos.length; k++) {
-        renderTruck(p5, pedidos[k], k);
+        if (pedidos[k]["active"] == 1) {
+          try {
+            renderTruck(p5, pedidos[k], k);
+          } catch (ex) {
+            console.log(ex);
+          }
+        }
       }
     }
   };

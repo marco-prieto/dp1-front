@@ -34,12 +34,22 @@ export default function SimulacionLayout({ ...rest }) {
   const handleClose = () => setOpen(false);
   const handleCloseSimulacion = () => {
     setFlagFinSimulacion(false);
+    setFlagConfig(true);
+    setFlagSimulation(false);
   };
   const handleCloseColapso = () => {
     setFlagColapso(false);
     setFlagConfig(true);
     setFlagSimulation(false);
   };
+
+  //Variables para bloqueos
+  const [openBloqueos, setOpenBloqueos] = React.useState(false);
+  var auxGlobalRoadblocks = [];
+  const [globalRoadblocks, setGlobalRoadblocks] = React.useState([]);
+
+  const handleOpenBloqueos = () => setOpenBloqueos(true);
+  const handleCloseBloqueos = () => setOpenBloqueos(false);
 
   const style2 = {
     position: "absolute",
@@ -57,6 +67,7 @@ export default function SimulacionLayout({ ...rest }) {
   //Variables para el back
   const [globalOrders, setGlobalOrders] = useState([]);
   //var globalOrders=[];
+  var auxGlobalOrders = [];
   const [globalVelocity, setGlobalVelocity] = useState(1);
 
   const [flagConfig, setFlagConfig] = useState(true);
@@ -78,9 +89,23 @@ export default function SimulacionLayout({ ...rest }) {
     return el;
   };
 
-  const handleUploadFile = (e) => {
+  const readMultiplePedidos = (e) => {
+    let files = e.currentTarget.files;
+    let readers = [];
+
+    // Abortar si no hubo archivos seleccionados
+    if (!files.length) return;
+
+    // Almacenar promesas en matriz
+    for (let i = 0; i < files.length; i++) {
+      readers.push(files[i]);
+      //console.log(files[i]);
+      handleUploadFile(files[i]);
+    }
+  };
+
+  const handleUploadFile = (file) => {
     try {
-      const file = e.target.files[0];
       if (!file) return;
 
       var nameFile = file.name;
@@ -103,7 +128,7 @@ export default function SimulacionLayout({ ...rest }) {
         for (var i = 0; i < lines.length - 1; i++) {
           var line = lines[i].replace("\r", "");
           //console.log(i)
-          //console.log(line)
+          //console.log(line);
           var parts = [];
           parts = line.split(":");
           if (parts.length !== 3) {
@@ -150,8 +175,8 @@ export default function SimulacionLayout({ ...rest }) {
 
           orders.push(order);
         }
-
-        setGlobalOrders(orders);
+        auxGlobalOrders = auxGlobalOrders.concat(orders);
+        setGlobalOrders(auxGlobalOrders);
 
         /*cargaMasiva(objetos).then(() => {
             readPedidos()
@@ -159,6 +184,159 @@ export default function SimulacionLayout({ ...rest }) {
             }).catch(err => {
             //aquí notificacion de error
             });*/
+      };
+      reader.readAsText(file);
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  //bloqueos
+  const handleSubmitBloqueos = () => {
+    var data = globalRoadblocks;
+    console.log(data);
+    axios
+      .post(`${url}/bloqueo/registarBloqueos`, data) //flag sera 2 si hay colapso
+      .then((res) => {
+        alert("Los bloqueos se registraron correctamente");
+      })
+      .catch((error) => {
+        alert("ERROR al registrar el archivo de bloqueos");
+        console.log(error);
+      });
+  };
+
+  const readMultipleBloqueos = (e) => {
+    let files = e.currentTarget.files;
+    let readers = [];
+
+    // Abortar si no hubo archivos seleccionados
+    if (!files.length) return;
+
+    // Almacenar promesas en matriz
+    for (let i = 0; i < files.length; i++) {
+      readers.push(files[i]);
+      //console.log(files[i]);
+      handleUploadFileBloqueo(files[i]);
+    }
+  };
+
+  const handleUploadFileBloqueo = (file) => {
+    try {
+      if (!file) return;
+
+      var nameFile = file.name;
+
+      nameFile = nameFile.replace("bloqueos", "");
+      nameFile = nameFile.replace(".txt", "");
+      var date = parseInt(nameFile);
+
+      var year = Math.trunc(date / 100).toString();
+      var month = (date - year * 100).toString();
+
+      const reader = new FileReader();
+
+      reader.onload = (evt) => {
+        var content = evt.target.result;
+        var lines = content.split("\n");
+
+        var roadblocks = [];
+
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].replace("\r", "");
+
+          var rb = {};
+          var nodes = [];
+
+          var data = line.split(",");
+          var datesStart = data[0].split("-")[0];
+          var datesEnd = data[0].split("-")[1];
+
+          var startDate = datesStart.split(":");
+          var endDate = datesEnd.split(":");
+
+          //Parseo de fechas
+          rb["startDate"] =
+            year +
+            "-" +
+            parseElement(month) +
+            "-" +
+            parseElement(startDate[0]) +
+            "@" +
+            parseElement(startDate[1]) +
+            ":" +
+            parseElement(startDate[2]) +
+            ":00";
+          rb["endDate"] =
+            year +
+            "-" +
+            parseElement(month) +
+            "-" +
+            parseElement(endDate[0]) +
+            "@" +
+            parseElement(endDate[1]) +
+            ":" +
+            parseElement(endDate[2]) +
+            ":00";
+
+          //Nodos
+          const nodes_ = data.slice(1);
+
+          for (let j = 0; j < nodes_.length; j = j + 2) {
+            var dummyNode = {};
+            dummyNode["x"] = nodes_[j];
+            dummyNode["y"] = nodes_[j + 1];
+            nodes.push(dummyNode);
+          }
+
+          //Encontrar nodos intermedios
+          var aux_nodes = [];
+          for (let k = 0; k < nodes.length - 1; k++) {
+            aux_nodes.push({
+              x: parseInt(nodes[k]["x"]),
+              y: parseInt(nodes[k]["y"]),
+            });
+            var x0 = parseInt(nodes[k]["x"]);
+            var y0 = parseInt(nodes[k]["y"]);
+            var x1 = parseInt(nodes[k + 1]["x"]);
+            var y1 = parseInt(nodes[k + 1]["y"]);
+
+            //Evaluar si es incremento en x o en y
+            if (Math.abs(x0 - x1) >= 2) {
+              if (x1 > x0) {
+                for (let q = 1; q < Math.abs(x0 - x1); q++) {
+                  aux_nodes.push({ x: x0 + q, y: y0 });
+                }
+              } else if (x1 < x0) {
+                for (let q = 1; q < Math.abs(x0 - x1); q++) {
+                  aux_nodes.push({ x: x0 - q, y: y0 });
+                }
+              }
+            } else if (Math.abs(y0 - y1) >= 2) {
+              if (y1 > y0) {
+                for (let q = 1; q < Math.abs(y0 - y1); q++) {
+                  aux_nodes.push({ x: x0, y: y0 + q });
+                }
+              } else if (y1 < y0) {
+                for (let q = 1; q < Math.abs(y0 - y1); q++) {
+                  aux_nodes.push({ x: x0, y: y0 - q });
+                }
+              }
+            }
+          }
+          aux_nodes.push({
+            x: parseInt(nodes[nodes.length - 1]["x"]),
+            y: parseInt(nodes[nodes.length - 1]["y"]),
+          });
+          rb["path"] = aux_nodes;
+          rb["type"] = 2;
+
+          roadblocks.push(rb);
+        }
+
+        auxGlobalRoadblocks = auxGlobalRoadblocks.concat(roadblocks);
+
+        setGlobalRoadblocks(auxGlobalRoadblocks);
       };
       reader.readAsText(file);
     } catch (error) {
@@ -184,6 +362,7 @@ export default function SimulacionLayout({ ...rest }) {
                     setFlagSimulation(false);
 
                     //Abrir modal de subir bloqueos
+                    handleOpenBloqueos();
                   }}
                 >
                   Subir Bloqueos
@@ -248,6 +427,8 @@ export default function SimulacionLayout({ ...rest }) {
                 disabled={globalOrders.length <= 0 ? "True" : false}
                 onClick={() => {
                   if (globalOrders.length > 0) {
+                    //console.log(globalOrders);
+                    //console.log(globalRoadblocks);
                     handleStartSimulacion3dias();
                     setFlagSimulation(true);
                     setFlagConfig(false);
@@ -289,7 +470,12 @@ export default function SimulacionLayout({ ...rest }) {
               <div className="col-3">
                 <Button variant="contained" component="label">
                   Subir Archivo
-                  <input type="file" hidden onChange={handleUploadFile} />
+                  <input
+                    type="file"
+                    hidden
+                    onChange={readMultiplePedidos}
+                    multiple
+                  />
                 </Button>
               </div>
             </div>
@@ -318,7 +504,7 @@ export default function SimulacionLayout({ ...rest }) {
           <div>
             <div className="row my-3">
               <div className="col-9">
-                La simulación concluyo por colapso logístico
+                La simulación concluyó por colapso logístico
               </div>
             </div>
             <br />
@@ -364,6 +550,61 @@ export default function SimulacionLayout({ ...rest }) {
                 className="btn btn-primary"
                 onClick={() => {
                   setFlagFinSimulacion(false);
+                  setFlagConfig(true);
+                  setFlagSimulation(false);
+                }}
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
+        </Box>
+      </Modal>
+      <Modal
+        open={openBloqueos}
+        onClose={handleCloseBloqueos}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        {/* <Box sx={style2}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Text in a modal
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+          </Typography>
+        </Box> */}
+        <Box sx={style2}>
+          <h3>Agregar Bloqueo</h3>
+          <br />
+          <div>
+            <div className="row my-3">
+              <div className="col-9">
+                (*) Suba el archivo txt con la información de los bloqueos en el
+                formato: dd:hh:mm-dd:hh:mm,x1,y1,x2,y2,x3,y3,x4,y4......xn,yn
+              </div>
+              <div className="col-3">
+                <Button variant="contained" component="label">
+                  Subir Archivo
+                  <input
+                    type="file"
+                    hidden
+                    onChange={readMultipleBloqueos}
+                    multiple
+                  />
+                </Button>
+              </div>
+            </div>
+            <br />
+            <br />
+
+            <div className="d-flex justify-content-end">
+              {" "}
+              <br />
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  handleCloseBloqueos();
                 }}
               >
                 Confirmar

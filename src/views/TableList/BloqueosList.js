@@ -117,7 +117,8 @@ React.useEffect(() =>{
 }, [])
 
 const obtenerBloqueos = () =>{
-  axios.get(`${url}/bloqueo/listarBloqueos`).then((resp)=>{
+  const data = { velocidad: 1, tipo: 1 };
+  axios.post(`${url}/bloqueo/listarBloqueos`,data).then((resp)=>{
     console.log(resp.data)
     setBloqueos(resp.data)
   })
@@ -242,6 +243,7 @@ const handleUploadFile = e => {
                 "y": parseInt(nodes[nodes.length-1]["y"]),
               });
               rb['path'] = aux_nodes;
+              rb['type'] = 1;
 
               roadblocks.push(rb);
           }
