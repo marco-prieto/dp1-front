@@ -235,12 +235,16 @@ export default function OrderList() {
                     required: {
                       value: true,
                       message: "Código del Camión requerido",
-                    },
+                    },                    
+                    length:{
+                      value: 5,
+                      message: "El codigo debe ser de 5 caracteres "
+                    }
                   })}
                 />
-                {errors.fechaPedido && (
+                {errors.codigoCamion && (
                   <span className="text-danger text-small d-block mb-2">
-                    {errors.fechaPedido.message}
+                    {errors.codigoCamion.message}
                   </span>
                 )}
               </div>
@@ -284,12 +288,20 @@ export default function OrderList() {
                       value: true,
                       message: "Velocidad del Camión requerida",
                     },
+                    min: {
+                      value: 0,
+                      message: "El valor debe ser mayor a 0"
+                    },
+                    max: {
+                      value: 20,
+                      message: "El valor debe ser maximo 20"
+                    }
                   })}
                 />
                 <br />
-                {errors.UbicacionY && (
+                {errors.velocidadCamion && (
                   <span className="text-danger text-small d-block mb-2">
-                    {errors.UbicacionY.message}
+                    {errors.velocidadCamion.message}
                   </span>
                 )}
               </div>
