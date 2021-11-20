@@ -132,7 +132,6 @@ export default function OrderList() {
       obtenerPedidos()
       alert('El registro fue exitoso')
       e.target.reset();
-      handleClose();
     }).catch(err=>{alert('Ocurrió un error en el registro del pedido')})
     
   };

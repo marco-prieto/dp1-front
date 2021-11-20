@@ -16,6 +16,7 @@ import bgImage from "assets/img/sidebar-2.jpg";
 import { Modal } from "@material-ui/core";
 import { Box } from "@material-ui/core";
 import SimulationMap from "map/SimulationMap.jsx";
+import AccordionHRSimulacion from "../../components/CustomAccordion/AccordionHRSimulacion";
 import axios from "axios";
 import url from "../../config";
 
@@ -85,7 +86,7 @@ export default function SimulacionLayout({ ...rest }) {
   };
 
   const handleStartSimulacionColapso = () => {
-    var data = { orders: globalOrders, speed: globalVelocity };
+    var data = { orders: globalOrders, speed: 1500 }; //por defecto, colapso se corre a x1500
     axios
       .post(`${url}/algoritmo/simulacionColapso `, data) //flag sera 2 si hay colapso
       .then((res) => {})
@@ -108,11 +109,15 @@ export default function SimulacionLayout({ ...rest }) {
     // Abortar si no hubo archivos seleccionados
     if (!files.length) return;
 
-    // Almacenar promesas en matriz
-    for (let i = 0; i < files.length; i++) {
-      readers.push(files[i]);
-      //console.log(files[i]);
-      handleUploadFile(files[i]);
+    try {
+      // Almacenar promesas en matriz
+      for (let i = 0; i < files.length; i++) {
+        readers.push(files[i]);
+        //console.log(files[i]);
+        handleUploadFile(files[i]);
+      }
+    } catch (ex) {
+      console.log(ex);
     }
   };
 
@@ -225,11 +230,15 @@ export default function SimulacionLayout({ ...rest }) {
     // Abortar si no hubo archivos seleccionados
     if (!files.length) return;
 
-    // Almacenar promesas en matriz
-    for (let i = 0; i < files.length; i++) {
-      readers.push(files[i]);
-      //console.log(files[i]);
-      handleUploadFileBloqueo(files[i]);
+    try {
+      // Almacenar promesas en matriz
+      for (let i = 0; i < files.length; i++) {
+        readers.push(files[i]);
+        //console.log(files[i]);
+        handleUploadFileBloqueo(files[i]);
+      }
+    } catch (ex) {
+      console.log(ex);
     }
   };
 
@@ -404,87 +413,108 @@ export default function SimulacionLayout({ ...rest }) {
           </p> */}
           </CardHeader>
         </Card>
+
         {flagConfig && (
           <div className="d-flex justify-content-between">
-            <div className="d-flex align-items-center mb-3">
-              <label className="me-2">Tipo de de Simulación:</label>
-              <select
-                value={simulationType}
-                className="form-select"
-                style={{ width: "auto", height: "45px" }}
-                onChange={(e) => {
-                  setSimulationType(e.target.value);
-                }}
-              >
-                <option value={2} defaultValue>
-                  Simulación de 3 días
-                </option>
-                <option value={3}>Simulación de Colapso Logístico</option>
-              </select>
-            </div>
-            <div className="d-flex align-items-center mb-3">
-              <label className="me-2">Velocidad de Simulación:</label>
-              <select
-                value={globalVelocity}
-                className="form-select"
-                style={{ width: "auto", height: "45px" }}
-                onChange={(e) => {
-                  setGlobalVelocity(e.target.value);
-                }}
-              >
-                <option value={1} defaultValue>
-                  1x
-                </option>
-                <option value={2}>2x</option>
-                <option value={5}>5x</option>
-                <option value={10}>10x</option>
-                <option value={20}>20x</option>
-                <option value={50}>50x</option>
-                <option value={100}>100x</option>
-                <option value={200}>200x</option>
-                <option value={300}>300x</option>
-                <option value={440}>440x</option>
-                <option value={1500}>1500x</option>
-              </select>
-            </div>
-
             <div className="d-flex">
-              <div className="me-4">
-                <Button
-                  variant="contained"
-                  component="label"
-                  color="primary"
-                  disabled={globalOrders.length <= 0 ? "True" : false}
-                  onClick={() => {
-                    if (globalOrders.length > 0) {
-                      //console.log(globalOrders);
-                      //console.log(globalRoadblocks);
-                      if (simulationType == 2) {
-                        handleStartSimulacion3dias();
-                      } else {
-                        handleStartSimulacionColapso();
-                      }
-
-                      setFlagSimulation(true);
-                      setFlagConfig(false);
-                    }
+              <div className="d-flex align-items-center mb-3 me-5">
+                <label className="me-2">Tipo de de Simulación:</label>
+                <select
+                  value={simulationType}
+                  className="form-select"
+                  style={{ width: "auto", height: "45px" }}
+                  onChange={(e) => {
+                    setSimulationType(e.target.value);
                   }}
                 >
-                  Empezar Simulación
-                </Button>
+                  <option value={2} defaultValue>
+                    Simulación de 3 días
+                  </option>
+                  <option value={3}>Simulación de Colapso Logístico</option>
+                </select>
+              </div>
+              {simulationType == 2 && (
+                <div className="d-flex align-items-center mb-3">
+                  <label className="me-2">Velocidad de Simulación:</label>
+                  <select
+                    value={globalVelocity}
+                    className="form-select"
+                    style={{ width: "auto", height: "45px" }}
+                    onChange={(e) => {
+                      setGlobalVelocity(e.target.value);
+                    }}
+                  >
+                    <option value={1} defaultValue>
+                      1x
+                    </option>
+                    <option value={2}>2x</option>
+                    <option value={5}>5x</option>
+                    <option value={10}>10x</option>
+                    <option value={20}>20x</option>
+                    <option value={50}>50x</option>
+                    <option value={100}>100x</option>
+                    <option value={200}>200x</option>
+                    <option value={300}>300x</option>
+                    <option value={440}>440x</option>
+                  </select>
+                </div>
+              )}
+            </div>
+            <div>
+              <div className="d-flex">
+                <div className="me-4 mt-1">
+                  <Button
+                    variant="contained"
+                    component="label"
+                    color="primary"
+                    disabled={globalOrders.length <= 0 ? "True" : false}
+                    onClick={() => {
+                      if (globalOrders.length > 0) {
+                        //console.log(globalOrders);
+                        //console.log(globalRoadblocks);
+                        if (simulationType == 2) {
+                          handleStartSimulacion3dias();
+                        } else {
+                          handleStartSimulacionColapso();
+                        }
+
+                        setFlagSimulation(true);
+                        setFlagConfig(false);
+                      }
+                    }}
+                  >
+                    Empezar Simulación
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         )}
         <div className="ms-4">
           {flagSimulation && (
-            <SimulationMap
-              blockSize_p={12}
-              speed_p={globalVelocity}
-              simulationType_p={simulationType}
-              setFlagColapso={setFlagColapso}
-              setFlagFinSimulacion={setFlagFinSimulacion}
-            />
+            <div>
+              <div className="ms-5">
+                <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
+              </div>
+              <div className="d-lg-flex d-md-block">
+                <SimulationMap
+                  blockSize_p={12}
+                  speed_p={globalVelocity}
+                  simulationType_p={simulationType}
+                  setFlagColapso={setFlagColapso}
+                  setFlagFinSimulacion={setFlagFinSimulacion}
+                />
+                <div className="mx-4">
+                  <h3
+                    className="d-flex justify-content-center"
+                    style={{ marginTop: "-55px" }}
+                  >
+                    Hoja de Rutas
+                  </h3>
+                  <AccordionHRSimulacion simulationType={simulationType} />
+                </div>
+              </div>
+            </div>
           )}
         </div>
       </GridItem>
