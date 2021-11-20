@@ -494,7 +494,11 @@ export default function SimulacionLayout({ ...rest }) {
           {flagSimulation && (
             <div>
               <div className="ms-5">
-                <h3 className="my-2 pb-2">Mapa de la Ciudad en Tiempo Real</h3>
+                {simulationType == 2 ? (
+                  <h3 className="my-2 pb-2">Simulación de 3 días</h3>
+                ) : (
+                  <h3 className="my-2 pb-2">Simulación de Colapso Logístico</h3>
+                )}
               </div>
               <div className="d-lg-flex d-md-block">
                 <SimulationMap
@@ -605,7 +609,7 @@ export default function SimulacionLayout({ ...rest }) {
           <div>
             <div className="row my-3">
               <div className="col-9">
-                La simulación concluyo satisfactoriamente
+                La simulación concluyó satisfactoriamente
               </div>
             </div>
             <br />
