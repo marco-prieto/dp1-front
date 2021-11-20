@@ -20,6 +20,7 @@ import url from "../config";
 const SimulationMap = ({
   blockSize_p,
   speed_p,
+  simulationType_p,
   setFlagColapso,
   setFlagFinSimulacion,
 }) => {
@@ -59,7 +60,7 @@ const SimulationMap = ({
   }, []);
 
   const obtenerRutaPedidos = (speed) => {
-    const data = { velocidad: speed, tipo: 2 }; //tipo 2 es simulacion 3 dias
+    const data = { velocidad: speed, tipo: simulationType_p }; //tipo 2 es simulacion 3 dias
     axios
       .post(`${url}/algoritmo/obtenerRutas`, data) //flag sera 2 si hay colapso
       .then((res) => {
@@ -79,7 +80,7 @@ const SimulationMap = ({
   };
 
   const obtenerBloqueos = (speed) => {
-    const data = { velocidad: speed, tipo: 2 }; //tipo 2 es sim 3 dias
+    const data = { velocidad: speed, tipo: simulationType_p }; //tipo 2 es sim 3 dias
     axios
       .post(`${url}/bloqueo/listarBloqueos`, data)
       .then((res) => {
@@ -93,7 +94,7 @@ const SimulationMap = ({
   };
 
   const obtenerAverias = (speed) => {
-    const data = { velocidad: speed, tipo: 2 }; //tipo 2 es sim 3 dias,
+    const data = { velocidad: speed, tipo: simulationType_p }; //tipo 2 es sim 3 dias,
     axios
       .post(`${url}/averia/obtenerAverias`, data) //flag sera 2 si hay colapso
       .then((res) => {
@@ -518,12 +519,16 @@ const SimulationMap = ({
     //Renderizar Bloqueos
     if (bloqueos && bloqueos.length > 0) {
       for (var i = 0; i < bloqueos.length; i++) {
-        renderRoadBlock(p5, bloqueos[i]);
+        try {
+          renderRoadBlock(p5, bloqueos[i]);
+        } catch (ex) {
+          console.log(bloqueos[i], ex);
+        }
       }
     }
 
     //Averias
-    if (averias && averias.length > 0) {
+    if (simulationType_p == 2 && averias && averias.length > 0) {
       for (var j = 0; j < averias.length; j++) {
         try {
           renderAveria(p5, averias[j]);

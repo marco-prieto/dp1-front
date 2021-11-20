@@ -69,6 +69,7 @@ export default function SimulacionLayout({ ...rest }) {
   //var globalOrders=[];
   var auxGlobalOrders = [];
   const [globalVelocity, setGlobalVelocity] = useState(1);
+  const [simulationType, setSimulationType] = useState(2);
 
   const [flagConfig, setFlagConfig] = useState(true);
 
@@ -79,6 +80,17 @@ export default function SimulacionLayout({ ...rest }) {
       .then((res) => {})
       .catch((error) => {
         alert("ERROR al ejecutar la simulación de 3 días");
+        console.log(error);
+      });
+  };
+
+  const handleStartSimulacionColapso = () => {
+    var data = { orders: globalOrders, speed: globalVelocity };
+    axios
+      .post(`${url}/algoritmo/simulacionColapso `, data) //flag sera 2 si hay colapso
+      .then((res) => {})
+      .catch((error) => {
+        alert("ERROR al ejecutar la simulación de Colapso Logístico");
         console.log(error);
       });
   };
@@ -329,7 +341,7 @@ export default function SimulacionLayout({ ...rest }) {
             y: parseInt(nodes[nodes.length - 1]["y"]),
           });
           rb["path"] = aux_nodes;
-          rb["type"] = 2;
+          rb["type"] = simulationType;
 
           roadblocks.push(rb);
         }
@@ -374,7 +386,7 @@ export default function SimulacionLayout({ ...rest }) {
                     handleOpen();
                   }}
                 >
-                  Simulación de 3 días
+                  Subir Ventas
                 </button>
                 <button
                   className="btn btn-light btn-sm ms-3"
@@ -395,11 +407,27 @@ export default function SimulacionLayout({ ...rest }) {
         {flagConfig && (
           <div className="d-flex justify-content-between">
             <div className="d-flex align-items-center mb-3">
+              <label className="me-2">Tipo de de Simulación:</label>
+              <select
+                value={simulationType}
+                className="form-select"
+                style={{ width: "auto", height: "45px" }}
+                onChange={(e) => {
+                  setSimulationType(e.target.value);
+                }}
+              >
+                <option value={2} defaultValue>
+                  Simulación de 3 días
+                </option>
+                <option value={3}>Simulación de Colapso Logístico</option>
+              </select>
+            </div>
+            <div className="d-flex align-items-center mb-3">
               <label className="me-2">Velocidad de Simulación:</label>
               <select
                 value={globalVelocity}
                 className="form-select"
-                style={{ width: "90px", height: "45px" }}
+                style={{ width: "auto", height: "45px" }}
                 onChange={(e) => {
                   setGlobalVelocity(e.target.value);
                 }}
@@ -416,27 +444,35 @@ export default function SimulacionLayout({ ...rest }) {
                 <option value={200}>200x</option>
                 <option value={300}>300x</option>
                 <option value={440}>440x</option>
+                <option value={1500}>1500x</option>
               </select>
             </div>
 
-            <div>
-              <Button
-                variant="contained"
-                component="label"
-                color="primary"
-                disabled={globalOrders.length <= 0 ? "True" : false}
-                onClick={() => {
-                  if (globalOrders.length > 0) {
-                    //console.log(globalOrders);
-                    //console.log(globalRoadblocks);
-                    handleStartSimulacion3dias();
-                    setFlagSimulation(true);
-                    setFlagConfig(false);
-                  }
-                }}
-              >
-                Empezar Simulación
-              </Button>
+            <div className="d-flex">
+              <div className="me-4">
+                <Button
+                  variant="contained"
+                  component="label"
+                  color="primary"
+                  disabled={globalOrders.length <= 0 ? "True" : false}
+                  onClick={() => {
+                    if (globalOrders.length > 0) {
+                      //console.log(globalOrders);
+                      //console.log(globalRoadblocks);
+                      if (simulationType == 2) {
+                        handleStartSimulacion3dias();
+                      } else {
+                        handleStartSimulacionColapso();
+                      }
+
+                      setFlagSimulation(true);
+                      setFlagConfig(false);
+                    }
+                  }}
+                >
+                  Empezar Simulación
+                </Button>
+              </div>
             </div>
           </div>
         )}
@@ -445,6 +481,7 @@ export default function SimulacionLayout({ ...rest }) {
             <SimulationMap
               blockSize_p={12}
               speed_p={globalVelocity}
+              simulationType_p={simulationType}
               setFlagColapso={setFlagColapso}
               setFlagFinSimulacion={setFlagFinSimulacion}
             />
@@ -604,7 +641,7 @@ export default function SimulacionLayout({ ...rest }) {
               <button
                 className="btn btn-primary"
                 onClick={() => {
-                  handleCloseBloqueos();
+                  handleSubmitBloqueos();
                 }}
               >
                 Confirmar
