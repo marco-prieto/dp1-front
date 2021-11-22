@@ -26,6 +26,7 @@
 import OrderList from "views/TableList/OrderList";
 import BloqueosList from "views/TableList/BloqueosList";
 import CamionesList from "views/TableList/CamionesList";
+import PlantasList from "views/TableList/PlantasList";
 import MantenimientoPreventivoList from "views/TableList/MantenimientoPreventivoList";
 import Simulacion from "views/Simulacion/Simulacion.jsx";
 import Login from "views/Login/Login"
@@ -154,9 +155,16 @@ const sagRoutes = [
   },
   {
     path: "/mantenimientoPreventivo",
-    name: "Mantenimientos Programados",
+    name: "Mantenimientos",
     icon: "content_paste",
     component: MantenimientoPreventivoList,
+    layout: "/admin",
+  },
+  {
+    path: "/plantas",
+    name: "Plantas",
+    icon: "content_paste",
+    component: PlantasList,
     layout: "/admin",
   },
   /* {

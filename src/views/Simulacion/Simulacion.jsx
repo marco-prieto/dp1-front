@@ -44,6 +44,9 @@ export default function SimulacionLayout({ ...rest }) {
     setFlagSimulation(false);
   };
 
+  //Config del mapa
+  const [blockSize, setBlockSize] = useState(12);
+
   //Variables para bloqueos
   const [openBloqueos, setOpenBloqueos] = React.useState(false);
   var auxGlobalRoadblocks = [];
@@ -425,6 +428,9 @@ export default function SimulacionLayout({ ...rest }) {
                   style={{ width: "auto", height: "45px" }}
                   onChange={(e) => {
                     setSimulationType(e.target.value);
+                    if (e.target.value == 3) {
+                      setGlobalVelocity(1500); //velocidad por defecto de la simulacion colapso
+                    }
                   }}
                 >
                   <option value={2} defaultValue>
@@ -459,6 +465,21 @@ export default function SimulacionLayout({ ...rest }) {
                   </select>
                 </div>
               )}
+              <div className="d-flex align-items-center mb-3 ms-5">
+                <label className="me-2">Tamaño del Mapa:</label>
+                <select
+                  value={blockSize}
+                  className="form-select"
+                  style={{ width: "auto", height: "45px" }}
+                  onChange={(e) => {
+                    setBlockSize(e.target.value);
+                  }}
+                >
+                  <option value={8}>pequeño</option>
+                  <option value={12}>mediano</option>
+                  <option value={15}>grande</option>
+                </select>
+              </div>
             </div>
             <div>
               <div className="d-flex">
@@ -502,7 +523,7 @@ export default function SimulacionLayout({ ...rest }) {
               </div>
               <div className="d-lg-flex d-md-block">
                 <SimulationMap
-                  blockSize_p={12}
+                  blockSize={parseInt(blockSize)}
                   speed_p={globalVelocity}
                   simulationType_p={simulationType}
                   setFlagColapso={setFlagColapso}

@@ -8,6 +8,14 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import Button from "@material-ui/core/Button";
+
+import axios from 'axios';
+import url from "../../config";
+
+
+
+
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 
@@ -40,24 +48,20 @@ export default function CustomTable(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-
                 <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.id}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key} align="center">
-                      {prop.camion.tipoCamion.abreviatura+"-"+prop.camion.codigo}
+                      {prop.tipoPlanta==1 ? "Principal" : "Secundaria"}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key} align="center">
-                      {prop.fechaEntrada.split('T')[0]}
+                      {"(" + prop.nodo.coordenadaX + "," + prop.nodo.coordenadaX + ")"}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key} align="center">
-                      {prop.fechaEntrada.split('T')[1]}
+                      {parseInt(prop.capacidadGLP) > 999999 ? "inf" : prop.capacidadGLP}
                 </TableCell>
                 <TableCell className={classes.tableCell} key={key} align="center">
-                      {prop.fechaSalida.split('T')[0]}
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key} align="center">
-                      {prop.fechaSalida.split('T')[1]}
+                {parseInt(prop.glpDisponible) > 999999 ? "inf" : prop.glpDisponible}
                 </TableCell>
               </TableRow>
             );

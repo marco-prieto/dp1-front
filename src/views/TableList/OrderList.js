@@ -1,4 +1,3 @@
-
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 
@@ -19,7 +18,7 @@ import { Typography } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 /* import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography'; */
-import axios from 'axios';
+import axios from "axios";
 import url from "../../config";
 import { Link } from "react-router-dom";
 
@@ -109,6 +108,7 @@ export default function OrderList() {
     },
   ];
   const [pedidos, setPedidos] = React.useState(null);
+  const [pedidosFiltrados, setPedidosFiltrados] = React.useState([]);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -125,30 +125,47 @@ export default function OrderList() {
   const onSubmit = (data, e) => {
     console.log(data);
     //setPedidos([...pedidos, data]);
-    axios.post(`${url}/pedido/registrarPedidoNuevo`,data)
-    .then(res => {
-      //console.log(res);
-      console.log(res.data);
-      obtenerPedidos()
-      alert('El registro fue exitoso')
-      e.target.reset();
-    }).catch(err=>{alert('Ocurrió un error en el registro del pedido')})
-    
+    axios
+      .post(`${url}/pedido/registrarPedidoNuevo`, data)
+      .then((res) => {
+        //console.log(res);
+        console.log(res.data);
+        obtenerPedidos();
+        alert("El registro fue exitoso");
+        e.target.reset();
+      })
+      .catch((err) => {
+        alert("Ocurrió un error en el registro del pedido");
+      });
   };
-  
+
   //Solo falta insertar API creo xD
-  
-  React.useEffect(() =>{
-    obtenerPedidos()
-  }, [])
-  
-  const obtenerPedidos = () =>{
-    axios.get(`${url}/pedido/listarPedidos`).then((resp)=>{
-      console.log(resp.data)
-      setPedidos(resp.data)
-    })
+
+  React.useEffect(() => {
+    obtenerPedidos();
+  }, []);
+
+  const obtenerPedidos = () => {
+    axios.get(`${url}/pedido/listarPedidos`).then((resp) => {
+      console.log(resp.data);
+      setPedidos(resp.data);
+      setPedidosFiltrados(resp.data);
+    });
+  };
+
+  function filtradoNuevo(e) {
+    console.log(e.estadoPedido);
+    return e.estadoPedido == "Nuevo";
   }
-  
+  function filtradoEnRuta(e) {
+    console.log(e.estadoPedido);
+    return e.estadoPedido == "En ruta";
+  }
+  function filtradoAtendido(e) {
+    console.log(e.estadoPedido);
+    return e.estadoPedido == "Atendido";
+  }
+
   /* *************************************************************************************************************  */
 
   return (
@@ -156,7 +173,7 @@ export default function OrderList() {
       <GridItem xs={12} sm={12} md={12}>
         <Card plain>
           <CardHeader plain color="primary">
-          {/* <CardHeader plain className="bg-danger"> */}
+            {/* <CardHeader plain className="bg-danger"> */}
             <h4 className={classes.cardTitleWhite}>Pedidos recibidos</h4>
             <div className="d-flex justify-content-end">
               <a href="/mapa" className="mx-2">
@@ -171,22 +188,47 @@ export default function OrderList() {
               Here is a subtitle for this table
             </p> */}
           </CardHeader>
+          <div className="d-flex justify-content-start align-items-center mt-4">
+            <label className="me-2">Filtrar Pedidos:</label>
+            <select
+              className="form-select"
+              style={{ width: "120px", height: "45px" }}
+              onChange={(e) => {
+                var val = e.target.value;
+                if (val == 1) setPedidosFiltrados(pedidos);
+                if (val == 2)
+                  setPedidosFiltrados(pedidos.filter(filtradoNuevo));
+                if (val == 3)
+                  setPedidosFiltrados(pedidos.filter(filtradoEnRuta));
+                if (val == 4)
+                  setPedidosFiltrados(pedidos.filter(filtradoAtendido));
+              }}
+            >
+              <option value={1} defaultValue>
+                Todos
+              </option>
 
+              <option value={2}>Nuevo</option>
+
+              <option value={3}>En ruta</option>
+              <option value={4}>Atendido</option>
+            </select>
+          </div>
           <CardBody>
-            {pedidos&&
-            <Table
-              tableHeaderColor="primary"
-              tableHead={[
-                "ID",
-                "Fecha de Recepción",
-                "Cantidad GLP (m3)",
-                "Plazo de Entrega (hr)",
-                "Fecha de Entrega",
-                "Estado",
-              ]}
-              tableData={pedidos}
-            />
-            }
+            {pedidos && (
+              <Table
+                tableHeaderColor="primary"
+                tableHead={[
+                  "ID",
+                  "Fecha de Recepción",
+                  "Cantidad GLP (m3)",
+                  "Plazo de Entrega (hr)",
+                  "Fecha de Entrega",
+                  "Estado",
+                ]}
+                tableData={pedidosFiltrados}
+              />
+            )}
           </CardBody>
         </Card>
       </GridItem>
@@ -231,34 +273,33 @@ export default function OrderList() {
               <br />
 
               <br />
-              
-                <div className="col-6">
-                  <label>Hora</label>
-                  <br />
-                  <input
-                    type="time"
-                    name="hora"
-                    step="1"
-                    {...register("hora", {
-                      required: {
-                        value: true,
-                        message: "Hora requerida",
-                      },
-                    })}
-                  />
-                  {errors.hora && (
-                    <span className="text-danger text-small d-block mb-2">
-                      {errors.hora.message}
-                    </span>
-                  )}
 
-                </div>
-              <br />
-              
               <div className="col-6">
+                <label>Hora</label>
+                <br />
+                <input
+                  type="time"
+                  name="hora"
+                  step="1"
+                  {...register("hora", {
+                    required: {
+                      value: true,
+                      message: "Hora requerida",
+                    },
+                  })}
+                />
+                {errors.hora && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.hora.message}
+                  </span>
+                )}
+              </div>
               <br />
+
+              <div className="col-6">
+                <br />
                 <label>Coordenada X</label>
-                
+
                 <input
                   type="number"
                   name="ubicacionX"
@@ -269,12 +310,12 @@ export default function OrderList() {
                     },
                     min: {
                       value: 0,
-                      message: "El valor debe ser mayor a 0"
+                      message: "El valor debe ser mayor a 0",
                     },
                     max: {
                       value: 70,
-                      message: "El valor debe ser maximo 70"
-                    }
+                      message: "El valor debe ser maximo 70",
+                    },
                   })}
                 />
                 <br />
@@ -284,10 +325,10 @@ export default function OrderList() {
                   </span>
                 )}
               </div>
-              
+
               <br />
               <div className="col-6">
-              <br />
+                <br />
                 <label>Coordenada Y</label>
                 <br />
                 <input
@@ -300,12 +341,12 @@ export default function OrderList() {
                     },
                     min: {
                       value: 0,
-                      message: "El valor debe ser mayor a 0"
+                      message: "El valor debe ser mayor a 0",
                     },
                     max: {
                       value: 50,
-                      message: "El valor debe ser maximo 50"
-                    }
+                      message: "El valor debe ser maximo 50",
+                    },
                   })}
                 />
                 <br />
@@ -317,73 +358,75 @@ export default function OrderList() {
               </div>
             </div>
             <div className="row">
-            <div className="col-6">
-            <br />
-            <label>Cantidad de GLP</label>
-            <br />
-            <input
-              type="number"
-              name="cantidadGLP"
-              {...register("cantidadGLP", {
-                required: {
-                  value: true,
-                  message: "Cantidad de GLP requerida",
-                },
-                min: {
-                  value: 0,
-                  message: "El valor debe ser mayor a 0"
-                },
-                max: {
-                  value: 40,
-                  message: "El valor debe ser maximo 40"
-                }
-              })}
-            />
-            <br />
-            {errors.cantidadGLP && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.cantidadGLP.message}
-              </span>
-            )}
+              <div className="col-6">
+                <br />
+                <label>Cantidad de GLP</label>
+                <br />
+                <input
+                  type="number"
+                  name="cantidadGLP"
+                  {...register("cantidadGLP", {
+                    required: {
+                      value: true,
+                      message: "Cantidad de GLP requerida",
+                    },
+                    min: {
+                      value: 0,
+                      message: "El valor debe ser mayor a 0",
+                    },
+                    max: {
+                      value: 40,
+                      message: "El valor debe ser maximo 40",
+                    },
+                  })}
+                />
+                <br />
+                {errors.cantidadGLP && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.cantidadGLP.message}
+                  </span>
+                )}
+              </div>
+              <div className="col-6">
+                <br />
+                <label>Plazo de Entrega</label>
+                <br />
+                <input
+                  type="number"
+                  name="plazoEntrega"
+                  {...register("plazoEntrega", {
+                    required: {
+                      value: true,
+                      message: "plazoEntrega requerido",
+                    },
+                    min: {
+                      value: 0,
+                      message: "El valor debe ser mayor a 0",
+                    },
+                    max: {
+                      value: 40,
+                      message: "El valor debe ser maximo 40",
+                    },
+                  })}
+                />
+                <br />
+                {errors.plazoEntrega && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.plazoEntrega.message}
+                  </span>
+                )}
+              </div>
             </div>
-            <div className="col-6">
             <br />
-            <label>Plazo de Entrega</label>
             <br />
-            <input
-              type="number"
-              name="plazoEntrega"
-              {...register("plazoEntrega", {
-                required: {
-                  value: true,
-                  message: "plazoEntrega requerido",
-                },
-                min: {
-                  value: 0,
-                  message: "El valor debe ser mayor a 0"
-                },
-                max: {
-                  value: 40,
-                  message: "El valor debe ser maximo 40"
-                }
-              })}
-            />
-            <br />
-            {errors.plazoEntrega && (
-              <span className="text-danger text-small d-block mb-2">
-                {errors.plazoEntrega.message}
-              </span>
-            )}
+            <div className="d-flex justify-content-end">
+              {" "}
+              <br />
+              <button className="btn btn-primary">Agregar pedido</button>
             </div>
-            </div>
-            <br />
-            <br />
-            <div className="d-flex justify-content-end"> <br /><button className="btn btn-primary">Agregar pedido</button></div>
-            
           </form>
         </Box>
       </Modal>
     </GridContainer>
   );
 }
-

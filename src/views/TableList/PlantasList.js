@@ -8,7 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import TableCamiones from "components/Table/TableCamiones.js";
+import TablePlantas from "components/Table/TablePlantas.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -71,10 +71,10 @@ const useStyles = makeStyles(styles);
 export default function OrderList() {
   const classes = useStyles();
 
-  const mockListarCamiones = [
+  const mockListarPlantas = [
     {
       id: 1,
-      codigoCamion: "TA-01",
+      tipoPlanta: "TA-01",
       taraCamion: "5",
       capacidadPetroleo: "25",
       capacidadGLP: "25",
@@ -99,7 +99,7 @@ export default function OrderList() {
   ];
 
   const [open, setOpen] = React.useState(false);
-  const [camiones, setCamiones] = React.useState(null);
+  const [plantas, setPlantas] = React.useState(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -112,16 +112,13 @@ export default function OrderList() {
 
   /* *************************************************************************************************************  */
   const onSubmit = (data, e) => {
-    console.log(data);
-    e.target.reset();
-    // //setPedidos([...pedidos, data]);
     axios
-      .post(`${url}/camion/registrarCamionNuevo`, data)
+      .post(`${url}/planta/registrarPlanta`, data)
       .then((res) => {
         //console.log(res);
         console.log(res.data);
         e.target.reset();
-        obtenerCamiones();
+        obtenerPlantas();
       })
       .catch((err) => {
         console.log(err);
@@ -132,55 +129,14 @@ export default function OrderList() {
   };
 
   React.useEffect(() => {
-    obtenerCamiones();
+    obtenerPlantas();
   }, []);
 
-  const obtenerCamiones = () => {
-    axios.get(`${url}/camion/listarCamiones`).then((resp) => {
+  const obtenerPlantas = () => {
+    axios.get(`${url}/planta/listarPlantas`).then((resp) => {
       console.log(resp.data);
-      setCamiones(resp.data);
+      setPlantas(resp.data);
     });
-  };
-
-  const parseElement = (el) => {
-    el = el.toString();
-    el = el.length >= 2 ? el : "0" + el;
-    return el;
-  };
-
-  const registrarAveria = (id) => {
-    var dateNow = new Date(Date.now());
-    var today = dateNow.toLocaleString("es-ES").toString().split(" "); //[date, time]
-    var date = today[0].split("/").reverse();
-    var time = today[1].split(":");
-
-    for (var i = 0; i < date.length; i++) {
-      date[i] = parseElement(date[i]);
-    }
-
-    var startDate =
-      date.join("-") +
-      "@" +
-      parseElement(time[0]) +
-      ":" +
-      parseElement(time[1]) +
-      ":" +
-      parseElement(time[2]); //formato para el back
-
-    var data = { idCamion: id, fecha: startDate, type: 1 }; //1 = dia a dia
-
-    console.log(data);
-
-    axios
-      .post(`${url}/averia/registrarAveriaNueva`, data)
-      .then((res) => {
-        alert("La avería se registró correctamente"); //hacer notificacion bonita
-        console.log(res.data);
-        obtenerCamiones();
-      })
-      .catch((err) => {
-        alert("Ocurrió un error en el registro de la avería");
-      });
   };
 
   /* *************************************************************************************************************  */
@@ -191,9 +147,7 @@ export default function OrderList() {
         <Card plain>
           <CardHeader plain color="primary">
             {/* <CardHeader plain className="bg-danger"> */}
-            <h4 className={classes.cardTitleWhite}>
-              Camiones Cisterna en la Flota
-            </h4>
+            <h4 className={classes.cardTitleWhite}>Plantas Abastecedoras</h4>
             <div className="d-flex justify-content-end">
               <button className="btn btn-light btn-sm" onClick={handleOpen}>
                 Nuevo
@@ -206,20 +160,17 @@ export default function OrderList() {
           </CardHeader>
 
           <CardBody>
-            {camiones && (
-              <TableCamiones
+            {plantas && (
+              <TablePlantas
                 tableHeaderColor="primary"
                 tableHead={[
                   "ID",
-                  "Código del Camión",
-                  "TARA Camión",
-                  "Capacidad de Petróleo (m3)",
-                  "Capacidad GLP (m3)",
-                  "Estado",
-                  "Acción",
+                  "Tipo de Planta",
+                  "Ubicación",
+                  "Capacidad de GLP (m3)",
+                  "Disponibilidad de GLP (m3)",
                 ]}
-                tableData={camiones}
-                registrarAveria={registrarAveria}
+                tableData={plantas}
               />
             )}
           </CardBody>
@@ -232,44 +183,42 @@ export default function OrderList() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style2}>
-          <h3>Agregar Camión Cisterna</h3>
+          <h3>Agregar Planta</h3>
           <br />
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="row">
               <div className="col-6">
-                <label>Código del Camión</label>
+                <label>Tipo de Planta</label>
+
+                <select
+                  className="form-select"
+                  style={{ width: "190px", height: "40px" }}
+                  {...register("tipo")}
+                >
+                  <option value={1} defaultValue>
+                    Principal
+                  </option>
+                  <option value={2}>Secundaria</option>
+                </select>
                 <br />
-                <input
-                  name="codigoCamion"
-                  {...register("codigoCamion", {
-                    required: {
-                      value: true,
-                      message: "Código del Camión requerido",
-                    },
-                    length: {
-                      value: 5,
-                      message: "El codigo debe ser de 5 caracteres ",
-                    },
-                  })}
-                />
-                {errors.codigoCamion && (
+                {errors.ubicacionX && (
                   <span className="text-danger text-small d-block mb-2">
-                    {errors.codigoCamion.message}
+                    {errors.ubicacionX.message}
                   </span>
                 )}
               </div>
 
               <div className="col-6">
-                <label>Kilometraje</label>
-
+                <label>Capacidad de GLP</label>
+                <br />
                 <input
                   className="mt-1"
                   type="number"
-                  name="kilometraje"
-                  {...register("kilometraje", {
+                  name="capacidadGLP"
+                  {...register("capacidadGLP", {
                     required: {
                       value: true,
-                      message: "Kilometraje del Camión requerida",
+                      message: "Capacidad GLP requerida",
                     },
                     min: {
                       value: 0,
@@ -284,42 +233,16 @@ export default function OrderList() {
                   </span>
                 )}
               </div>
-              <br />
-
+            </div>
+            <div className="row">
               <div className="col-6">
-                <br />
-                <label>Tipo de Camión</label>
-
-                <select
-                  className="form-select"
-                  style={{ width: "190px", height: "40px" }}
-                  {...register("tipoCamion")}
-                >
-                  <option value={1} defaultValue>
-                    A
-                  </option>
-                  <option value={2}>B</option>
-                  <option value={3}>C</option>
-                  <option value={4}>D</option>
-                </select>
-                <br />
-                {errors.ubicacionX && (
-                  <span className="text-danger text-small d-block mb-2">
-                    {errors.ubicacionX.message}
-                  </span>
-                )}
-              </div>
-
-              <br />
-              <div className="col-6">
-                <br />
-                <label>Velocidad del Camión</label>
+                <label>Ubicación X</label>
                 <br />
                 <input
                   className="mt-1"
                   type="number"
-                  name="velocidadCamion"
-                  {...register("velocidadCamion", {
+                  name="x"
+                  {...register("x", {
                     required: {
                       value: true,
                       message: "Velocidad del Camión requerida",
@@ -329,8 +252,38 @@ export default function OrderList() {
                       message: "El valor debe ser mayor a 0",
                     },
                     max: {
-                      value: 200,
-                      message: "El valor debe ser maximo 200",
+                      value: 70,
+                      message: "El valor debe ser maximo 20",
+                    },
+                  })}
+                />
+                <br />
+                {errors.velocidadCamion && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.velocidadCamion.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="col-6">
+                <label>Ubicación Y</label>
+                <br />
+                <input
+                  className="mt-1"
+                  type="number"
+                  name="y"
+                  {...register("y", {
+                    required: {
+                      value: true,
+                      message: "Velocidad del Camión requerida",
+                    },
+                    min: {
+                      value: 0,
+                      message: "El valor debe ser mayor a 0",
+                    },
+                    max: {
+                      value: 50,
+                      message: "El valor debe ser maximo 20",
                     },
                   })}
                 />
@@ -345,9 +298,8 @@ export default function OrderList() {
               <div></div>
             </div>
 
-            <div className="d-flex justify-content-end mt-3">
+            <div className="d-flex justify-content-end mt-5">
               {" "}
-              <br />
               <button className="btn btn-primary">Registrar Camión</button>
             </div>
           </form>

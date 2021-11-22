@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
@@ -12,6 +11,10 @@ import TableCell from "@material-ui/core/TableCell";
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 
 const useStyles = makeStyles(styles);
+
+const funcionFiltrado = (e) => {
+  return;
+};
 
 export default function CustomTable(props) {
   const classes = useStyles();
@@ -27,6 +30,7 @@ export default function CustomTable(props) {
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     key={key}
+                    align="center"
                   >
                     {prop}
                   </TableCell>
@@ -46,24 +50,50 @@ export default function CustomTable(props) {
                     </TableCell>
                   );
                 })} */}
-                <TableCell className={classes.tableCell} key={key}>
-                      {prop.id}
+                <TableCell
+                  className={classes.tableCell}
+                  key={key}
+                  align="center"
+                >
+                  {prop.id}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                      {prop.fechaPedido.replace('@', ' ')}
+                <TableCell
+                  className={classes.tableCell}
+                  key={key}
+                  align="center"
+                >
+                  {prop.fechaPedido.replace("@", " ")}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                      {prop.cantidadGLP}
+                <TableCell
+                  className={classes.tableCell}
+                  key={key}
+                  align="center"
+                >
+                  {prop.cantidadGLP}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                      {prop.plazoEntrega}
+                <TableCell
+                  className={classes.tableCell}
+                  key={key}
+                  align="center"
+                >
+                  {prop.plazoEntrega}
                 </TableCell>
-              
-                <TableCell className={classes.tableCell} key={key}>
-                      {prop.fechaEntrega?prop.fechaEntrega.replace('@', ' '):"En camino"}
+
+                <TableCell
+                  className={classes.tableCell}
+                  key={key}
+                  align="center"
+                >
+                  {prop.fechaEntrega
+                    ? prop.fechaEntrega.replace("@", " ")
+                    : "En camino"}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
-                      {prop.estadoPedido}
+                <TableCell
+                  className={classes.tableCell}
+                  key={key}
+                  align="center"
+                >
+                  {prop.estadoPedido}
                 </TableCell>
               </TableRow>
             );

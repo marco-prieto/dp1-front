@@ -93,21 +93,43 @@ export default function OrderList() {
     },
   ];
   const [mantenimientos, setMantenimientos] = React.useState(null);
+  const [globalMantenimientos, setGlobalMantenimientos] = React.useState(null);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const parseElement = (el) => {
+    el = el.toString();
+    el = el.length >= 2 ? el:"0"+el;
+    return el;
+  };
+
+
+  const handleSubmitMantenimientos = () =>{
+    var data = globalMantenimientos;
+
+      axios.post(`${url}/mantenimiento/registrarMantenimientoPreventivo`,data) //flag sera 2 si hay colapso
+      .then(res => {
+        alert("Los matenimientos se registraron correctamente");
+        obtenerMantenimientos();
+      }).catch(error=>{
+        alert("ERROR al registrar el archivo de mantenimientos preventivos");
+        console.log(error);
+      })
+  }
 
   /* *************************************************************************************************************  */  
   
+  const obtenerMantenimientos = () =>{
+    axios.get(`${url}/mantenimiento/listarMantenimientos`).then((resp)=>{
+      console.log(resp.data)
+      setMantenimientos(resp.data)
+    })
+  }
+
   React.useEffect(() =>{
-    setMantenimientos(mockListarMantenimientos);
+    obtenerMantenimientos();
     //obtenerMantenimientoPreventivo();
   }, [])
   
@@ -128,13 +150,6 @@ const handleUploadFile = e => {
       if (!file) return;
   
       var nameFile = file.name;
-
-      /* nameFile = nameFile.replace("bloqueos", "")
-      nameFile = nameFile.replace(".txt", "")
-      var date = parseInt(nameFile);
-
-      var year = Math.trunc(date / 100).toString();
-      var month = (date - year * 100).toString(); */
   
       const reader = new FileReader();
   
@@ -173,27 +188,21 @@ const handleUploadFile = e => {
                 type = type + cad[j]
                 numberStr = numberStr + cad[j+2]
               }
-              var number = parseInt(numberStr)
+              var number = numberStr
 
               var mant = {
-                "fecha" : year+"-"+month+"-"+day,
-                "tipo" : type,
-                "numero" : number
+                "fecha" : (year+"-"+parseElement(month)+"-"+parseElement(day)+"@"+"00:00:00").toString(),
+                "tipo" : type.toString(),
+                "numero" : number.toString()
               }
 
               maintenance.push(mant)
-              console.log(mant)
+
           }
           
-          console.log(maintenance);
-          setMantenimientos(maintenance)
-          /* console.log(mantenimientos) */
-          /*cargaMasiva(objetos).then(() => {
-          readPedidos()
-          //aquí myuestras la notificacion
-          }).catch(err => {
-          //aquí notificacion de error
-          });*/
+          //console.log(maintenance);
+          setGlobalMantenimientos(maintenance)
+
       };
       reader.readAsText(file);
   } catch (error) {
@@ -227,6 +236,7 @@ const handleUploadFile = e => {
               tableHeaderColor="primary"
               tableHead={[
                 "ID",
+                "Código del Camión",
                 "Fecha de Inicio",
                 "Hora de Inicio",
                 "Fecha de Fin",
@@ -244,18 +254,11 @@ const handleUploadFile = e => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {/* <Box sx={style2}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box> */}
+
         <Box sx={style2}>
           <h3>Agregar Mantenimiento Preventivo</h3>
           <br />
-          <form>
+          <div>
             
             <div className="row my-3">
                 <div className="col-9">(*) Suba el archivo txt con la información de los mantenimientos en el formato: aaaammdd:TTNN</div>
@@ -268,9 +271,9 @@ const handleUploadFile = e => {
             </div>
             <br/><br/>
             
-            <div className="d-flex justify-content-end"> <br /><button className="btn btn-primary">Confirmar</button></div>
+            <div className="d-flex justify-content-end"> <br /><button className="btn btn-primary" onClick={()=>{handleSubmitMantenimientos()}}>Confirmar</button></div>
             
-          </form>
+          </div>
         </Box>
       </Modal>
     </GridContainer>

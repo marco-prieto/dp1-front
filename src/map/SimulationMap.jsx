@@ -18,13 +18,12 @@ import axios from "axios";
 import url from "../config";
 
 const SimulationMap = ({
-  blockSize_p,
+  blockSize,
   speed_p,
   simulationType_p,
   setFlagColapso,
   setFlagFinSimulacion,
 }) => {
-  const blockSize = blockSize_p;
   const speed = speed_p;
   var imgPlantaPrincipal;
   var imgPlantaSecundaria;
@@ -162,11 +161,12 @@ const SimulationMap = ({
     p5.stroke(100);
     p5.strokeWeight(6);
     p5.rect(0, 0, p5.width, p5.height);
-    for (var i = 0; i < p5.width; i = i + blockSize) {
+    for (var i = 0; i < p5.width; ) {
       p5.stroke(p5.color(69, 69, 69));
-      p5.strokeWeight(1);
+      p5.strokeWeight(0.5);
       p5.line(i, 0, i, p5.height);
       p5.line(0, i, p5.width, i);
+      i = i + blockSize;
     }
   };
 
@@ -229,10 +229,13 @@ const SimulationMap = ({
         truckDirection[index] = 0;
         truckNextOrder[index] = truckNextOrder[index] + 1;
       }
-    } else {
+    } else if (truckNextOrder[index] == orders.length) {
       //Regresando a planta principal
       truckDirection[index] = 0;
       truckNextOrder[index] = orders.length;
+    } else {
+      truckNextOrder[index] = 0;
+      truckDirection[index] = 0;
     }
 
     var tiempoTramo;

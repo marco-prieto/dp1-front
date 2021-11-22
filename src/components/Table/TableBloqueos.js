@@ -27,6 +27,7 @@ export default function CustomTable(props) {
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     key={key}
+                    align="center"
                   >
                     {prop}
                   </TableCell>
@@ -46,19 +47,19 @@ export default function CustomTable(props) {
                     </TableCell>
                   );
                 })} */}
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.id}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.startDate.split('@')[0]}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.startDate.split('@')[1]}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.endDate.split('@')[0]}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.endDate.split('@')[1]}
                 </TableCell>
               </TableRow>

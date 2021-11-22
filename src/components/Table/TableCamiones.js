@@ -35,6 +35,7 @@ export default function CustomTable(props) {
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     key={key}
+                    align="center"
                   >
                     {prop}
                   </TableCell>
@@ -47,25 +48,25 @@ export default function CustomTable(props) {
           {tableData.map((prop, key) => {
             return (
               <TableRow key={key} className={classes.tableBodyRow}>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.id}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.tipoCamion}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.taraCamion}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.capacidadPetroleo}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.capacidadGLP}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                       {prop.estadoCamion}
                 </TableCell>
-                <TableCell className={classes.tableCell} key={key}>
+                <TableCell className={classes.tableCell} key={key} align="center">
                   {(prop.estadoCamion == 'Operativo' || prop.estadoCamion == 'En Ruta') &&
                   <Button variant="outlined" component="label" size="small"
                           onClick={()=>{props.registrarAveria(prop.id)}}> 
