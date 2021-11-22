@@ -23,6 +23,7 @@ const SimulationMap = ({
   simulationType_p,
   setFlagColapso,
   setFlagFinSimulacion,
+  setInfoColapso,
 }) => {
   const speed = speed_p;
   var imgPlantaPrincipal;
@@ -38,6 +39,7 @@ const SimulationMap = ({
   var averias = null;
 
   var bloqueos = null;
+  var infoColapso = null;
 
   //Variables para la simulacion
   var truckNextOrder = []; //Pedido que atiende cada camion
@@ -64,10 +66,12 @@ const SimulationMap = ({
       .post(`${url}/algoritmo/obtenerRutas`, data) //flag sera 2 si hay colapso
       .then((res) => {
         pedidos = res.data["routes"];
-        console.log(res.data["flag"], pedidos);
+        infoColapso = res.data["collapseInfo"];
+        console.log(res.data["flag"], infoColapso, pedidos);
         initFlags();
         if (res.data["flag"] == 2) {
           setFlagColapso(true);
+          setInfoColapso(infoColapso);
         } else if (res.data["flag"] == 1) {
           setFlagFinSimulacion(true);
         }

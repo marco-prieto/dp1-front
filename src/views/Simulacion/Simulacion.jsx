@@ -68,6 +68,9 @@ export default function SimulacionLayout({ ...rest }) {
     p: 4,
   };
 
+  //Info colapso
+  const [infoColapso, setInfoColapso] = useState(null);
+
   //Variables para el back
   const [globalOrders, setGlobalOrders] = useState([]);
   //var globalOrders=[];
@@ -89,7 +92,7 @@ export default function SimulacionLayout({ ...rest }) {
   };
 
   const handleStartSimulacionColapso = () => {
-    var data = { orders: globalOrders, speed: 1500 }; //por defecto, colapso se corre a x1500
+    var data = { orders: globalOrders, speed: globalVelocity }; //por defecto, colapso se corre a x1500
     axios
       .post(`${url}/algoritmo/simulacionColapso `, data) //flag sera 2 si hay colapso
       .then((res) => {})
@@ -528,6 +531,7 @@ export default function SimulacionLayout({ ...rest }) {
                   simulationType_p={simulationType}
                   setFlagColapso={setFlagColapso}
                   setFlagFinSimulacion={setFlagFinSimulacion}
+                  setInfoColapso={setInfoColapso}
                 />
                 <div className="mx-4">
                   <h3
@@ -536,7 +540,7 @@ export default function SimulacionLayout({ ...rest }) {
                   >
                     Hoja de Rutas
                   </h3>
-                  <AccordionHRSimulacion simulationType={simulationType} />
+                  {/* <AccordionHRSimulacion simulationType={simulationType} /> */}
                 </div>
               </div>
             </div>
@@ -596,7 +600,23 @@ export default function SimulacionLayout({ ...rest }) {
           <div>
             <div className="row my-3">
               <div className="col-9">
-                La simulación concluyó por colapso logístico
+                <div>
+                  La simulación concluyó por colapso logístico el día:{" "}
+                  {infoColapso && infoColapso.fechaColapso.split("T")[0]} a las
+                  {infoColapso &&
+                    " " + infoColapso.fechaColapso.split("T")[1]}{" "}
+                  horas.
+                </div>
+                <br />
+
+                <div>
+                  <strong>Pedidos Atendidos: </strong>
+                  {infoColapso && infoColapso.pedidosAtendidos}
+                </div>
+                <div>
+                  <strong>Pedidos por Atender: </strong>
+                  {infoColapso && infoColapso.pedidosPorAtender}
+                </div>
               </div>
             </div>
             <br />
