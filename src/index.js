@@ -25,6 +25,9 @@ import MapLayout from "layouts/MapLayout.jsx";
 import SimulacionMapLayout from "layouts/SimulacionMapLayout.jsx";
 import AccordionHojaRutas from "components/CustomAccordion/AccordionHojaRutas"
 import Login from "views/Login/Login"
+/* import DiagramaBarras from "components/Graficas/DiagramaBarras";
+import DiagramaPastel from "components/Graficas/DiagramaPastel"
+import Reportes from "views/Dashboard/Reportes" */
 
 import "assets/css/material-dashboard-react.css?v=1.10.0";
 
@@ -36,6 +39,10 @@ ReactDOM.render(
       <Route path="/dev" component={AccordionHojaRutas} />
       <Route path="/simulacionMap" component={SimulacionMapLayout} />
       <Route path="/login" component={Login} />
+      {/* <Route path="/barras" component={DiagramaBarras}/>
+      <Route path="/pastel" component={DiagramaPastel}/>
+      <Route path="/reportaje" component={Reportes}/> */}
+      
       <Redirect from="/" to="/Login" />
     </Switch>
   </BrowserRouter>,

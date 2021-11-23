@@ -29,7 +29,10 @@ import CamionesList from "views/TableList/CamionesList";
 import PlantasList from "views/TableList/PlantasList";
 import MantenimientoPreventivoList from "views/TableList/MantenimientoPreventivoList";
 import Simulacion from "views/Simulacion/Simulacion.jsx";
+import Reportes from "views/Dashboard/Reportes"
+import DiagramaPastel from "components/Graficas/DiagramaPastel"
 import Login from "views/Login/Login"
+import Dashboard from "views/Dashboard/Dashboard"
 
 
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
@@ -167,6 +170,20 @@ const sagRoutes = [
     component: PlantasList,
     layout: "/admin",
   },
+  {
+    path: "/reportes",
+    name: "Reportes",
+    icon: "content_paste",
+    component: Reportes,
+    layout: "/admin",
+  }/* ,
+  {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "content_paste",
+    component: Dashboard,
+    layout: "/admin",
+  }, */
   /* {
     path: "/login",
     name: "Cerrar Cesión",
