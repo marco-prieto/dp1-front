@@ -99,10 +99,17 @@ export default function OrderList() {
   ];
 
   const [open, setOpen] = React.useState(false);
+  const [openEdit, setOpenEdit] = React.useState(false);
   const [camiones, setCamiones] = React.useState(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const handleOpenEdit = () => setOpenEdit(true);
+  const handleCloseEdit = () => {
+    setOpenEdit(false);
+  };
+
+  const [camionEdit, setCamionEdit] = React.useState({});
 
   const {
     register,
@@ -183,6 +190,46 @@ export default function OrderList() {
       });
   };
 
+  const handleEditCamion = () => {
+    var cam = camionEdit;
+    var state = parseInt(cam.estado);
+
+    switch (state) {
+      case 1:
+        state = "Operativo";
+        break;
+      case 2:
+        state = "Averiado";
+        break;
+      case 3:
+        state = "En Ruta";
+        break;
+      case 4:
+        state = "Mantenimiento Correctivo";
+        break;
+      case 5:
+        state = "Mantenimiento Preventivo";
+        break;
+    }
+
+    cam.estado = state;
+    cam.codigoCamion = parseInt(cam.codigoCamion);
+
+    console.log(cam);
+    axios
+      .post(`${url}/camion/editarCamion`, cam) //flag sera 2 si hay colapso
+      .then((res) => {
+        console.log(res.data);
+        alert("El registro fue exitoso");
+        handleCloseEdit();
+        obtenerCamiones();
+      })
+      .catch((error) => {
+        alert("ERROR al editar la información del camión cisterna");
+        console.log(error);
+      });
+  };
+
   /* *************************************************************************************************************  */
 
   return (
@@ -220,6 +267,8 @@ export default function OrderList() {
                 ]}
                 tableData={camiones}
                 registrarAveria={registrarAveria}
+                handleOpenEdit={handleOpenEdit}
+                setCamionEdit={setCamionEdit}
               />
             )}
           </CardBody>
@@ -351,6 +400,145 @@ export default function OrderList() {
               <button className="btn btn-primary">Registrar Camión</button>
             </div>
           </form>
+        </Box>
+      </Modal>
+
+      <Modal
+        open={openEdit}
+        onClose={handleCloseEdit}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style2}>
+          <h3>Editar Camión Cisterna</h3>
+          <br />
+          <div>
+            <div className="row">
+              <div className="col-6">
+                <label>Código del Camión</label>
+                <br />
+                <input
+                  name="codigoCamion"
+                  value={camionEdit.codigoCamion}
+                  onChange={(e) => {
+                    var cam = camionEdit;
+                    cam.codigoCamion = parseInt(e.target.value);
+                    setCamionEdit({ ...cam });
+                  }}
+                />
+                {errors.codigoCamion && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.codigoCamion.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="col-6">
+                <label>Kilometraje</label>
+
+                <input
+                  className="mt-1"
+                  type="number"
+                  name="kilometraje"
+                  value={camionEdit.kilometraje}
+                  onChange={(e) => {
+                    var cam = camionEdit;
+                    cam.kilometraje = parseFloat(e.target.value);
+                    setCamionEdit({ ...cam });
+                  }}
+                />
+                <br />
+                {errors.velocidadCamion && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.velocidadCamion.message}
+                  </span>
+                )}
+              </div>
+              <br />
+
+              <div className="col-6">
+                <br />
+                <label>Tipo de Camión</label>
+
+                <select
+                  className="form-select"
+                  value={camionEdit.tipoCamion}
+                  style={{ width: "190px", height: "40px" }}
+                  onChange={(e) => {
+                    var cam = camionEdit;
+                    cam.tipoCamion = e.target.value;
+                    setCamionEdit({ ...cam });
+                  }}
+                >
+                  <option value={1}>A</option>
+                  <option value={2}>B</option>
+                  <option value={3}>C</option>
+                  <option value={4}>D</option>
+                </select>
+                <br />
+                {errors.ubicacionX && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.ubicacionX.message}
+                  </span>
+                )}
+              </div>
+
+              <br />
+              <div className="col-6">
+                <br />
+                <label>Velocidad del Camión</label>
+                <br />
+                <input
+                  type="number"
+                  name="velocidadCamion"
+                  value={camionEdit.velocidadCamion}
+                  onChange={(e) => {
+                    var cam = camionEdit;
+                    cam.velocidadCamion = parseFloat(e.target.value);
+                    setCamionEdit({ ...cam });
+                  }}
+                />
+                <br />
+              </div>
+
+              <div className="col-6">
+                <label>Estado</label>
+                <select
+                  className="form-select"
+                  value={camionEdit.estado}
+                  style={{ width: "auto", height: "40px" }}
+                  onChange={(e) => {
+                    var cam = camionEdit;
+                    cam.estado = e.target.value;
+                    setCamionEdit({ ...cam });
+                  }}
+                >
+                  <option value={1}>Operativo</option>
+                  <option value={2}>Averiado</option>
+                  <option value={3}>En Ruta</option>
+                  <option value={4}>Mantenimiento Correctivo</option>
+                  <option value={5}>Mantenimiento Preventivo</option>
+                </select>
+                <br />
+                {errors.ubicacionX && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.ubicacionX.message}
+                  </span>
+                )}
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-end mt-2">
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  handleEditCamion();
+                }}
+              >
+                Editar Camión
+              </button>
+            </div>
+          </div>
         </Box>
       </Modal>
     </GridContainer>

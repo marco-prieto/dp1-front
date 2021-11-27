@@ -22,9 +22,10 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 // core components
 import Admin from "layouts/Admin.js";
 import MapLayout from "layouts/MapLayout.jsx";
+import ColapsoLayout from "layouts/ColapsoLayout.jsx";
 import SimulacionMapLayout from "layouts/SimulacionMapLayout.jsx";
-import AccordionHojaRutas from "components/CustomAccordion/AccordionHojaRutas"
-import Login from "views/Login/Login"
+import AccordionHojaRutas from "components/CustomAccordion/AccordionHojaRutas";
+import Login from "views/Login/Login";
 /* import DiagramaBarras from "components/Graficas/DiagramaBarras";
 import DiagramaPastel from "components/Graficas/DiagramaPastel"
 import Reportes from "views/Dashboard/Reportes" */
@@ -36,13 +37,21 @@ ReactDOM.render(
     <Switch>
       <Route path="/admin" component={Admin} />
       <Route path="/mapa" component={MapLayout} />
+      <Route
+        path="/infoColapso"
+        component={(props) =>
+          ColapsoLayout({
+            ...props.location.state,
+          })
+        }
+      />
+
       <Route path="/dev" component={AccordionHojaRutas} />
       <Route path="/simulacionMap" component={SimulacionMapLayout} />
       <Route path="/login" component={Login} />
       {/* <Route path="/barras" component={DiagramaBarras}/>
       <Route path="/pastel" component={DiagramaPastel}/>
       <Route path="/reportaje" component={Reportes}/> */}
-      
       <Redirect from="/" to="/Login" />
     </Switch>
   </BrowserRouter>,

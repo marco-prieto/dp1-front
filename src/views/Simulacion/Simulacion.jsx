@@ -17,6 +17,8 @@ import { Modal } from "@material-ui/core";
 import { Box } from "@material-ui/core";
 import SimulationMap from "map/SimulationMap.jsx";
 import AccordionHRSimulacion from "../../components/CustomAccordion/AccordionHRSimulacion";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
 import axios from "axios";
 import url from "../../config";
 
@@ -411,6 +413,13 @@ export default function SimulacionLayout({ ...rest }) {
                 >
                   Ver Mapa
                 </button>
+                <button
+                  onClick={() => {
+                    setFlagColapso(true);
+                  }}
+                >
+                  AAAAA
+                </button>
               </div>
             )}
 
@@ -486,7 +495,7 @@ export default function SimulacionLayout({ ...rest }) {
             </div>
             <div>
               <div className="d-flex">
-                <div className="me-4 mt-1">
+                <div className="me-4 mt-1 ms-2">
                   <Button
                     variant="contained"
                     component="label"
@@ -540,7 +549,7 @@ export default function SimulacionLayout({ ...rest }) {
                   >
                     Hoja de Rutas
                   </h3>
-                  {/* <AccordionHRSimulacion simulationType={simulationType} /> */}
+                  <AccordionHRSimulacion simulationType={simulationType} />
                 </div>
               </div>
             </div>
@@ -622,18 +631,28 @@ export default function SimulacionLayout({ ...rest }) {
             <br />
 
             <div className="d-flex justify-content-end">
-              {" "}
               <br />
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setFlagColapso(false);
-                  setFlagConfig(true);
-                  setFlagSimulation(false);
-                }}
-              >
-                Confirmar
-              </button>
+              <div className="d-flex">
+                <Link
+                  to={{
+                    pathname: "/infoColapso",
+                    state: { info: infoColapso },
+                  }}
+                >
+                  <button className="btn btn-primary">Ver Más</button>
+                </Link>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setFlagColapso(false);
+                    setFlagConfig(true);
+                    setFlagSimulation(false);
+                  }}
+                >
+                  Confirmar
+                </button>
+              </div>
             </div>
           </div>
         </Box>
@@ -678,14 +697,6 @@ export default function SimulacionLayout({ ...rest }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {/* <Box sx={style2}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box> */}
         <Box sx={style2}>
           <h3>Agregar Bloqueo</h3>
           <br />

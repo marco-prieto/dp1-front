@@ -34,6 +34,11 @@ const SimulationMap = ({
   var imgAveria;
   const truckScalingFactor = 26;
   const requestInterval = 5 * 1000; //en segundos
+
+  //GLPs restantes
+  var glpPlanta2 = null;
+  var glpPlanta3 = null;
+
   //Usar la misma imagen para el camion
   var pedidos = null;
   var averias = null;
@@ -66,6 +71,10 @@ const SimulationMap = ({
       .post(`${url}/algoritmo/obtenerRutas`, data) //flag sera 2 si hay colapso
       .then((res) => {
         pedidos = res.data["routes"];
+
+        glpPlanta2 = res.data["glpRestantePlanta2"];
+        glpPlanta3 = res.data["glpRestantePlanta3"];
+
         infoColapso = res.data["collapseInfo"];
         console.log(res.data["flag"], infoColapso, pedidos);
         initFlags();
@@ -498,6 +507,7 @@ const SimulationMap = ({
       );
     }
 
+    //PLANTA 2
     if (imgPlantaSecundaria) {
       p5.image(
         imgPlantaSecundaria,
@@ -507,6 +517,16 @@ const SimulationMap = ({
         25
       );
     }
+    if (glpPlanta2 != null) {
+      p5.textSize(12);
+      p5.text(
+        `GLP: ${glpPlanta2}`,
+        (42 - 1) * blockSize,
+        (50 - 42 - 1) * blockSize
+      );
+    }
+
+    //PLANTA 3
 
     if (imgPlantaSecundaria) {
       p5.image(
@@ -515,6 +535,15 @@ const SimulationMap = ({
         (50 - 3) * blockSize - 12.5,
         30,
         25
+      );
+    }
+
+    if (glpPlanta3 != null) {
+      p5.textSize(12);
+      p5.text(
+        `GLP: ${glpPlanta3}`,
+        (63 - 1) * blockSize,
+        (50 - 3 - 1) * blockSize
       );
     }
   };

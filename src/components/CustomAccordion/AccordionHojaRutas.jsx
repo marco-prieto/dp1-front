@@ -78,7 +78,7 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
     <div>
       <div square className="mx-2 " style={{ marginBottom: "-10px" }}>
         <div
-          className="row align-items-center ps-4"
+          className="row align-items-center ps-4 pe-3"
           disableGutters="true"
           style={{
             minHeight: "60px",
@@ -87,7 +87,7 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
           }}
         >
           <div
-            className="col-2 d-flex justify-content-center"
+            className="col-1 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
             Código del Camión
@@ -114,13 +114,19 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
             className="col-2 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
-            Cantidad de Petróleo Actual
+            Cantidad de Petróleo Utilizado (m3)
           </div>
           <div
             className="col-2 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
-            Cantidad de GLP Actual
+            Cantidad Petróleo Restante (m3)
+          </div>
+          <div
+            className="col-1 d-flex justify-content-center"
+            style={{ fontWeight: "bold" }}
+          >
+            Cantidad de GLP Entregado (m3)
           </div>
         </div>
 
@@ -152,10 +158,13 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
                   {camion.horaLlegada}
                 </div>
                 <div className="col-2 d-flex justify-content-center">
-                  {camion.cantPetroleoActual}
+                  {Math.round(camion.cantPetroleoActual * 100) / 100}
                 </div>
                 <div className="col-2 d-flex justify-content-center">
-                  {camion.cantGlpActual}
+                  {Math.round(camion.cantPetroleoFinalRuta * 100) / 100}
+                </div>
+                <div className="col-1 d-flex justify-content-center me-2">
+                  {Math.round(camion.cantGlpActual * 100) / 100}
                 </div>
               </AccordionSummary>
 

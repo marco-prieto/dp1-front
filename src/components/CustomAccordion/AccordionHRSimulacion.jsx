@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import MuiAccordion from "@material-ui/core/Accordion";
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
-import TableHojaRutas from "components/Table/TableHojaRutas.js";
+import TableHojaRutasSimulacion from "components/Table/TableHojaRutasSimulacion.js";
 
 import axios from "axios";
 import url from "../../config";
@@ -77,7 +77,7 @@ const AccordionHojaRutas = ({ simulationType }) => {
     <div>
       <div square className="mx-2 " style={{ marginBottom: "-10px" }}>
         <div
-          className="row align-items-center ps-4"
+          className="row align-items-center ps-4 pe-3"
           disableGutters="true"
           style={{
             minHeight: "60px",
@@ -86,7 +86,7 @@ const AccordionHojaRutas = ({ simulationType }) => {
           }}
         >
           <div
-            className="col-2 d-flex justify-content-center"
+            className="col-1 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
             Código del Camión
@@ -113,13 +113,19 @@ const AccordionHojaRutas = ({ simulationType }) => {
             className="col-2 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
-            Cantidad de Petróleo Actual
+            Cantidad de Petróleo Utilizado (m3)
           </div>
           <div
             className="col-2 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
-            Cantidad de GLP Actual
+            Cantidad Petróleo Restante (m3)
+          </div>
+          <div
+            className="col-1 d-flex justify-content-center"
+            style={{ fontWeight: "bold" }}
+          >
+            Cantidad de GLP Entregado (m3)
           </div>
         </div>
 
@@ -138,7 +144,7 @@ const AccordionHojaRutas = ({ simulationType }) => {
                 className="row"
                 style={{ fontSize: "13px" }}
               >
-                <div className="col-2 d-flex justify-content-center">
+                <div className="col-1 d-flex justify-content-center">
                   {camion.codigoCamion}
                 </div>
                 <div className="col-2 d-flex justify-content-center">
@@ -151,15 +157,18 @@ const AccordionHojaRutas = ({ simulationType }) => {
                   {camion.horaLlegada}
                 </div>
                 <div className="col-2 d-flex justify-content-center">
-                  {camion.cantPetroleoActual}
+                  {Math.round(camion.cantPetroleoActual * 100) / 100}
                 </div>
                 <div className="col-2 d-flex justify-content-center">
-                  {camion.cantGlpActual}
+                  {Math.round(camion.cantPetroleoFinalRuta * 100) / 100}
+                </div>
+                <div className="col-1 d-flex justify-content-center me-2">
+                  {Math.round(camion.cantGlpActual * 100) / 100}
                 </div>
               </AccordionSummary>
 
               <AccordionDetails>
-                <TableHojaRutas
+                <TableHojaRutasSimulacion
                   tableHeaderColor="primary"
                   style={{ marginTop: "-5px" }}
                   tableHead={[
