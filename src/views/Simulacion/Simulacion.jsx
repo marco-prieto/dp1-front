@@ -413,13 +413,13 @@ export default function SimulacionLayout({ ...rest }) {
                 >
                   Ver Mapa
                 </button>
-                <button
+                {/* <button
                   onClick={() => {
                     setFlagColapso(true);
                   }}
                 >
                   AAAAA
-                </button>
+                </button> */}
               </div>
             )}
 
@@ -632,14 +632,16 @@ export default function SimulacionLayout({ ...rest }) {
 
             <div className="d-flex justify-content-end">
               <br />
-              <div className="d-flex">
+              <div className="d-flex ">
                 <Link
                   to={{
                     pathname: "/infoColapso",
                     state: { info: infoColapso },
                   }}
                 >
-                  <button className="btn btn-primary">Ver Más</button>
+                  <button className="btn btn-primary me-4">
+                    Ver Información del Colapso
+                  </button>
                 </Link>
 
                 <button
