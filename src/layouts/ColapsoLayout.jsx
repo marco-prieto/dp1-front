@@ -109,8 +109,8 @@ export default function ColapsoLayout({ props }) {
                 className="d-flex align-items-center mb-3 ms-5"
                 style={{ fontSize: "21px" }}
               >
-                <div className="me-3">
-                  <strong>Pedidos Por Atendider:</strong>
+                <div className="me-4">
+                  <strong>Pedidos Por Atender:</strong>
                 </div>
                 <div>{info && info.pedidosPorAtender}</div>
               </div>

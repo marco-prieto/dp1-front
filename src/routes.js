@@ -29,11 +29,11 @@ import CamionesList from "views/TableList/CamionesList";
 import PlantasList from "views/TableList/PlantasList";
 import MantenimientoPreventivoList from "views/TableList/MantenimientoPreventivoList";
 import Simulacion from "views/Simulacion/Simulacion.jsx";
-import Reportes from "views/Dashboard/Reportes"
-import DiagramaPastel from "components/Graficas/DiagramaPastel"
-import Login from "views/Login/Login"
-import Dashboard from "views/Dashboard/Dashboard"
-
+import ReportesDashboard from "views/Dashboard/Reportes";
+import Reportes from "views/TableList/ReportesList";
+import DiagramaPastel from "components/Graficas/DiagramaPastel";
+import Login from "views/Login/Login";
+import Dashboard from "views/Dashboard/Dashboard";
 
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
 // import BubbleChart from "@material-ui/icons/BubbleChart";
@@ -126,7 +126,6 @@ import Dashboard from "views/Dashboard/Dashboard"
 //   },
 // ];
 
-
 const sagRoutes = [
   {
     path: "/pedidos",
@@ -171,12 +170,21 @@ const sagRoutes = [
     layout: "/admin",
   },
   {
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "content_paste",
+    component: ReportesDashboard,
+    layout: "/admin",
+  },
+  {
     path: "/reportes",
     name: "Reportes",
     icon: "content_paste",
     component: Reportes,
     layout: "/admin",
-  }/* ,
+  },
+
+  /* ,
   {
     path: "/dashboard",
     name: "Dashboard",
@@ -192,6 +200,7 @@ const sagRoutes = [
     layout: "/admin",
   }, */
 
+  ,
 ];
 
 export default sagRoutes;

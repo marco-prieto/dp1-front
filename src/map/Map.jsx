@@ -473,7 +473,7 @@ const Map = (blockSize_p) => {
     }
 
     p5.stroke(p5.color("red"));
-    p5.strokeWeight(0.5);
+    p5.strokeWeight(1);
     p5.text(
       av.codigoCamion,
       node["x"] * blockSize - 15,

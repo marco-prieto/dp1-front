@@ -104,6 +104,21 @@ export default function SimulacionLayout({ ...rest }) {
       });
   };
 
+  const handleGenerarPedidos = () => {
+    var data = { fecha: "2021-11-16 00:00:01" }; //por defecto, colapso se corre a x1500
+    console.log(data);
+    // axios
+    //   .post(`${url}/pedido/generarPedidosColapso`, data) //flag sera 2 si hay colapso
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     alert("Los pedidos se generaron correctamente");
+    //   })
+    //   .catch((error) => {
+    //     alert("ERROR al ejecutar al generar los pedidos");
+    //     console.log(error);
+    //   });
+  };
+
   const parseElement = (el) => {
     el = el.toString();
     el = el.length >= 2 ? el : "0" + el;
@@ -152,6 +167,7 @@ export default function SimulacionLayout({ ...rest }) {
         var orders = [];
         for (var i = 0; i < lines.length - 1; i++) {
           var line = lines[i].replace("\r", "");
+          if (line.length == 0) continue;
           //console.log(i)
           //console.log(line);
           var parts = [];
@@ -273,6 +289,7 @@ export default function SimulacionLayout({ ...rest }) {
 
         for (var i = 0; i < lines.length; i++) {
           var line = lines[i].replace("\r", "");
+          if (line.length == 0) continue;
 
           var rb = {};
           var nodes = [];
@@ -384,35 +401,47 @@ export default function SimulacionLayout({ ...rest }) {
             </h4>
 
             {flagConfig && (
-              <div className="d-flex justify-content-end">
-                <button
-                  className="btn btn-light btn-md me-3"
-                  onClick={() => {
-                    setFlagSimulation(false);
+              <div className="d-flex justify-content-between">
+                <div>
+                  <button
+                    className="btn btn-light btn-md me-3"
+                    onClick={() => {
+                      handleGenerarPedidos();
+                    }}
+                  >
+                    Generar Pedidos
+                  </button>
+                </div>
+                <div className="d-flex justify-content-end">
+                  <button
+                    className="btn btn-light btn-md me-3"
+                    onClick={() => {
+                      setFlagSimulation(false);
 
-                    //Abrir modal de subir bloqueos
-                    handleOpenBloqueos();
-                  }}
-                >
-                  Subir Bloqueos
-                </button>
-                <button
-                  className="btn btn-light btn-sm"
-                  onClick={() => {
-                    setFlagSimulation(false);
-                    handleOpen();
-                  }}
-                >
-                  Subir Ventas
-                </button>
-                <button
-                  className="btn btn-light btn-sm ms-3"
-                  onClick={() => {
-                    setFlagSimulation(!flagSimulation);
-                  }}
-                >
-                  Ver Mapa
-                </button>
+                      //Abrir modal de subir bloqueos
+                      handleOpenBloqueos();
+                    }}
+                  >
+                    Subir Bloqueos
+                  </button>
+                  <button
+                    className="btn btn-light btn-sm"
+                    onClick={() => {
+                      setFlagSimulation(false);
+                      handleOpen();
+                    }}
+                  >
+                    Subir Ventas
+                  </button>
+                  <button
+                    className="btn btn-light btn-sm ms-3"
+                    onClick={() => {
+                      setFlagSimulation(!flagSimulation);
+                    }}
+                  >
+                    Ver Mapa
+                  </button>
+                </div>
                 {/* <button
                   onClick={() => {
                     setFlagColapso(true);
