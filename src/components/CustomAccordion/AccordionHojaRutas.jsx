@@ -183,7 +183,7 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
                 className="row"
                 style={{ fontSize: "13px" }}
               >
-                <div className="col-2 d-flex justify-content-center">
+                <div className="col-1 d-flex justify-content-center">
                   {camion.codigoCamion}
                 </div>
                 <div className="col-2 d-flex justify-content-center">

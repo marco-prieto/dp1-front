@@ -407,6 +407,14 @@ const SimulationMap = ({
         sh
       );
     }
+
+    p5.stroke(p5.color("black"));
+    p5.strokeWeight(0.5);
+    p5.text(
+      orderList.code,
+      route[curNode]["x"] * blockSize + xFactor - 5,
+      (50 - route[curNode]["y"]) * blockSize + yFactor
+    );
   };
 
   const renderRoadBlock = (p5, rb) => {
@@ -494,6 +502,14 @@ const SimulationMap = ({
         22
       );
     }
+
+    p5.stroke(p5.color("red"));
+    p5.strokeWeight(0.5);
+    p5.text(
+      av.codigoCamion,
+      node["x"] * blockSize - 15,
+      (50 - node["y"]) * blockSize - 15
+    );
   };
 
   const renderPlantas = (p5) => {
@@ -518,6 +534,8 @@ const SimulationMap = ({
       );
     }
     if (glpPlanta2 != null) {
+      p5.stroke(p5.color("red"));
+      p5.strokeWeight(0.5);
       p5.textSize(12);
       p5.text(
         `GLP: ${glpPlanta2}`,
@@ -539,6 +557,8 @@ const SimulationMap = ({
     }
 
     if (glpPlanta3 != null) {
+      p5.stroke(p5.color("red"));
+      p5.strokeWeight(0.5);
       p5.textSize(12);
       p5.text(
         `GLP: ${glpPlanta3}`,
