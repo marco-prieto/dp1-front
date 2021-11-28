@@ -45,6 +45,18 @@ const AccordionDetails = withStyles((theme) => ({
   root: {},
 }))(MuiAccordionDetails);
 
+function startsWith(wordToCompare) {
+  return function (element) {
+    //console.log(element.codigoCamion, wordToCompare);
+    return element.codigoCamion.indexOf(wordToCompare) === 0;
+  };
+}
+
+function filtrado(e) {
+  console.log(e);
+  //return e.codigoCamion == "Nuevo";
+}
+
 const AccordionHojaRutas = ({ simulationType }) => {
   const [expanded, setExpanded] = React.useState("");
 
@@ -52,8 +64,12 @@ const AccordionHojaRutas = ({ simulationType }) => {
     setExpanded(newExpanded ? pancamion : false);
   };
 
+  var camiones = [];
+  const [camionesCombo, setCamionesCombo] = useState(null);
+
   //Pasara por props
   const [hRuta, setHRuta] = useState(null);
+  const [hRutaAll, setHRutaAll] = useState(null);
   const requestInterval = 20 * 1000; //en segundos
 
   React.useEffect(() => {
@@ -70,11 +86,45 @@ const AccordionHojaRutas = ({ simulationType }) => {
     axios.post(`${url}/algoritmo/obtenerHojaDeRuta`, data).then((resp) => {
       console.log(resp.data);
       setHRuta(resp.data);
+      setHRutaAll(resp.data);
+
+      //Para el filtrado de camiones
+      camiones = [];
+      for (var i = 0; i < resp.data.length; i++) {
+        camiones.push({
+          codigo: resp.data[i].codigoCamion,
+          key: resp.data[i].codigoCamion,
+        });
+      }
+      setCamionesCombo(camiones);
     });
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "-52px" }}>
+      <div className="d-flex justify-content-end mb-2">
+        <select
+          className="form-select"
+          style={{ width: "120px", height: "45px" }}
+          onChange={(e) => {
+            var val = e.target.value;
+            if (val == 1) setHRuta(hRutaAll);
+            else setHRuta(hRutaAll.filter(startsWith(e.target.value)));
+          }}
+        >
+          <option value={1} defaultValue>
+            Todos
+          </option>
+          {camionesCombo &&
+            camionesCombo.map((c) => {
+              return (
+                <option value={c.codigo} key={c.key}>
+                  {c.codigo}
+                </option>
+              );
+            })}
+        </select>
+      </div>
       <div square className="mx-2 " style={{ marginBottom: "-10px" }}>
         <div
           className="row align-items-center ps-4 pe-3"
