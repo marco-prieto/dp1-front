@@ -71,37 +71,13 @@ const useStyles = makeStyles(styles);
 export default function OrderList() {
   const classes = useStyles();
 
-  const mockListarPlantas = [
-    {
-      id: 1,
-      tipoPlanta: "TA-01",
-      taraCamion: "5",
-      capacidadPetroleo: "25",
-      capacidadGLP: "25",
-      estadoCamion: "Operativo",
-    },
-    {
-      id: 2,
-      codigoCamion: "TD-01",
-      taraCamion: "1",
-      capacidadPetroleo: "25",
-      capacidadGLP: "5",
-      estadoCamion: "Operativo",
-    },
-    {
-      id: 3,
-      codigoCamion: "TD-02",
-      taraCamion: "1",
-      capacidadPetroleo: "25",
-      capacidadGLP: "5",
-      estadoCamion: "Mantenimiento Correctivo",
-    },
-  ];
-
   const [open, setOpen] = React.useState(false);
+  const [today, setToday] = React.useState();
+
+  //params consumo mensual
   const [paramsConsumoMensual, setParamsConsumoMensual] = React.useState({
-    desde: "",
-    hasta: "",
+    desde: new Date(),
+    hasta: new Date(),
   });
 
   const handleOpen = () => setOpen(true);
@@ -137,7 +113,16 @@ export default function OrderList() {
                 <strong>Desde:</strong>
               </div>
               <div>
-                <input type="date" name="consumoDesde"></input>
+                <input
+                  type="date"
+                  name="consumoDesde"
+                  value={paramsConsumoMensual.desde}
+                  onChange={(e) => {
+                    var p = paramsConsumoMensual;
+                    p.desde = e.target.value;
+                    setParamsConsumoMensual(p);
+                  }}
+                ></input>
               </div>
             </div>
 
