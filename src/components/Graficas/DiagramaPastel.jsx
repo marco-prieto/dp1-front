@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import {Pie} from 'react-chartjs-2'
 import axios from 'axios'
+import url from "../../config";
 
 const Circulo = () => {
 
@@ -8,24 +9,15 @@ const Circulo = () => {
     const [continentes,setContinentes] = useState([])
     const [porcentajes,setPorcentajes] = useState([])
     const [pedidos,setPedidos] = useState([])
-    const [estados,setEstados] = useState([])
+    const [estados,setEstados] = useState([])  
+
     
 
     const data={
-        //labels: ['Google','Bing','Baidu','Otros'],
-        labels: continentes,
-        datasets:[{          
-          backgroundColor: ['#FFFF00','blue','green','#black','red','purple','orange'],          
-          //data: [74.56,10.54,9.42,5.42]
-          data: porcentajes
-        }]
-    }
-
-    const data2={
-        labels: ['Entregado','Pendiente'],
+        labels: ['Entregado','En ruta','Nuevo'],
         datasets:[{
-            backgroundColor: ['blue','yellow'],
-            //data: [3,4]
+            backgroundColor: ['#335c81','#5899e2','#34d1bf'],
+            //  data: [120,200,50]
             data: estados
         }]
     }
@@ -39,25 +31,42 @@ const Circulo = () => {
     
 
     const peticionApi= async() =>{
-        await axios.get('http://localhost:3001/pedidos')
+        await axios.get(`${url}/pedido/listarPedidos`)
         .then(response=>{
           console.log(response.data)
           var respuesta = response.data
-          var auxPendientes = 0,auxEntregados=0, array = []
+          var auxPendientes = 0,auxEntregados=0,auxNuevos = 0,array = []
           var ahora = fechasxD()
           var hoy = ahora.split("@")
-          var fechaElemento
-          console.log(hoy)
+          var fechaElemento,fechaEntrega
+          /* console.log(hoy[0]) */
           respuesta.map(elemento=>{
-            fechaElemento = elemento.fecha.split("@")[0]
-            if("entregado" === elemento.estado && hoy[0] === fechaElemento){
-                auxEntregados++
-            }   
-            if("pendiente" === elemento.estado && hoy[0] === fechaElemento)
+            fechaElemento = elemento.fechaPedido.split("@")[0]
+            /* console.log(fechaElemento) */
+            if(elemento.fechaEntrega != null){
+
+                fechaEntrega = elemento.fechaEntrega.split("@")[0]
+                /* console.log("Aca hay fechas de entrega")
+                console.log(fechaEntrega) */
+                if("Atendido" === elemento.estadoPedido && hoy[0] === fechaEntrega){
+                    auxEntregados++
+                }   
+            }
+            /* if("En ruta" === elemento.estadoPedido && hoy[0] === fechaElemento)
+                auxPendientes++ */
+            if("En ruta" === elemento.estadoPedido)
                 auxPendientes++
+            if("Nuevo" === elemento.estadoPedido)
+                auxNuevos++
+            /* if("Nuevo" === elemento.estadoPedido && hoy[0] === fechaElemento)
+                auxNuevos++ */
           })
+          /* console.log(auxEntregados)
+          console.log(auxPendientes)
+          console.log(auxNuevos) */
           array.push(auxEntregados)
           array.push(auxPendientes)
+          array.push(auxNuevos)
           setEstados(array)
           setPedidos(respuesta)
         })
@@ -95,7 +104,7 @@ const Circulo = () => {
     return (
         <div className="container" style={{width: '100%',height: '550px'}}> 
             <h3>Estado de Pedidos</h3>           
-            <Pie data={data2} options={opciones}/>
+            <Pie data={data} options={opciones}/>
         </div>
     );
 }
