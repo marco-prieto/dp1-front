@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import DiagramaBarras from '../../components/Graficas/DiagramaBarras'
 import DiagramaPastel from '../../components/Graficas/DiagramaPastel'
+import DiagramaBarrasPetroleo from 'components/Graficas/DiagramaBarrasPetroleo';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -23,7 +24,7 @@ function TabPanel(props) {
     >
       {value === index && (
         /* en p se pone la cantidad de pestañas creo xD */
-        <Box p={2}>
+        <Box p={3}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -77,7 +78,7 @@ export default function Reportes() {
         >
           <Tab label="Pedidos" {...a11yProps(0)} />
           <Tab label="GLP" {...a11yProps(1)} />
-          {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
+          <Tab label="Petróleo" {...a11yProps(2)} />
         </Tabs>
       </AppBar>
       <SwipeableViews
@@ -91,9 +92,9 @@ export default function Reportes() {
         <TabPanel value={value} index={1} dir={theme.direction}>
           <DiagramaBarras></DiagramaBarras>
         </TabPanel>
-        {/* <TabPanel value={value} index={2} dir={theme.direction}>
-          Item Three
-        </TabPanel> */}
+        <TabPanel value={value} index={2} dir={theme.direction}>
+          <DiagramaBarrasPetroleo></DiagramaBarrasPetroleo>
+        </TabPanel>
       </SwipeableViews>
     </div>
   );
