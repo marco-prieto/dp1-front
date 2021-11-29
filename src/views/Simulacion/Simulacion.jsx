@@ -17,6 +17,8 @@ import { Modal } from "@material-ui/core";
 import { Box } from "@material-ui/core";
 import SimulationMap from "map/SimulationMap.jsx";
 import AccordionHRSimulacion from "../../components/CustomAccordion/AccordionHRSimulacion";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
 import axios from "axios";
 import url from "../../config";
 
@@ -102,6 +104,21 @@ export default function SimulacionLayout({ ...rest }) {
       });
   };
 
+  const handleGenerarPedidos = () => {
+    var data = { fecha: "2021-11-16 00:00:01" }; //por defecto, colapso se corre a x1500
+    console.log(data);
+    // axios
+    //   .post(`${url}/pedido/generarPedidosColapso`, data) //flag sera 2 si hay colapso
+    //   .then((res) => {
+    //     console.log(res.data);
+    //     alert("Los pedidos se generaron correctamente");
+    //   })
+    //   .catch((error) => {
+    //     alert("ERROR al ejecutar al generar los pedidos");
+    //     console.log(error);
+    //   });
+  };
+
   const parseElement = (el) => {
     el = el.toString();
     el = el.length >= 2 ? el : "0" + el;
@@ -150,6 +167,7 @@ export default function SimulacionLayout({ ...rest }) {
         var orders = [];
         for (var i = 0; i < lines.length - 1; i++) {
           var line = lines[i].replace("\r", "");
+          if (line.length == 0) continue;
           //console.log(i)
           //console.log(line);
           var parts = [];
@@ -271,6 +289,7 @@ export default function SimulacionLayout({ ...rest }) {
 
         for (var i = 0; i < lines.length; i++) {
           var line = lines[i].replace("\r", "");
+          if (line.length == 0) continue;
 
           var rb = {};
           var nodes = [];
@@ -382,35 +401,54 @@ export default function SimulacionLayout({ ...rest }) {
             </h4>
 
             {flagConfig && (
-              <div className="d-flex justify-content-end">
-                <button
-                  className="btn btn-light btn-md me-3"
-                  onClick={() => {
-                    setFlagSimulation(false);
+              <div className="d-flex justify-content-between">
+                <div>
+                  <button
+                    className="btn btn-light btn-md me-3"
+                    onClick={() => {
+                      handleGenerarPedidos();
+                    }}
+                  >
+                    Generar Pedidos
+                  </button>
+                </div>
+                <div className="d-flex justify-content-end">
+                  <button
+                    className="btn btn-light btn-md me-3"
+                    onClick={() => {
+                      setFlagSimulation(false);
 
-                    //Abrir modal de subir bloqueos
-                    handleOpenBloqueos();
-                  }}
-                >
-                  Subir Bloqueos
-                </button>
-                <button
-                  className="btn btn-light btn-sm"
+                      //Abrir modal de subir bloqueos
+                      handleOpenBloqueos();
+                    }}
+                  >
+                    Subir Bloqueos
+                  </button>
+                  <button
+                    className="btn btn-light btn-sm"
+                    onClick={() => {
+                      setFlagSimulation(false);
+                      handleOpen();
+                    }}
+                  >
+                    Subir Ventas
+                  </button>
+                  <button
+                    className="btn btn-light btn-sm ms-3"
+                    onClick={() => {
+                      setFlagSimulation(!flagSimulation);
+                    }}
+                  >
+                    Ver Mapa
+                  </button>
+                </div>
+                {/* <button
                   onClick={() => {
-                    setFlagSimulation(false);
-                    handleOpen();
+                    setFlagColapso(true);
                   }}
                 >
-                  Subir Ventas
-                </button>
-                <button
-                  className="btn btn-light btn-sm ms-3"
-                  onClick={() => {
-                    setFlagSimulation(!flagSimulation);
-                  }}
-                >
-                  Ver Mapa
-                </button>
+                  AAAAA
+                </button> */}
               </div>
             )}
 
@@ -486,7 +524,7 @@ export default function SimulacionLayout({ ...rest }) {
             </div>
             <div>
               <div className="d-flex">
-                <div className="me-4 mt-1">
+                <div className="me-4 mt-1 ms-2">
                   <Button
                     variant="contained"
                     component="label"
@@ -540,7 +578,7 @@ export default function SimulacionLayout({ ...rest }) {
                   >
                     Hoja de Rutas
                   </h3>
-                  {/* <AccordionHRSimulacion simulationType={simulationType} /> */}
+                  <AccordionHRSimulacion simulationType={simulationType} />
                 </div>
               </div>
             </div>
@@ -622,18 +660,30 @@ export default function SimulacionLayout({ ...rest }) {
             <br />
 
             <div className="d-flex justify-content-end">
-              {" "}
               <br />
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setFlagColapso(false);
-                  setFlagConfig(true);
-                  setFlagSimulation(false);
-                }}
-              >
-                Confirmar
-              </button>
+              <div className="d-flex ">
+                <Link
+                  to={{
+                    pathname: "/infoColapso",
+                    state: { info: infoColapso },
+                  }}
+                >
+                  <button className="btn btn-primary me-4">
+                    Ver Información del Colapso
+                  </button>
+                </Link>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    setFlagColapso(false);
+                    setFlagConfig(true);
+                    setFlagSimulation(false);
+                  }}
+                >
+                  Confirmar
+                </button>
+              </div>
             </div>
           </div>
         </Box>
@@ -678,14 +728,6 @@ export default function SimulacionLayout({ ...rest }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {/* <Box sx={style2}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
-        </Box> */}
         <Box sx={style2}>
           <h3>Agregar Bloqueo</h3>
           <br />

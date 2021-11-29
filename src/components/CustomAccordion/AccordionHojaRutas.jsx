@@ -52,8 +52,12 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
     setExpanded(newExpanded ? pancamion : false);
   };
 
+  var camiones = [];
+  const [camionesCombo, setCamionesCombo] = useState(null);
+
   //Pasara por props
   const [hRuta, setHRuta] = useState(null);
+  const [hRutaAll, setHRutaAll] = useState(null);
   const requestInterval = 20 * 1000; //en segundos
 
   React.useEffect(() => {
@@ -71,14 +75,48 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
     axios.post(`${url}/algoritmo/obtenerHojaDeRuta`, data).then((resp) => {
       console.log(resp.data);
       setHRuta(resp.data);
+      setHRutaAll(resp.data);
+
+      //Para el filtrado de camiones
+      camiones = [];
+      for (var i = 0; i < resp.data.length; i++) {
+        camiones.push({
+          codigo: resp.data[i].codigoCamion,
+          key: resp.data[i].codigoCamion,
+        });
+      }
+      setCamionesCombo(camiones);
     });
   };
 
   return (
-    <div>
+    <div style={{ marginTop: "-52px" }}>
       <div square className="mx-2 " style={{ marginBottom: "-10px" }}>
+        <div className="d-flex justify-content-end mb-2">
+          <select
+            className="form-select"
+            style={{ width: "120px", height: "45px" }}
+            onChange={(e) => {
+              var val = e.target.value;
+              if (val == 1) setHRuta(hRutaAll);
+              else setHRuta(hRutaAll.filter(startsWith(e.target.value)));
+            }}
+          >
+            <option value={1} defaultValue>
+              Todos
+            </option>
+            {camionesCombo &&
+              camionesCombo.map((c) => {
+                return (
+                  <option value={c.codigo} key={c.key}>
+                    {c.codigo}
+                  </option>
+                );
+              })}
+          </select>
+        </div>
         <div
-          className="row align-items-center ps-4"
+          className="row align-items-center ps-4 pe-3"
           disableGutters="true"
           style={{
             minHeight: "60px",
@@ -87,7 +125,7 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
           }}
         >
           <div
-            className="col-2 d-flex justify-content-center"
+            className="col-1 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
             Código del Camión
@@ -114,13 +152,19 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
             className="col-2 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
-            Cantidad de Petróleo Actual
+            Cantidad de Petróleo Utilizado (m3)
           </div>
           <div
             className="col-2 d-flex justify-content-center"
             style={{ fontWeight: "bold" }}
           >
-            Cantidad de GLP Actual
+            Cantidad Petróleo Restante (m3)
+          </div>
+          <div
+            className="col-1 d-flex justify-content-center"
+            style={{ fontWeight: "bold" }}
+          >
+            Cantidad de GLP Entregado (m3)
           </div>
         </div>
 
@@ -139,7 +183,7 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
                 className="row"
                 style={{ fontSize: "13px" }}
               >
-                <div className="col-2 d-flex justify-content-center">
+                <div className="col-1 d-flex justify-content-center">
                   {camion.codigoCamion}
                 </div>
                 <div className="col-2 d-flex justify-content-center">
@@ -152,10 +196,13 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
                   {camion.horaLlegada}
                 </div>
                 <div className="col-2 d-flex justify-content-center">
-                  {camion.cantPetroleoActual}
+                  {Math.round(camion.cantPetroleoActual * 100) / 100}
                 </div>
                 <div className="col-2 d-flex justify-content-center">
-                  {camion.cantGlpActual}
+                  {Math.round(camion.cantPetroleoFinalRuta * 100) / 100}
+                </div>
+                <div className="col-1 d-flex justify-content-center me-2">
+                  {Math.round(camion.cantGlpActual * 100) / 100}
                 </div>
               </AccordionSummary>
 

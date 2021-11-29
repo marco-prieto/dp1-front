@@ -30,6 +30,11 @@ const Map = (blockSize_p) => {
   var truckNextOrder = []; //Pedido que atiende cada camion
   var truckDirection = []; //Camion atiende pedido o si esta parado atendiendo
 
+  //GLPs restantes
+  var glpPlanta2 = null;
+  var glpPlanta3 = null;
+
+  //vars
   var pedidos = null;
   var bloqueos = null;
   var averias = null;
@@ -55,6 +60,10 @@ const Map = (blockSize_p) => {
       .then((res) => {
         console.log(res.data);
         pedidos = res.data["routes"];
+
+        glpPlanta2 = res.data["glpRestantePlanta2"];
+        glpPlanta3 = res.data["glpRestantePlanta3"];
+
         initFlags();
       })
       .catch((error) => {
@@ -367,6 +376,14 @@ const Map = (blockSize_p) => {
         sh
       );
     }
+
+    p5.stroke(p5.color("black"));
+    p5.strokeWeight(0.5);
+    p5.text(
+      orderList.code,
+      route[curNode]["x"] * blockSize + xFactor - 5,
+      (50 - route[curNode]["y"]) * blockSize + yFactor
+    );
   };
 
   const renderRoadBlock = (p5, rb) => {
@@ -454,6 +471,14 @@ const Map = (blockSize_p) => {
         22
       );
     }
+
+    p5.stroke(p5.color("red"));
+    p5.strokeWeight(1);
+    p5.text(
+      av.codigoCamion,
+      node["x"] * blockSize - 15,
+      (50 - node["y"]) * blockSize - 15
+    );
   };
 
   const renderPlantas = (p5) => {
@@ -467,6 +492,7 @@ const Map = (blockSize_p) => {
       );
     }
 
+    //PLANTA 2
     if (imgPlantaSecundaria) {
       p5.image(
         imgPlantaSecundaria,
@@ -476,6 +502,18 @@ const Map = (blockSize_p) => {
         25
       );
     }
+    if (glpPlanta2 != null) {
+      p5.stroke(p5.color("red"));
+      p5.strokeWeight(0.5);
+      p5.textSize(12);
+      p5.text(
+        `GLP: ${glpPlanta2}`,
+        (42 - 1) * blockSize,
+        (50 - 42 - 1) * blockSize
+      );
+    }
+
+    //PLANTA 3
 
     if (imgPlantaSecundaria) {
       p5.image(
@@ -486,7 +524,19 @@ const Map = (blockSize_p) => {
         25
       );
     }
+
+    if (glpPlanta3 != null) {
+      p5.stroke(p5.color("red"));
+      p5.strokeWeight(0.5);
+      p5.textSize(12);
+      p5.text(
+        `GLP: ${glpPlanta3}`,
+        (63 - 1) * blockSize,
+        (50 - 3 - 1) * blockSize
+      );
+    }
   };
+
   const draw = (p5) => {
     p5.background(255);
     renderGrid(p5);
