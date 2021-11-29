@@ -70,20 +70,44 @@ const useStyles = makeStyles(styles);
 
 export default function OrderList() {
   const classes = useStyles();
-
+  const FileDownload = require("js-file-download");
   const [open, setOpen] = React.useState(false);
   const [today, setToday] = React.useState();
 
   //params consumo mensual
   const [paramsConsumoMensual, setParamsConsumoMensual] = React.useState({
-    desde: new Date(),
-    hasta: new Date(),
+    desdeConsumo: new Date().toISOString().split("T")[0],
+    hastaConsumo: new Date().toISOString().split("T")[0],
   });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleOnChange = (e) => {
+    setParamsConsumoMensual({
+      ...paramsConsumoMensual,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   /* *************************************************************************************************************  */
+
+  const handleReporteConsumo = () => {
+    const data = {
+      fechaIni: paramsConsumoMensual.desdeConsumo + " 00:00:00",
+      fechaFin: paramsConsumoMensual.hastaConsumo + " 00:00:00",
+    };
+    console.log(data);
+
+    return axios({
+      url: `${url}/reportes/ConsumoMensual`,
+      method: "POST",
+      data: data,
+      responseType: "blob", // Important
+    }).then((response) => {
+      FileDownload(response.data, "Reporte Consumo.xlsx");
+    });
+  };
 
   React.useEffect(() => {}, []);
 
@@ -101,42 +125,55 @@ export default function OrderList() {
           </CardHeader>
 
           <CardBody>
-            <div className="mb-5">
+            <div className="my-5">
               <h3>Reporte de Consumo Mensual</h3>
             </div>
-
-            <div
-              className="d-flex align-items-center  my-3"
-              style={{ fontSize: "20px" }}
-            >
-              <div className="me-3">
-                <strong>Desde:</strong>
+            <div>
+              <div
+                className="d-flex align-items-center  my-3"
+                style={{ fontSize: "20px" }}
+              >
+                <div className="me-3">
+                  <strong>Desde:</strong>
+                </div>
+                <div>
+                  <input
+                    type="date"
+                    name="desdeConsumo"
+                    value={paramsConsumoMensual.desdeConsumo}
+                    onChange={handleOnChange}
+                  ></input>
+                </div>
               </div>
-              <div>
-                <input
-                  type="date"
-                  name="consumoDesde"
-                  value={paramsConsumoMensual.desde}
-                  onChange={(e) => {
-                    var p = paramsConsumoMensual;
-                    p.desde = e.target.value;
-                    setParamsConsumoMensual(p);
-                  }}
-                ></input>
+
+              <div
+                className="d-flex align-items-center my-4"
+                style={{ fontSize: "20px" }}
+              >
+                <div className="me-3 ">
+                  <strong>Hasta:</strong>
+                </div>
+                <div>
+                  <input
+                    type="date"
+                    name="hastaConsumo"
+                    value={paramsConsumoMensual.hastaConsumo}
+                    onChange={handleOnChange}
+                  ></input>
+                </div>
               </div>
             </div>
-
-            <div
-              className="d-flex align-items-center my-4"
-              style={{ fontSize: "20px" }}
+            <Button
+              variant="contained"
+              component="label"
+              color="primary"
+              className="mt-3"
+              onClick={() => {
+                handleReporteConsumo();
+              }}
             >
-              <div className="me-3">
-                <strong>Hasta:</strong>
-              </div>
-              <div>
-                <input type="date" name="consumoHasta"></input>
-              </div>
-            </div>
+              Descargar Reporte
+            </Button>
           </CardBody>
         </Card>
       </GridItem>
