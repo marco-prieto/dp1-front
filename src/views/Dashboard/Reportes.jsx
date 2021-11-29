@@ -76,7 +76,7 @@ export default function Reportes() {
           aria-label="full width tabs example"
         >
           <Tab label="Pedidos" {...a11yProps(0)} />
-          <Tab label="Petróleo" {...a11yProps(1)} />
+          <Tab label="GLP" {...a11yProps(1)} />
           {/* <Tab label="Item Three" {...a11yProps(2)} /> */}
         </Tabs>
       </AppBar>
