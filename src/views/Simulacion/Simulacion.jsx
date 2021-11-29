@@ -25,6 +25,7 @@ import url from "../../config";
 const useStyles = makeStyles(styles);
 
 export default function SimulacionLayout({ ...rest }) {
+  const FileDownload = require("js-file-download");
   // styles
   const classes = useStyles();
   // ref to help us initialize PerfectScrollbar on windows devices
@@ -105,18 +106,16 @@ export default function SimulacionLayout({ ...rest }) {
   };
 
   const handleGenerarPedidos = () => {
-    var data = { fecha: "2021-11-16 00:00:01" }; //por defecto, colapso se corre a x1500
-    console.log(data);
-    // axios
-    //   .post(`${url}/pedido/generarPedidosColapso`, data) //flag sera 2 si hay colapso
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     alert("Los pedidos se generaron correctamente");
-    //   })
-    //   .catch((error) => {
-    //     alert("ERROR al ejecutar al generar los pedidos");
-    //     console.log(error);
-    //   });
+    var data = {}; //por defecto, colapso se corre a x1500
+
+    return axios({
+      url: `${url}/pedido/generarPedidosColapso`,
+      method: "GET",
+      responseType: "blob", // Important
+    }).then((res) => {
+      console.log(res.data);
+      FileDownload(res.data, "Archivos.zip");
+    });
   };
 
   const parseElement = (el) => {
