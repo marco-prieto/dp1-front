@@ -18,6 +18,7 @@ import { Typography } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 /* import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography'; */
+import Button from "@material-ui/core/Button";
 import axios from "axios";
 import url from "../../config";
 import { Link } from "react-router-dom";
@@ -107,6 +108,8 @@ export default function OrderList() {
       estadoPedido: "Enrutado",
     },
   ];
+  var auxGlobalOrders = [];
+  const [globalOrders, setGlobalOrders] = React.useState([]);
   const [pedidos, setPedidos] = React.useState(null);
   const [pedidosFiltrados, setPedidosFiltrados] = React.useState([]);
 
@@ -139,7 +142,135 @@ export default function OrderList() {
       });
   };
 
-  //Solo falta insertar API creo xD
+  /*
+  Pedidos masivos, luego borrar
+  */
+  const parseElement = (el) => {
+    el = el.toString();
+    el = el.length >= 2 ? el : "0" + el;
+    return el;
+  };
+
+  const readMultiplePedidos = (e) => {
+    let files = e.currentTarget.files;
+    let readers = [];
+
+    // Abortar si no hubo archivos seleccionados
+    if (!files.length) return;
+
+    try {
+      // Almacenar promesas en matriz
+      for (let i = 0; i < files.length; i++) {
+        readers.push(files[i]);
+        //console.log(files[i]);
+        handleUploadFile(files[i]);
+      }
+    } catch (ex) {
+      console.log(ex);
+    }
+  };
+
+  const handleUploadFile = (file) => {
+    try {
+      if (!file) return;
+
+      var nameFile = file.name;
+      nameFile = nameFile.replace("ventas", "");
+      nameFile = nameFile.replace(".txt", "");
+      var date = parseInt(nameFile);
+      var year = Math.trunc(date / 100);
+      var month = date - year * 100;
+      /* console.log(year)
+        console.log(month) */
+
+      const reader = new FileReader();
+
+      reader.onload = (evt) => {
+        var content = evt.target.result;
+        var lines = content.split("\n");
+        //console.log(lines)
+
+        var orders = [];
+        for (var i = 0; i < lines.length - 1; i++) {
+          var line = lines[i].replace("\r", "");
+          if (line.length == 0) continue;
+          //console.log(i)
+          //console.log(line);
+          var parts = [];
+          parts = line.split(":");
+          if (parts.length !== 3) {
+            console.log("archivo equivocado");
+            return;
+          }
+          var day = parseInt(parts[0]);
+          var hour = parseInt(parts[1]);
+
+          parts = parts[2].split(",");
+          if (parts.length !== 5) {
+            console.log("archivo equivocado");
+            return;
+          }
+          var minute = parseInt(parts[0]);
+          var x = parseInt(parts[1]);
+          var y = parseInt(parts[2]);
+          var demandGLP = parseFloat(parts[3]);
+          var slack = parseInt(parts[4]);
+
+          month = parseElement(month);
+          day = parseElement(day);
+          hour = parseElement(hour);
+          minute = parseElement(minute);
+
+          var order = {
+            fechaPedido:
+              year +
+              "-" +
+              month +
+              "-" +
+              day +
+              "@" +
+              hour +
+              ":" +
+              minute +
+              ":00",
+            estadoPedido: "Nuevo",
+            cantidadGLP: demandGLP,
+            plazoEntrega: slack,
+            nodo: { coordenadaX: x, coordenadaY: y },
+          };
+          //console.log(order)
+
+          orders.push(order);
+        }
+        auxGlobalOrders = auxGlobalOrders.concat(orders);
+        setGlobalOrders(auxGlobalOrders);
+
+        /*cargaMasiva(objetos).then(() => {
+            readPedidos()
+            //aquí myuestras la notificacion
+            }).catch(err => {
+            //aquí notificacion de error
+            });*/
+      };
+      reader.readAsText(file);
+    } catch (error) {
+      console.log("error");
+    }
+  };
+
+  const handleRegistrarPedidos = () => {
+    axios
+      .post(`${url}/pedido/registrarListaPedidos`, globalOrders)
+      .then((res) => {
+        console.log("Pedidos registradossssssss");
+      })
+      .catch((error) => {
+        alert("ERROR al registrar pedidos");
+        console.log(error);
+      });
+  };
+
+  /* ELIMINAR */
 
   React.useEffect(() => {
     obtenerPedidos();
@@ -182,6 +313,23 @@ export default function OrderList() {
               <button className="btn btn-light btn-sm" onClick={handleOpen}>
                 Nuevo
               </button>
+              {/* <Button variant="contained" component="label">
+                Subir Archivo
+                <input
+                  type="file"
+                  hidden
+                  onChange={readMultiplePedidos}
+                  multiple
+                />
+              </Button>
+              <button
+                onClick={() => {
+                  console.log(globalOrders);
+                  handleRegistrarPedidos();
+                }}
+              >
+                ENVIAR
+              </button> */}
             </div>
 
             {/* <p className={classes.cardCategoryWhite}>

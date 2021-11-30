@@ -108,8 +108,23 @@ export default function SimulacionLayout({ ...rest }) {
   const handleGenerarPedidos = () => {
     var data = {}; //por defecto, colapso se corre a x1500
 
+    axios
+      .get(`${url}/pedido/generarPedidosColapso`)
+      .then((resp) => {
+        console.log(resp.data);
+        alert("Los pedidos se generaron correctamente");
+      })
+      .catch((error) => {
+        alert("ERROR al generar los pedidos");
+        console.log(error);
+      });
+  };
+
+  const handleDescargarPedidos = () => {
+    var data = {}; //por defecto, colapso se corre a x1500
+
     return axios({
-      url: `${url}/pedido/generarPedidosColapso`,
+      url: `${url}/pedido/descargarPedidosColapso`,
       method: "GET",
       responseType: "blob", // Important
     }).then((res) => {
@@ -409,6 +424,14 @@ export default function SimulacionLayout({ ...rest }) {
                     }}
                   >
                     Generar Pedidos
+                  </button>
+                  <button
+                    className="btn btn-light btn-md me-3"
+                    onClick={() => {
+                      handleDescargarPedidos();
+                    }}
+                  >
+                    Descargar Pedidos
                   </button>
                 </div>
                 <div className="d-flex justify-content-end">
