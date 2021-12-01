@@ -86,7 +86,7 @@ export default function CustomTable(props) {
                 >
                   {prop.fechaEntrega
                     ? prop.fechaEntrega.replace("@", " ")
-                    : "En camino"}
+                    : "En espera"}
                 </TableCell>
                 <TableCell
                   className={classes.tableCell}

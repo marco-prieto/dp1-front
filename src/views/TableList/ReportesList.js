@@ -109,6 +109,22 @@ export default function OrderList() {
     });
   };
 
+  const handleReporteCapacidadAtencionMensual = () => {
+    const data = {
+      tipo: 1, //dia a dia
+    };
+    console.log(data);
+
+    return axios({
+      url: `${url}/reportes/capacidadAtencionMensual`,
+      method: "POST",
+      data: data,
+      responseType: "blob", // Important
+    }).then((response) => {
+      FileDownload(response.data, "Reporte Capacidad de Atención Mensual.xlsx");
+    });
+  };
+
   React.useEffect(() => {}, []);
 
   /* *************************************************************************************************************  */
@@ -125,55 +141,73 @@ export default function OrderList() {
           </CardHeader>
 
           <CardBody>
-            <div className="my-5">
-              <h3>Reporte de Consumo Mensual</h3>
+            <div>
+              <div className="my-5">
+                <h3>Reporte de Consumo Mensual</h3>
+              </div>
+              <div>
+                <div
+                  className="d-flex align-items-center  my-3"
+                  style={{ fontSize: "20px" }}
+                >
+                  <div className="me-3">
+                    <strong>Desde:</strong>
+                  </div>
+                  <div>
+                    <input
+                      type="date"
+                      name="desdeConsumo"
+                      value={paramsConsumoMensual.desdeConsumo}
+                      onChange={handleOnChange}
+                    ></input>
+                  </div>
+                </div>
+
+                <div
+                  className="d-flex align-items-center my-4"
+                  style={{ fontSize: "20px" }}
+                >
+                  <div className="me-3 ">
+                    <strong>Hasta:</strong>
+                  </div>
+                  <div>
+                    <input
+                      type="date"
+                      name="hastaConsumo"
+                      value={paramsConsumoMensual.hastaConsumo}
+                      onChange={handleOnChange}
+                    ></input>
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="contained"
+                component="label"
+                color="primary"
+                className="mt-3"
+                onClick={() => {
+                  handleReporteConsumo();
+                }}
+              >
+                Descargar Reporte
+              </Button>
             </div>
             <div>
-              <div
-                className="d-flex align-items-center  my-3"
-                style={{ fontSize: "20px" }}
-              >
-                <div className="me-3">
-                  <strong>Desde:</strong>
-                </div>
-                <div>
-                  <input
-                    type="date"
-                    name="desdeConsumo"
-                    value={paramsConsumoMensual.desdeConsumo}
-                    onChange={handleOnChange}
-                  ></input>
-                </div>
-              </div>
-
-              <div
-                className="d-flex align-items-center my-4"
-                style={{ fontSize: "20px" }}
-              >
-                <div className="me-3 ">
-                  <strong>Hasta:</strong>
-                </div>
-                <div>
-                  <input
-                    type="date"
-                    name="hastaConsumo"
-                    value={paramsConsumoMensual.hastaConsumo}
-                    onChange={handleOnChange}
-                  ></input>
-                </div>
+              <div className="my-5">
+                <h3>Reporte de Capacidad de Atención Mensual</h3>
+                <Button
+                  variant="contained"
+                  component="label"
+                  color="primary"
+                  className="mt-3"
+                  onClick={() => {
+                    handleReporteCapacidadAtencionMensual();
+                  }}
+                >
+                  Descargar Reporte
+                </Button>
               </div>
             </div>
-            <Button
-              variant="contained"
-              component="label"
-              color="primary"
-              className="mt-3"
-              onClick={() => {
-                handleReporteConsumo();
-              }}
-            >
-              Descargar Reporte
-            </Button>
           </CardBody>
         </Card>
       </GridItem>
