@@ -10,6 +10,7 @@ function DiagramaBarras() {
   const [paises,setPaises] = useState([]) */
   const [cantidadGLP,setCantidadGLP] = useState([])
   const [idCamiones,setIdCamiones] = useState([])
+  const [tipoRango,setTipoRango] = useState(1)
   /* const [fechas,setFechas] = useState([])
   const [consumos,setConsumos] = useState([]) */
 
@@ -111,6 +112,8 @@ function DiagramaBarras() {
     .catch((err) =>{
       alert("Ocurrió un error en el registro del pedido");
     })
+
+
     //setPedidos([...pedidos, data]);
     /* axios
       .post(`${url}/pedido/registrarPedidoNuevo`, data)
@@ -135,28 +138,97 @@ function DiagramaBarras() {
       <h3>Entrega de GLP diario en m3 de cada camión</h3>
       <form  onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
-              <div className="col-6">
-                <label>Fecha</label>
-                <br />
-                <input
-                  type="date"
-                  name="fechaPedido"
-                  {...register("fechaPedido", {
-                    required: {
-                      value: true,
-                      message: "fechaPedido requerida",
-                    },
-                  })}
-                />
-                {errors.fechaPedido && (
-                  <span className="text-danger text-small d-block mb-2">
-                    {errors.fechaPedido.message}
-                  </span>
-                )}
-              </div>
-              <div className="col-6">
-
-                <button className="btn btn-primary">Iniciar</button>
+              {/* <div className="col-4">
+                  <label className="me-2">Vista</label>
+                  <select
+                    value={tipoRango}
+                    className="form-select mt-0"
+                    style={{ width: "auto", height: "40px" }}
+                    onChange={(e) => {
+                      setTipoRango(e.target.value);
+                    }}
+                  >
+                    <option value={1} defaultValue>
+                      diario
+                    </option>
+                    <option value={2}>mensual</option>
+                    <option value={3}>anual</option>                                       
+                  </select>
+              </div> */}
+              {
+                tipoRango == 1 && (
+                  <div className="col-5">
+                    <label>Fecha</label>
+                    <br />
+                    <input
+                      type="date"
+                      name="fechaPedido"
+                      className= "mt-1"
+                      {...register("fechaPedido", {
+                        required: {
+                          value: true,
+                          message: "fechaPedido requerida",
+                        },
+                      })}
+                    />
+                    {errors.fechaPedido && (
+                      <span className="text-danger text-small d-block mb-2">
+                        {errors.fechaPedido.message}
+                      </span>
+                    )}
+                  </div>
+                )                
+              }
+              {/* {
+                tipoRango == 2 && (
+                  <div className="col-5">
+                    <label>Fecha</label>
+                    <br />
+                    <input
+                      type="month"
+                      name="fechaPedido"
+                      className= "mt-1"
+                      {...register("fechaPedido", {
+                        required: {
+                          value: true,
+                          message: "fechaPedido requerida",
+                        },
+                      })}
+                    />
+                    {errors.fechaPedido && (
+                      <span className="text-danger text-small d-block mb-2">
+                        {errors.fechaPedido.message}
+                      </span>
+                    )}
+                  </div>
+                )          
+              }
+              {
+                tipoRango == 3 && (
+                  <div className="col-5">
+                    <label>Fecha</label>
+                    <br />
+                    <input
+                      type="year"
+                      name="fechaPedido"
+                      className= "mt-1"
+                      {...register("fechaPedido", {
+                        required: {
+                          value: true,
+                          message: "fechaPedido requerida",
+                        },
+                      })}
+                    />
+                    {errors.fechaPedido && (
+                      <span className="text-danger text-small d-block mb-2">
+                        {errors.fechaPedido.message}
+                      </span>
+                    )}
+                  </div>
+                )          
+              }             */}  
+              <div className="d-flex justify-content-end">
+                <button className="btn btn-secondary">Iniciar</button>
               </div>
             </div>
       </form>

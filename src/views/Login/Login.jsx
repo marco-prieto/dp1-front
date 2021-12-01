@@ -70,6 +70,11 @@ function App() {
 
 	const onSubmit = () => {
 		console.log(body)
+		if(body.nickname == "admin" && body.password == "admin")
+			window.location.href="./admin/pedidos";
+		else{
+			alert('Usuario y contraseña icorrectos')
+		}
         //aca se verifica si el usuario y contraseña con correctos
         /* axios.get(baseurl, {params: {username: body.nickname, password: md5(body.password)}}).then(response =>{
             console.log(response.data)
@@ -92,7 +97,7 @@ function App() {
         .catch(error =>{
             console.log(error)
         }) */
-        window.location.href="./admin/pedidos";
+        //window.location.href="./admin/pedidos";
 	}
 
   return (
