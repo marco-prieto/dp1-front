@@ -52,7 +52,7 @@ ReactDOM.render(
       {/* <Route path="/barras" component={DiagramaBarras}/>
       <Route path="/pastel" component={DiagramaPastel}/>
       <Route path="/reportaje" component={Reportes}/> */}
-      <Redirect from="/" to="/Login" />
+      <Redirect from="/" to="/admin/pedidos" />
     </Switch>
   </BrowserRouter>,
   document.getElementById("root")
