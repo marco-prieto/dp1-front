@@ -18,6 +18,7 @@ import { Box } from "@material-ui/core";
 import SimulationMap from "map/SimulationMap.jsx";
 import AccordionHRSimulacion from "../../components/CustomAccordion/AccordionHRSimulacion";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import CapacidadAtencion from "components/CustomIndicador/CapacidadAtencion";
 
 import axios from "axios";
 import url from "../../config";
@@ -584,15 +585,21 @@ export default function SimulacionLayout({ ...rest }) {
                   <h3 className="my-2 pb-2">Simulación de Colapso Logístico</h3>
                 )}
               </div>
+
               <div className="d-lg-flex d-md-block">
-                <SimulationMap
-                  blockSize={parseInt(blockSize)}
-                  speed_p={globalVelocity}
-                  simulationType_p={simulationType}
-                  setFlagColapso={setFlagColapso}
-                  setFlagFinSimulacion={setFlagFinSimulacion}
-                  setInfoColapso={setInfoColapso}
-                />
+                <div>
+                  <SimulationMap
+                    blockSize={parseInt(blockSize)}
+                    speed_p={globalVelocity}
+                    simulationType_p={simulationType}
+                    setFlagColapso={setFlagColapso}
+                    setFlagFinSimulacion={setFlagFinSimulacion}
+                    setInfoColapso={setInfoColapso}
+                  />
+                  <div>
+                    <CapacidadAtencion simulationType={simulationType} />
+                  </div>
+                </div>
                 <div className="mx-4">
                   <h3
                     className="d-flex justify-content-center"
