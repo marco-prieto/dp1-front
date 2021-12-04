@@ -30,12 +30,14 @@ export default function Header(props) {
   });
   return (
     <AppBar className={classes.appBar + appBarClasses}>
+      
       <Toolbar className={classes.container}>
         <div className={classes.flex}>
           {/* Here we create navbar brand, based on route name */}
           <Button color="transparent" href="#" className={classes.title}>
-            {routeName}
+            {routeName}            
           </Button>
+          
         </div>
         <Hidden smDown implementation="css">
           {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
@@ -46,10 +48,12 @@ export default function Header(props) {
             aria-label="open drawer"
             onClick={props.handleDrawerToggle}
           >
+             
             <Menu />
           </IconButton>
         </Hidden>
-      </Toolbar>
+        
+      </Toolbar>      
     </AppBar>
   );
 }

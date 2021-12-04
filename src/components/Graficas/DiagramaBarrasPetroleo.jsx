@@ -13,6 +13,8 @@ function DiagramaBarrasPetroleo() {
   const [fechas,setFechas] = useState([])
   const [consumos,setConsumos] = useState([])
   const [tipoRango,setTipoRango] = useState(1)
+  const [anioInicio,setAnioInicio] = useState('2021')
+  const [anioFin,setAnioFin] = useState('2021')
 
   const {
     register,
@@ -101,8 +103,8 @@ function DiagramaBarrasPetroleo() {
     }
     if(tipoRango == 3){
       var dato = {
-        "fechaInicio": data.fechaInicio + '-01-01 00:00:00',
-        "fechaFin": data.fechaFin + '-12-31 00:00:00',
+        "fechaInicio": anioInicio + '-01-01 00:00:00',
+        "fechaFin": anioFin + '-12-31 00:00:00',
         tipo:1
       }
     }
@@ -112,15 +114,15 @@ function DiagramaBarrasPetroleo() {
         "fechaFin": data.fechaFin + '-31 00:00:00',
         tipo:1
       }
-      var rangoIni = data.fechaInicio.split("-")
+      /* var rangoIni = data.fechaInicio.split("-")
       var rangoFin = data.fechaFin.split("-")
       console.log('Imprimiendo rangos y diferencias')
-      /* console.log(rangoIni)
+      console.log(rangoIni)
       console.log(rangoIni[0])
       console.log(rangoIni[1])
       console.log(rangoFin)
       console.log(rangoFin[0])
-      console.log(rangoFin[1]) */
+      console.log(rangoFin[1])
       
       var diferenciaAnios = 0,diferenciaMeses = 0,bucle
 
@@ -140,7 +142,7 @@ function DiagramaBarrasPetroleo() {
         diferenciaMeses = parseInt(rangoFin[1],10) - parseInt(rangoIni[1],10) + 1
         bucle = diferenciaMeses
       }
-      /* console.log(diferenciaMeses)
+      console.log(diferenciaMeses)
       console.log(diferenciaAnios)
       console.log(bucle) */
     }
@@ -172,6 +174,7 @@ function DiagramaBarrasPetroleo() {
             anterior = elemento.fecha.substring(0,7)            
             auxFechas.push(anterior)
             contMes = 0
+            contMes += elemento.consumo
           }
           else{
             contMes += elemento.consumo
@@ -194,14 +197,17 @@ function DiagramaBarrasPetroleo() {
             anterior = elemento.fecha.substring(0,4)            
             auxFechas.push(anterior)
             contMes = 0
+            contMes += elemento.consumo
           }
           else{
             contMes += elemento.consumo
           }
         }        
       })      
-      if(tipoRango == 2 || tipoRango == 3)
+      if(tipoRango == 2 || tipoRango == 3){
+        console.log(contMes)
         auxConsumo.push(contMes)  
+      }
       setFechas(auxFechas)
       setConsumos(auxConsumo)
     })
@@ -299,7 +305,7 @@ function DiagramaBarrasPetroleo() {
                 tipoRango == 2 && (
                   <div className="row mt-1">
                     <div className="col-4">
-                      <label>Fecha Inicio</label>
+                      <label>Mes Inicio</label>
                       <br />
                       <input
                         type="month"
@@ -318,7 +324,7 @@ function DiagramaBarrasPetroleo() {
                       )}
                     </div>
                     <div className="col-4">
-                      <label>Fecha Fin</label>
+                      <label>Mes Fin</label>
                       <br />
                       <input
                         type="month"
@@ -343,6 +349,48 @@ function DiagramaBarrasPetroleo() {
                 tipoRango == 3 && (
                   <div className="row mt-1">
                     <div className="col-4">
+                      <label className="me-2">Año Inicio</label>
+                      <select
+                        value={anioInicio}
+                        className="form-select mt-0"
+                        style={{ width: "auto", height: "40px" }}
+                        onChange={(e) => {
+                          setAnioInicio(e.target.value);
+                        }}
+                      >
+                        <option value={'2022'}>2022</option>
+                        <option value={'2021'} defaultValue>
+                          2021
+                        </option>
+                        <option value={'2020'}>2020</option>
+                        <option value={'2019'}>2019</option>                                       
+                        <option value={'2018'}>2018</option>                                       
+                        <option value={'2017'}>2017</option>                                       
+                                                              
+                      </select>
+                    </div>
+                    <div className="col-4">
+                      <label className="me-2">Año Fin</label>
+                      <select
+                        value={anioFin}
+                        className="form-select mt-0"
+                        style={{ width: "auto", height: "40px" }}
+                        onChange={(e) => {
+                          setAnioFin(e.target.value);
+                        }}
+                      >
+                        <option value={'2022'}>2022</option>
+                        <option value={'2021'} defaultValue>
+                          2021
+                        </option>
+                        <option value={'2020'}>2020</option>
+                        <option value={'2019'}>2019</option>                                       
+                        <option value={'2018'}>2018</option>                                       
+                        <option value={'2017'}>2017</option>                                       
+                                                              
+                      </select>
+                    </div>
+                    {/* <div className="col-4">
                       <label>Fecha Inicio</label>
                       <br />
                       <input
@@ -379,7 +427,7 @@ function DiagramaBarrasPetroleo() {
                           {errors.fechaFin.message}
                         </span>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 )          
               }

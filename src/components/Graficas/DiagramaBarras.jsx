@@ -11,6 +11,7 @@ function DiagramaBarras() {
   const [cantidadGLP,setCantidadGLP] = useState([])
   const [idCamiones,setIdCamiones] = useState([])
   const [tipoRango,setTipoRango] = useState(1)
+  const [anio,setAnio] = useState('2021')
   /* const [fechas,setFechas] = useState([])
   const [consumos,setConsumos] = useState([]) */
 
@@ -103,15 +104,15 @@ function DiagramaBarras() {
 
       var dato = {
         "fechaInicio": data.fechaPedido + '-01 00:00:00',
-        "fechaFin": data.fechaPedido + '-31 00:00:00',
+        "fechaFin": data.fechaPedido + '-31 11:59:59',
         "tipo":1,
       }
     }
     if(tipoRango == 3){
 
       var dato = {
-        "fechaInicio": data.fechaPedido + '-01-01 00:00:00',
-        "fechaFin": data.fechaPedido + '-12-31 00:00:00',
+        "fechaInicio": anio + '-01-01 00:00:00',
+        "fechaFin": anio + '-12-31 11:59:59',
         "tipo":1
       }
     }
@@ -240,7 +241,7 @@ function DiagramaBarras() {
               {
                 tipoRango == 2 && (
                   <div className="col-5">
-                    <label>Fecha</label>
+                    <label>Mes</label>
                     <br />
                     <input
                       type="month"
@@ -263,8 +264,33 @@ function DiagramaBarras() {
               }
               {
                 tipoRango == 3 && (
+                  
                   <div className="col-5">
-                    <label>Fecha</label>
+                    <label className="me-2">Año</label>
+                    <select
+                      value={anio}
+                      className="form-select mt-0"
+                      style={{ width: "auto", height: "40px" }}
+                      onChange={(e) => {
+                        setAnio(e.target.value);
+                      }}
+                    >
+                      <option value={'2022'}>2022</option>
+                      <option value={'2021'} defaultValue>
+                        2021
+                      </option>
+                      <option value={'2020'}>2020</option>
+                      <option value={'2019'}>2019</option>                                       
+                      <option value={'2018'}>2018</option>                                       
+                      <option value={'2017'}>2017</option>                                       
+                                                             
+                    </select>
+                  </div>
+                )                
+              }
+              
+              {/* <div className="col-5">
+                    <label>Año</label>
                     <br />
                     <input
                       type="year"
@@ -282,9 +308,8 @@ function DiagramaBarras() {
                         {errors.fechaPedido.message}
                       </span>
                     )}
-                  </div>
-                )                
-              }
+                  </div> */}
+
               {/* {
                 tipoRango == 2 && (
                   <div className="row mt-1">

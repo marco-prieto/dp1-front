@@ -108,23 +108,43 @@ export default function Admin({ ...rest }) {
         open={mobileOpen}
         color={color}
         {...rest}
-      />
-      
+      />      
+      <div className="d-flex justify-content-end">
+                <button
+                onClick={()=> cerrarSesion()} 
+                className="btn btn-outline-secondary mx-1 mt-1 btn-sm"
+                type="button">Cerrar Cesión</button>
+        </div> 
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
-        />        
-        {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-        {getRoute() ? (
-          <div className={classes.content}>
-            <div className="d-flex justify-content-end">
+        />
+        {/* <div className="d-flex justify-content-end">
                 <button
                 onClick={()=> cerrarSesion()} 
-                className="btn btn-secondary mr-5">Cerrar Cesión</button>
-            </div>            
-            <div className={classes.container}>{switchRoutes}</div>            
+                className="btn btn-outline-secondary m-1"
+                type="button">Cerrar Cesión</button>
+        </div>  */} 
+              
+        {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
+        {getRoute() ? (
+          <div>   
+            {/* <div className="d-flex justify-content-end">
+                <button
+                onClick={()=> cerrarSesion()} 
+                className="btn btn-outline-secondary btn-sm m-1"
+                type="button">Cerrar Cesión</button>
+            </div> */}         
+            <div className={classes.content}>
+              {/* <div className="d-flex justify-content-end">
+                  <button
+                  onClick={()=> cerrarSesion()} 
+                  className="btn btn-outline-secondary btn-sm m-1">Cerrar Cesión</button>
+              </div> */}            
+              <div className={classes.container}>{switchRoutes}</div>            
+            </div>
           </div>
         ) : (
           <div className={classes.map}>{switchRoutes}</div>
