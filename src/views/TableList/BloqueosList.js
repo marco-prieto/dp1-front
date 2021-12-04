@@ -126,14 +126,16 @@ export default function OrderList() {
   const handleSubmitBloqueos = () => {
     var data = globalRoadblocks;
     console.log(data);
-    // axios.post(`${url}/bloqueo/registarBloqueos`,data) //flag sera 2 si hay colapso
-    // .then(res => {
-    //   alert("Los bloqueos se registraron correctamente");
-    //   obtenerBloqueos();
-    // }).catch(error=>{
-    //   alert("ERROR al registrar el archivo de bloqueos");
-    //   console.log(error);
-    // })
+    axios
+      .post(`${url}/bloqueo/registarBloqueos`, data) //flag sera 2 si hay colapso
+      .then((res) => {
+        alert("Los bloqueos se registraron correctamente");
+        obtenerBloqueos();
+      })
+      .catch((error) => {
+        alert("ERROR al registrar el archivo de bloqueos");
+        console.log(error);
+      });
   };
 
   const onInputClick = (event) => {

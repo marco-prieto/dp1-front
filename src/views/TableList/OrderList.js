@@ -121,6 +121,7 @@ export default function OrderList() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   /* *************************************************************************************************************  */
@@ -136,6 +137,7 @@ export default function OrderList() {
         obtenerPedidos();
         alert("El registro fue exitoso");
         e.target.reset();
+        reset();
       })
       .catch((err) => {
         alert("Ocurrió un error en el registro del pedido");
