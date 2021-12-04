@@ -9,6 +9,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import TableCamiones from "components/Table/TableCamiones.js";
+import TableUsarios from "components/Table/TableUsuarios"
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
@@ -21,6 +22,7 @@ import Typography from '@mui/material/Typography'; */
 import Button from "@material-ui/core/Button";
 //import UploadFileIcon from '@material-ui/icons/UploadFile';
 import axios from "axios";
+import md5 from 'md5'
 import url from "../../config";
 import { Link } from "react-router-dom";
 import Cookies from 'universal-cookie'
@@ -103,7 +105,7 @@ export default function OrderList() {
 
   const [open, setOpen] = React.useState(false);
   const [openEdit, setOpenEdit] = React.useState(false);
-  const [camiones, setCamiones] = React.useState(null);
+  const [usuarios, setUsuarios] = React.useState(null);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -124,41 +126,59 @@ export default function OrderList() {
   const onSubmit = (data, e) => {
     console.log(data);
     e.target.reset();
+
+    /* var dato = data
+    dato.id = Math.random()*1000
+    dato.password = md5(data.password)
+    console.log(dato) */
+
     // //setPedidos([...pedidos, data]);
+
     axios
-      .post(`${url}/camion/registrarCamionNuevo`, data)
+      .post(`${url}/usuario/registrarUsuarioNuevo`, data)
       .then((res) => {
         //console.log(res);
         console.log(res.data);
         e.target.reset();
-        obtenerCamiones();
+        obtenerUsuarios();
       })
       .catch((err) => {
         console.log(err);
       });
 
-    //handleClose();
-    alert("El registro fue exitoso");
+      alert("El registro fue exitoso");
+      //handleClose();
   };
-
+  const cerrarSesion = () => {
+    cookies.remove('id',{path: "/"});
+		cookies.remove('apellidoPaterno',{path: "/"});
+		cookies.remove('apellidoMaterno',{path: "/"});
+		cookies.remove('nombre',{path: "/"});
+		cookies.remove('correo',{path: "/"});
+		cookies.remove('nombreUsuario',{path: "/"});
+		cookies.remove('telefono',{path: "/"});
+		cookies.remove('clave',{path: "/"});
+		cookies.remove('activo',{path: "/"});
+    window.location.href='./login';
+  }
   React.useEffect(() => {
     if(!cookies.get('nombreUsuario')){
-      window.location.href="./login";
+        window.location.href="./";
     }  
     else{
 
-        obtenerCamiones();
+        obtenerUsuarios();
     }
   }, []);
 
-  const obtenerCamiones = () => {
-    axios.get(`${url}/camion/listarCamiones`).then((resp) => {
+  const obtenerUsuarios = () => {
+    axios.get(`${url}/usuario/listarUsuarios`).then((resp) => {
       console.log(resp.data);
-      setCamiones(resp.data);
+      setUsuarios(resp.data);
     });
   };
 
-  const parseElement = (el) => {
+  /* const parseElement = (el) => {
     el = el.toString();
     el = el.length >= 2 ? el : "0" + el;
     return el;
@@ -192,7 +212,7 @@ export default function OrderList() {
       .then((res) => {
         alert("La avería se registró correctamente"); //hacer notificacion bonita
         console.log(res.data);
-        obtenerCamiones();
+        obtenerUsuarios();
       })
       .catch((err) => {
         alert("Ocurrió un error en el registro de la avería");
@@ -231,13 +251,13 @@ export default function OrderList() {
         console.log(res.data);
         alert("El registro fue exitoso");
         handleCloseEdit();
-        obtenerCamiones();
+        obtenerUsuarios();
       })
       .catch((error) => {
         alert("ERROR al editar la información del camión cisterna");
         console.log(error);
       });
-  };
+  }; */
 
   /* *************************************************************************************************************  */
 
@@ -248,7 +268,7 @@ export default function OrderList() {
           <CardHeader plain color="primary">
             {/* <CardHeader plain className="bg-danger"> */}
             <h4 className={classes.cardTitleWhite}>
-              Camiones Cisterna en la Flota
+              Usuarios
             </h4>
             <div className="d-flex justify-content-end">
               <button className="btn btn-light btn-sm" onClick={handleOpen}>
@@ -262,20 +282,21 @@ export default function OrderList() {
           </CardHeader>
 
           <CardBody>
-            {camiones && (
-              <TableCamiones
+            {usuarios && (
+              <TableUsarios
                 tableHeaderColor="primary"
                 tableHead={[
                   "ID",
-                  "Código del Camión",
-                  "TARA Camión",
-                  "Capacidad de Petróleo (m3)",
-                  "Capacidad GLP (m3)",
+                  "Nombre",
+                  "Apellido",
+                  "Correo",
+                  "Telefono"
+                  /* "Capacidad GLP (m3)",
                   "Estado",
-                  "Acción",
+                  "Acción", */
                 ]}
-                tableData={camiones}
-                registrarAveria={registrarAveria}
+                tableData={usuarios}
+                /* registrarAveria={registrarAveria} */
                 handleOpenEdit={handleOpenEdit}
                 setCamionEdit={setCamionEdit}
               />
@@ -290,112 +311,176 @@ export default function OrderList() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style2}>
-          <h3>Agregar Camión Cisterna</h3>
-          <br />
+          <h3>Agregar Usuario</h3>
+          {/* <br /> */}
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="row">
               <div className="col-6">
-                <label>Código del Camión</label>
+                <label>Nombre</label>
                 <br />
                 <input
-                  name="codigoCamion"
-                  {...register("codigoCamion", {
+                  className="mt-1"  
+                  name="nombre"
+                  {...register("nombre", {
                     required: {
                       value: true,
-                      message: "Código del Camión requerido",
-                    },
-                    length: {
-                      value: 5,
-                      message: "El codigo debe ser de 5 caracteres ",
-                    },
+                      message: "Nombre del usuario requerido",
+                    },    
+                    maxLength : {
+                        value: 20,
+                        message: "El nombre no debe exceder los 20 caracteres"
+                    }                 
                   })}
                 />
-                {errors.codigoCamion && (
+                {errors.nombre && (
                   <span className="text-danger text-small d-block mb-2">
-                    {errors.codigoCamion.message}
+                    {errors.nombre.message}
                   </span>
                 )}
               </div>
 
               <div className="col-6">
-                <label>Kilometraje</label>
+                <label>Apellido Paterno</label>
+                <input
+                  className="mt-1"
+                  type="text"
+                  name="apellidoPaterno"
+                  {...register("apellidoPaterno", {
+                    required: {
+                      value: true,
+                      message: "Apellido paterno requerido",
+                    },
+                    maxLength : {
+                        value: 20,
+                        message: "El apellido no debe exceder los 20 caracteres"
+                    }                    
+                  })}
+                />
+                <br />
+                {errors.apellidoPaterno && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.apellidoPaterno.message}
+                  </span>
+                )}
+              </div>
+              <br />
+              <div className="col-6 mt-1">
+                <label>Apellido Materno</label>
+                <input
+                  className="mt-1"
+                  type="text"
+                  name="apellidoMaterno"
+                  {...register("apellidoMaterno", {
+                    required: {
+                      value: true,
+                      message: "Apellido materno requerido",
+                    },
+                    maxLength : {
+                        value: 20,
+                        message: "El materno no debe exceder los 20 caracteres"
+                    }                    
+                  })}
+                />
+                <br />
+                {errors.apellidoMaterno && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.apellidoMaterno.message}
+                  </span>
+                )}
+              </div>
+              <br />             
+              
+              <div className="col-6 mt-1">
+                <label>Correo</label>
+                <br />
+                <input
+                  type = "email"
+                  name="correo"
+                  {...register("correo", {
+                    required: {
+                      value: true,
+                      message: "Correo requerido",
+                    },                    
+                  })}
+                />
+                {errors.correo && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.correo.message}
+                  </span>
+                )}
+              </div>
+              <div className="col-6 mt-1">                
+                <label>Usuario</label>
+                <br />
+                <input
+                  className="mt-1"
+                  type="text"
+                  name="nombreUsuario"
+                  {...register("nombreUsuario", {
+                    required: {
+                      value: true,
+                      message: "Usuario requerido",
+                    },
+                    maxLength: {
+                      value: 15,
+                      message: "El usuario no puede tener mas de 15 caracteres",
+                    },                    
+                    minLength: {
+                      value: 5,
+                      message: "El usuario debe tener mas de 5 caracteres",
+                    },                    
+                  })}
+                />
+                <br />
+                {errors.nombreUsuario && (
+                  <span className="text-danger text-small d-block mb-2">
+                    {errors.nombreUsuario.message}
+                  </span>
+                )}
+              </div>
+
+              <div className="col-6 mt-1">
+                <label>Contraseña</label>
 
                 <input
                   className="mt-1"
-                  type="number"
-                  name="kilometraje"
-                  {...register("kilometraje", {
+                  type="password"
+                  name="clave"
+                  {...register("clave", {
                     required: {
                       value: true,
                       message: "Kilometraje del Camión requerida",
-                    },
-                    min: {
-                      value: 0,
-                      message: "El valor debe ser mayor a 0",
-                    },
+                    },                   
                   })}
                 />
                 <br />
-                {errors.velocidadCamion && (
+                {errors.clave && (
                   <span className="text-danger text-small d-block mb-2">
-                    {errors.velocidadCamion.message}
+                    {errors.clave.message}
                   </span>
                 )}
-              </div>
-              <br />
-
-              <div className="col-6">
-                <br />
-                <label>Tipo de Camión</label>
-
-                <select
-                  className="form-select"
-                  style={{ width: "190px", height: "40px" }}
-                  {...register("tipoCamion")}
-                >
-                  <option value={1} defaultValue>
-                    A
-                  </option>
-                  <option value={2}>B</option>
-                  <option value={3}>C</option>
-                  <option value={4}>D</option>
-                </select>
-                <br />
-                {errors.ubicacionX && (
-                  <span className="text-danger text-small d-block mb-2">
-                    {errors.ubicacionX.message}
-                  </span>
-                )}
-              </div>
+              </div>                        
 
               <br />
               <div className="col-6">
-                <br />
-                <label>Velocidad del Camión</label>
+                
+                <label>Telefono</label>
                 <br />
                 <input
                   className="mt-1"
-                  type="number"
-                  name="velocidadCamion"
-                  {...register("velocidadCamion", {
+                  type="tel"
+                  name="telefono"
+                  {...register("telefono", {
                     required: {
                       value: true,
-                      message: "Velocidad del Camión requerida",
-                    },
-                    min: {
-                      value: 0,
-                      message: "El valor debe ser mayor a 0",
-                    },
-                    max: {
-                      value: 200,
-                      message: "El valor debe ser maximo 200",
-                    },
+                      message: "Telefono obligatorio",
+                    },                    
                   })}
                 />
                 <br />
-                {errors.velocidadCamion && (
+                {errors.telefono && (
                   <span className="text-danger text-small d-block mb-2">
-                    {errors.velocidadCamion.message}
+                    {errors.telefono.message}
                   </span>
                 )}
               </div>
@@ -406,13 +491,18 @@ export default function OrderList() {
             <div className="d-flex justify-content-end mt-3">
               {" "}
               <br />
-              <button className="btn btn-primary">Registrar Camión</button>
+              <button className="btn btn-primary">Agregar Usuario</button>
             </div>
           </form>
         </Box>
       </Modal>
+      {/* <div className="d-flex justify-content-end">
+        <button 
+        onClick={()=> cerrarSesion()}
+        className="btn btn-secondary">Cerrar Sesión</button>
+      </div> */}
 
-      <Modal
+      {/* <Modal
         open={openEdit}
         onClose={handleCloseEdit}
         aria-labelledby="modal-modal-title"
@@ -549,7 +639,7 @@ export default function OrderList() {
             </div>
           </div>
         </Box>
-      </Modal>
+      </Modal> */}
     </GridContainer>
   );
 }

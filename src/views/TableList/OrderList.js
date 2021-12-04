@@ -22,6 +22,9 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import url from "../../config";
 import { Link } from "react-router-dom";
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies()
 
 const styles = {
   cardCategoryWhite: {
@@ -275,7 +278,13 @@ export default function OrderList() {
   /* ELIMINAR */
 
   React.useEffect(() => {
-    obtenerPedidos();
+    if(!cookies.get('nombreUsuario')){
+      window.location.href="./login";
+    }
+    else{
+
+      obtenerPedidos();
+    }
   }, []);
 
   const obtenerPedidos = () => {

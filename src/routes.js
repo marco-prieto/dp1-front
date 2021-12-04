@@ -34,6 +34,7 @@ import Reportes from "views/TableList/ReportesList";
 import DiagramaPastel from "components/Graficas/DiagramaPastel";
 import Login from "views/Login/Login";
 import Dashboard from "views/Dashboard/Dashboard";
+import Usuarios from "views/Login/Usuarios"
 
 // import LibraryBooks from "@material-ui/icons/LibraryBooks";
 // import BubbleChart from "@material-ui/icons/BubbleChart";
@@ -137,50 +138,57 @@ const sagRoutes = [
   {
     path: "/simulacion",
     name: "Simulación",
-    icon: "content_paste",
+    icon: "play_circlee",
     component: Simulacion,
     layout: "/admin",
   },
   {
     path: "/bloqueos",
     name: "Bloqueos",
-    icon: "content_paste",
+    icon: "block",
     component: BloqueosList,
     layout: "/admin",
   },
   {
     path: "/camiones",
     name: "Camiones Cisterna",
-    icon: "content_paste",
+    icon: "local_shipping",
     component: CamionesList,
     layout: "/admin",
   },
   {
     path: "/mantenimientoPreventivo",
     name: "Mantenimientos",
-    icon: "content_paste",
+    icon: "build",
     component: MantenimientoPreventivoList,
     layout: "/admin",
   },
   {
     path: "/plantas",
     name: "Plantas",
-    icon: "content_paste",
+    icon: "domain",
     component: PlantasList,
     layout: "/admin",
   },
   {
     path: "/dashboard",
     name: "Dashboard",
-    icon: "content_paste",
+    icon: "dashboard",
     component: ReportesDashboard,
     layout: "/admin",
   },
   {
     path: "/reportes",
     name: "Reportes",
-    icon: "content_paste",
+    icon: "summarize",
     component: Reportes,
+    layout: "/admin",
+  },
+  {
+    path: "/usuarios",
+    name: "Usuarios",
+    icon: "account_circle",
+    component: Usuarios,
     layout: "/admin",
   },
 

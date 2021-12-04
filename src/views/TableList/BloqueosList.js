@@ -24,6 +24,9 @@ import axios from "axios";
 import url from "../../config";
 import { Link } from "react-router-dom";
 import { RvHookup } from "@material-ui/icons";
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies()
 
 const styles = {
   cardCategoryWhite: {
@@ -112,7 +115,12 @@ export default function OrderList() {
   /* *************************************************************************************************************  */
 
   React.useEffect(() => {
-    obtenerBloqueos();
+    if(!cookies.get('nombreUsuario')){
+      window.location.href="./login";
+    }  
+    else{
+      obtenerBloqueos();
+    }    
   }, []);
 
   const obtenerBloqueos = () => {

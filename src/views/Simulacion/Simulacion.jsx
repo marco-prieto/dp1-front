@@ -22,6 +22,9 @@ import CapacidadAtencion from "components/CustomIndicador/CapacidadAtencion";
 
 import axios from "axios";
 import url from "../../config";
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies()
 
 const useStyles = makeStyles(styles);
 
@@ -404,6 +407,12 @@ export default function SimulacionLayout({ ...rest }) {
       console.log("error");
     }
   };
+
+  React.useEffect(() => {
+    if(!cookies.get('nombreUsuario')){
+        window.location.href="./login";
+    }      
+  }, []);
 
   return (
     <GridContainer>
