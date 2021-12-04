@@ -23,9 +23,9 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import url from "../../config";
 import { Link } from "react-router-dom";
-import Cookies from 'universal-cookie'
+import Cookies from "universal-cookie";
 
-const cookies = new Cookies()
+const cookies = new Cookies();
 
 const styles = {
   cardCategoryWhite: {
@@ -82,6 +82,10 @@ export default function OrderList() {
     desdeConsumo: new Date().toISOString().split("T")[0],
     hastaConsumo: new Date().toISOString().split("T")[0],
   });
+  const [paramsCantidadPedidos, setParamsCantidadPedidos] = React.useState({
+    desdeCantidadPedidos: new Date().toISOString().split("T")[0],
+    hastaCantidadPedidos: new Date().toISOString().split("T")[0],
+  });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -89,6 +93,13 @@ export default function OrderList() {
   const handleOnChange = (e) => {
     setParamsConsumoMensual({
       ...paramsConsumoMensual,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleOnChange2 = (e) => {
+    setParamsCantidadPedidos({
+      ...paramsCantidadPedidos,
       [e.target.name]: e.target.value,
     });
   };
@@ -128,9 +139,27 @@ export default function OrderList() {
     });
   };
 
+  const handleReporteCantidadPedidos = () => {
+    const data = {
+      fechaInicio: paramsCantidadPedidos.desdeCantidadPedidos + " 00:00:00",
+      fechaInicio: paramsCantidadPedidos.hastaCantidadPedidos + " 00:00:00",
+      tipo: 1, //dia a dia
+    };
+    console.log(data);
+
+    return axios({
+      url: `${url}/reportes/PedidosEntregados`,
+      method: "POST",
+      data: data,
+      responseType: "blob", // Important
+    }).then((response) => {
+      FileDownload(response.data, "Reporte Capacidad de Atención Mensual.xlsx");
+    });
+  };
+
   React.useEffect(() => {
-    if(!cookies.get('nombreUsuario')){
-      window.location.href="./login";
+    if (!cookies.get("nombreUsuario")) {
+      window.location.href = "./login";
     }
   }, []);
 
@@ -214,6 +243,57 @@ export default function OrderList() {
                   Descargar Reporte
                 </Button>
               </div>
+            </div>
+            <div>
+              <div className="my-5">
+                <h3>Reporte de Cantidad de Pedidos</h3>
+              </div>
+              <div>
+                <div
+                  className="d-flex align-items-center  my-3"
+                  style={{ fontSize: "20px" }}
+                >
+                  <div className="me-3">
+                    <strong>Desde:</strong>
+                  </div>
+                  <div>
+                    <input
+                      type="date"
+                      name="desdeCantidadPedidos"
+                      value={paramsCantidadPedidos.desdeCantidadPedidos}
+                      onChange={handleOnChange2}
+                    ></input>
+                  </div>
+                </div>
+
+                <div
+                  className="d-flex align-items-center my-4"
+                  style={{ fontSize: "20px" }}
+                >
+                  <div className="me-3 ">
+                    <strong>Hasta:</strong>
+                  </div>
+                  <div>
+                    <input
+                      type="date"
+                      name="hastaCantidadPedidos"
+                      value={paramsCantidadPedidos.hastaCantidadPedidos}
+                      onChange={handleOnChange2}
+                    ></input>
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="contained"
+                component="label"
+                color="primary"
+                className="mt-3"
+                onClick={() => {
+                  handleReporteCantidadPedidos();
+                }}
+              >
+                Descargar Reporte
+              </Button>
             </div>
           </CardBody>
         </Card>
