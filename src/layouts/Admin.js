@@ -16,6 +16,9 @@ import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
 import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/sag/sagLogo.svg";
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies()
 
 let ps;
 
@@ -33,7 +36,8 @@ const switchRoutes = (
       }
       return null;
     })}
-    <Redirect from="/admin" to="/admin/dashboard" />
+    <Redirect from="/admin/login" to="/login" />
+    {/* <Redirect from="/admin" to="/admin/dashboard" /> */}
   </Switch>
 );
 
@@ -79,8 +83,22 @@ export default function Admin({ ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
+  const cerrarSesion = () => {
+    cookies.remove('id',{path: "/"});
+		cookies.remove('apellidoPaterno',{path: "/"});
+		cookies.remove('apellidoMaterno',{path: "/"});
+		cookies.remove('nombre',{path: "/"});
+		cookies.remove('correo',{path: "/"});
+		cookies.remove('nombreUsuario',{path: "/"});
+		cookies.remove('telefono',{path: "/"});
+		cookies.remove('clave',{path: "/"});
+		cookies.remove('activo',{path: "/"});
+    window.location.href='./login';
+  }
+
   return (
     <div className={classes.wrapper}>
+      
       <Sidebar
         routes={routes}
         logoText={"SAG Logistics"}
@@ -91,16 +109,22 @@ export default function Admin({ ...rest }) {
         color={color}
         {...rest}
       />
+      
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           routes={routes}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
-        />
+        />        
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes}</div>
+            <div className="d-flex justify-content-end">
+                <button
+                onClick={()=> cerrarSesion()} 
+                className="btn btn-secondary mr-5">Cerrar Cesión</button>
+            </div>            
+            <div className={classes.container}>{switchRoutes}</div>            
           </div>
         ) : (
           <div className={classes.map}>{switchRoutes}</div>

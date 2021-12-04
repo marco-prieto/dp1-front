@@ -92,26 +92,84 @@ function DiagramaBarras() {
   } */
   const onSubmit = (data, e) => {
     console.log(data);
-    var dato = {
-      "fecha": data.fechaPedido + ' 00:00:00',
-      tipo:1
+    if(tipoRango == 1){
+
+      var dato = {
+        "fecha": data.fechaPedido + ' 00:00:00',
+        "tipo":1
+      }
+    }
+    if(tipoRango == 2){
+
+      var dato = {
+        "fechaInicio": data.fechaPedido + '-01 00:00:00',
+        "fechaFin": data.fechaPedido + '-31 00:00:00',
+        "tipo":1,
+      }
+    }
+    if(tipoRango == 3){
+
+      var dato = {
+        "fechaInicio": data.fechaPedido + '-01-01 00:00:00',
+        "fechaFin": data.fechaPedido + '-12-31 00:00:00',
+        "tipo":1
+      }
     }
     console.log(dato)
-    axios.post(`${url}/reportes/GLPEntregadoXCamion`,dato).
-    then(response=>{
-      console.log(response.data)
-      var respuesta = response.data
-      var auxIds=[],auxCantidad=[]
-      respuesta.map(elemento=>{
-        auxIds.push(elemento.placa)
-        auxCantidad.push(elemento.cantidadGLP)
+    if(tipoRango == 1){
+
+      axios.post(`${url}/reportes/GLPEntregadoXCamion`,dato).
+      then(response=>{
+        console.log(response.data)
+        var respuesta = response.data
+        var auxIds=[],auxCantidad=[]
+        respuesta.map(elemento=>{
+          auxIds.push(elemento.placa)
+          auxCantidad.push(elemento.cantidadGLP)
+        })
+        setIdCamiones(auxIds)
+        setCantidadGLP(auxCantidad)
       })
-      setIdCamiones(auxIds)
-      setCantidadGLP(auxCantidad)
-    })
-    .catch((err) =>{
-      alert("Ocurrió un error en el registro del pedido");
-    })
+      .catch((err) =>{
+        alert("Ocurrió un error en el registro del pedido");
+      })
+    }
+    if(tipoRango == 2){
+
+      axios.post(`${url}/reportes/GLPEntregadoXCamionXMeses`,dato).
+      then(response=>{
+        console.log(response.data)
+        var respuesta = response.data
+        var auxIds=[],auxCantidad=[]
+        respuesta.map(elemento=>{
+          auxIds.push(elemento.placa)
+          auxCantidad.push(elemento.cantidadGLP)
+        })
+        setIdCamiones(auxIds)
+        setCantidadGLP(auxCantidad)
+      })
+      .catch((err) =>{
+        alert("Ocurrió un error en el registro del pedido");
+      })
+    }
+    if(tipoRango == 3){
+
+      axios.post(`${url}/reportes/GLPEntregadoXCamionXAnios`,dato).
+      then(response=>{
+        console.log(response.data)
+        var respuesta = response.data
+        var auxIds=[],auxCantidad=[]
+        respuesta.map(elemento=>{
+          auxIds.push(elemento.placa)
+          auxCantidad.push(elemento.cantidadGLP)
+        })
+        setIdCamiones(auxIds)
+        setCantidadGLP(auxCantidad)
+      })
+      .catch((err) =>{
+        alert("Ocurrió un error en el registro del pedido");
+      })
+    }
 
 
     //setPedidos([...pedidos, data]);
@@ -138,7 +196,7 @@ function DiagramaBarras() {
       <h3>Entrega de GLP diario en m3 de cada camión</h3>
       <form  onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
-              {/* <div className="col-4">
+              <div className="col-4">
                   <label className="me-2">Vista</label>
                   <select
                     value={tipoRango}
@@ -154,7 +212,7 @@ function DiagramaBarras() {
                     <option value={2}>mensual</option>
                     <option value={3}>anual</option>                                       
                   </select>
-              </div> */}
+              </div>
               {
                 tipoRango == 1 && (
                   <div className="col-5">
@@ -179,7 +237,7 @@ function DiagramaBarras() {
                   </div>
                 )                
               }
-              {/* {
+              {
                 tipoRango == 2 && (
                   <div className="col-5">
                     <label>Fecha</label>
@@ -201,7 +259,7 @@ function DiagramaBarras() {
                       </span>
                     )}
                   </div>
-                )          
+                )                
               }
               {
                 tipoRango == 3 && (
@@ -225,8 +283,96 @@ function DiagramaBarras() {
                       </span>
                     )}
                   </div>
+                )                
+              }
+              {/* {
+                tipoRango == 2 && (
+                  <div className="row mt-1">
+                    <div className="col-4">
+                      <label>Fecha Inicio</label>
+                      <br />
+                      <input
+                        type="month"
+                        name="fechaInicio"
+                        {...register("fechaInicio", {
+                          required: {
+                            value: true,
+                            message: "fechaInicio requerida",
+                          },
+                        })}
+                      />
+                      {errors.fechaInicio && (
+                        <span className="text-danger text-small d-block mb-2">
+                          {errors.fechaInicio.message}
+                        </span>
+                      )}
+                    </div>
+                    <div className="col-4">
+                      <label>Fecha Fin</label>
+                      <br />
+                      <input
+                        type="month"
+                        name="fechaFin"
+                        {...register("fechaFin", {
+                          required: {
+                            value: true,
+                            message: "fechaFin requerida",
+                          },
+                        })}
+                      />
+                      {errors.fechaFin && (
+                        <span className="text-danger text-small d-block mb-2">
+                          {errors.fechaFin.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 )          
-              }             */}  
+              }
+              {
+                tipoRango == 3 && (
+                  <div className="row mt-1">
+                    <div className="col-4">
+                      <label>Fecha Inicio</label>
+                      <br />
+                      <input
+                        type="year"
+                        name="fechaInicio"
+                        {...register("fechaInicio", {
+                          required: {
+                            value: true,
+                            message: "fechaInicio requerida",
+                          },
+                        })}
+                      />
+                      {errors.fechaInicio && (
+                        <span className="text-danger text-small d-block mb-2">
+                          {errors.fechaInicio.message}
+                        </span>
+                      )}
+                    </div>
+                    <div className="col-4">
+                      <label>Fecha Fin</label>
+                      <br />
+                      <input
+                        type="year"
+                        name="fechaFin"
+                        {...register("fechaFin", {
+                          required: {
+                            value: true,
+                            message: "fechaFin requerida",
+                          },
+                        })}
+                      />
+                      {errors.fechaFin && (
+                        <span className="text-danger text-small d-block mb-2">
+                          {errors.fechaFin.message}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )          
+              } */}              
               <div className="d-flex justify-content-end">
                 <button className="btn btn-secondary">Iniciar</button>
               </div>

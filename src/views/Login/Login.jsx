@@ -6,8 +6,9 @@ import { LockOutlined as LockOutlinedIcon } from '@material-ui/icons'
 import axios from 'axios'
 import md5 from 'md5'
 import Cookies from 'universal-cookie'
+import url from '../../config'
 
-const baseurl = 'http://localhost:3001/usuarios'
+/* const baseurl = 'http://localhost:3001/usuarios' */
 const cookies = new Cookies()
 
 const useStyles = makeStyles(theme => ({
@@ -61,20 +62,19 @@ function App() {
 		})
 	}
     //Esto se encargará de que si ya se esta logueado se vuelva a entrar y no poder logearse doblemente
-   /*  useEffect(() => {
-        if(cookies.get('username')){
-            window.location.href="./menu";
-        }
-        
-    },[]) */
+    useEffect(() => {
+        if(cookies.get('nombreUsuario')){
+            window.location.href="./admin/pedidos";
+        }  
+    },[])
 
 	const onSubmit = () => {
 		console.log(body)
-		if(body.nickname == "admin" && body.password == "admin")
+		/* if(body.nickname == "admin" && body.password == "admin")
 			window.location.href="./admin/pedidos";
 		else{
 			alert('Usuario y contraseña icorrectos')
-		}
+		} */
         //aca se verifica si el usuario y contraseña con correctos
         /* axios.get(baseurl, {params: {username: body.nickname, password: md5(body.password)}}).then(response =>{
             console.log(response.data)
@@ -82,6 +82,7 @@ function App() {
         })
         .then(response =>{
             if(response.length > 0){
+				console.log(response[0])
                 var respuesta = response[0];
                 cookies.set('id', respuesta.id, {path: "/"});
                 cookies.set('apellido_paterno', respuesta.apellido_paterno, {path: "/"});
@@ -89,7 +90,7 @@ function App() {
                 cookies.set('nombre', respuesta.nombre, {path: "/"});
                 cookies.set('username', respuesta.username, {path: "/"});
                 alert(`Bienvenido ${respuesta.nombre} ${respuesta.apellido_paterno}`);
-                window.location.href="./menu";
+                //window.location.href="./admin/pedidos";
             }else{
                 alert('El usuario y password no son correctos')
             }
@@ -97,6 +98,32 @@ function App() {
         .catch(error =>{
             console.log(error)
         }) */
+		var dato = {
+			"username": body.nickname,
+			"password": body.password
+		}
+		axios.post(`${url}/usuario/login`,dato)
+		.then(response =>{
+			console.log(response.data)
+			var respuesta = response.data
+			console.log(respuesta)
+			console.log(typeof respuesta)
+			if((typeof respuesta) === "object"){
+				cookies.set('id', respuesta.id, {path: "/"});
+				cookies.set('apellidoPaterno', respuesta.apellidoPaterno, {path: "/"});
+				cookies.set('apellidoMaterno', respuesta.apellidoMaterno, {path: "/"});
+				cookies.set('nombre', respuesta.nombre, {path: "/"});
+				cookies.set('correo', respuesta.correo, {path: "/"});
+				cookies.set('nombreUsuario', respuesta.nombreUsuario, {path: "/"});
+				cookies.set('telefono', respuesta.telefono, {path: "/"});
+				cookies.set('clave', respuesta.clave, {path: "/"});
+				cookies.set('activo', respuesta.activo, {path: "/"});
+				alert(`Bienvenido ${respuesta.nombre} ${respuesta.apellidoPaterno}`);
+				window.location.href="./admin/pedidos";
+			}else{
+                alert('El usuario y password no son correctos')
+            }
+		})
         //window.location.href="./admin/pedidos";
 	}
 

@@ -10,6 +10,9 @@ import Box from '@material-ui/core/Box';
 import DiagramaBarras from '../../components/Graficas/DiagramaBarras'
 import DiagramaPastel from '../../components/Graficas/DiagramaPastel'
 import DiagramaBarrasPetroleo from 'components/Graficas/DiagramaBarrasPetroleo';
+import Cookies from 'universal-cookie'
+
+const cookies = new Cookies()
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,6 +67,12 @@ export default function Reportes() {
   const handleChangeIndex = (index) => {
     setValue(index);
   };
+
+  React.useEffect(() => {
+    if(!cookies.get('nombreUsuario')){
+        window.location.href="./";
+    }
+  }, []);
 
   return (
     <div className={classes.root}>
