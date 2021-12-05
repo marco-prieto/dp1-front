@@ -1,4 +1,3 @@
-
 import React from "react";
 import PropTypes from "prop-types";
 // @material-ui/core components
@@ -8,7 +7,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import shortid from 'shortid';
+import shortid from "shortid";
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
 
@@ -19,17 +18,25 @@ export default function CustomTable(props) {
   const { tableHead, tableData, tableHeaderColor } = props;
   return (
     <div className={classes.tableResponsive}>
-        <h4 className="d-flex justify-content-center" style={{marginBottom:"10px"}}>Pedidos Atendidos</h4>
+      <h4
+        className="d-flex justify-content-center"
+        style={{ marginBottom: "10px" }}
+      >
+        Pedidos Atendidos
+      </h4>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
-          <TableHead className={classes[tableHeaderColor + "TableHeader"]} style={{fontSize:"12px"}}>
+          <TableHead
+            className={classes[tableHeaderColor + "TableHeader"]}
+            style={{ fontSize: "12px" }}
+          >
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
                 return (
                   <TableCell
                     className={classes.tableCell + " " + classes.tableHeadCell}
                     key={shortid.generate()}
-                    align='center'
+                    align="center"
                   >
                     {prop}
                   </TableCell>
@@ -41,24 +48,49 @@ export default function CustomTable(props) {
         <TableBody>
           {tableData.map((prop, key) => {
             return (
-              <TableRow key={key} className={classes.tableBodyRow} style={{fontSize:"10px"}}>
-                <TableCell className={classes.tableCell} key={key} align='center'>
-                      {prop.idPedido}
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key} align='center'>
-                      {prop.cantidadGLP}
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key} align='center'>
-                      {prop.horaLlegada}
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key} align='center'>
-                      {prop.horaDeFinAtencion}
-                </TableCell>
-                <TableCell className={classes.tableCell} key={key} align='center'>
-                      {`(${prop.ubicacion['x']},${prop.ubicacion['y']})`}
-                </TableCell>
-
-              </TableRow>
+              prop && (
+                <TableRow
+                  key={key}
+                  className={classes.tableBodyRow}
+                  style={{ fontSize: "10px" }}
+                >
+                  <TableCell
+                    className={classes.tableCell}
+                    key={key}
+                    align="center"
+                  >
+                    {prop.idPedido}
+                  </TableCell>
+                  <TableCell
+                    className={classes.tableCell}
+                    key={key}
+                    align="center"
+                  >
+                    {prop.cantidadGLP}
+                  </TableCell>
+                  <TableCell
+                    className={classes.tableCell}
+                    key={key}
+                    align="center"
+                  >
+                    {prop.horaLlegada}
+                  </TableCell>
+                  <TableCell
+                    className={classes.tableCell}
+                    key={key}
+                    align="center"
+                  >
+                    {prop.horaDeFinAtencion}
+                  </TableCell>
+                  <TableCell
+                    className={classes.tableCell}
+                    key={key}
+                    align="center"
+                  >
+                    {`(${prop.ubicacion["x"]},${prop.ubicacion["y"]})`}
+                  </TableCell>
+                </TableRow>
+              )
             );
           })}
         </TableBody>

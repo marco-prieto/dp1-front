@@ -188,13 +188,13 @@ export default function ColapsoLayout({ props }) {
                 )}
               </div>
 
-              <button
+              {/* <button
                 onClick={() => {
                   console.log(info);
                 }}
               >
                 Boton
-              </button>
+              </button> */}
             </div>
           </div>
         </div>

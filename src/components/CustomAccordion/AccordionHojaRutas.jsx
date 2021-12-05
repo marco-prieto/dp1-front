@@ -207,18 +207,20 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
               </AccordionSummary>
 
               <AccordionDetails>
-                <TableHojaRutas
-                  tableHeaderColor="primary"
-                  style={{ marginTop: "-5px" }}
-                  tableHead={[
-                    "ID",
-                    "Cantidad de GLP",
-                    "Hora de Llegada",
-                    "Hora de Salida",
-                    "Ubicación (x,y)",
-                  ]}
-                  tableData={camion.pedidos}
-                />
+                {camion.pedidos && camion.pedidos.length > 0 && (
+                  <TableHojaRutas
+                    tableHeaderColor="primary"
+                    style={{ marginTop: "-5px" }}
+                    tableHead={[
+                      "ID",
+                      "Cantidad de GLP",
+                      "Hora de Llegada",
+                      "Hora de Salida",
+                      "Ubicación (x,y)",
+                    ]}
+                    tableData={camion.pedidos}
+                  />
+                )}
               </AccordionDetails>
             </Accordion>
           </div>

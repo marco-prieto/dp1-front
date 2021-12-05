@@ -22,9 +22,9 @@ import CapacidadAtencion from "components/CustomIndicador/CapacidadAtencion";
 
 import axios from "axios";
 import url from "../../config";
-import Cookies from 'universal-cookie'
+import Cookies from "universal-cookie";
 
-const cookies = new Cookies()
+const cookies = new Cookies();
 
 const useStyles = makeStyles(styles);
 
@@ -409,9 +409,9 @@ export default function SimulacionLayout({ ...rest }) {
   };
 
   React.useEffect(() => {
-    if(!cookies.get('nombreUsuario')){
-        window.location.href="./login";
-    }      
+    if (!cookies.get("nombreUsuario")) {
+      window.location.href = "./login";
+    }
   }, []);
 
   return (
@@ -502,7 +502,7 @@ export default function SimulacionLayout({ ...rest }) {
                   onChange={(e) => {
                     setSimulationType(e.target.value);
                     if (e.target.value == 3) {
-                      setGlobalVelocity(1500); //velocidad por defecto de la simulacion colapso
+                      setGlobalVelocity(1000); //velocidad por defecto de la simulacion colapso
                     }
                   }}
                 >

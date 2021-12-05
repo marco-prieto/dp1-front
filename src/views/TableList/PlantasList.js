@@ -23,9 +23,9 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import url from "../../config";
 import { Link } from "react-router-dom";
-import Cookies from 'universal-cookie'
+import Cookies from "universal-cookie";
 
-const cookies = new Cookies()
+const cookies = new Cookies();
 
 const styles = {
   cardCategoryWhite: {
@@ -111,6 +111,7 @@ export default function OrderList() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
 
   /* *************************************************************************************************************  */
@@ -121,6 +122,7 @@ export default function OrderList() {
         //console.log(res);
         console.log(res.data);
         e.target.reset();
+        reset();
         obtenerPlantas();
       })
       .catch((err) => {
@@ -132,13 +134,11 @@ export default function OrderList() {
   };
 
   React.useEffect(() => {
-    if(!cookies.get('nombreUsuario')){
-      window.location.href="./login";
-    }  
-    else{
-
+    if (!cookies.get("nombreUsuario")) {
+      window.location.href = "./login";
+    } else {
       obtenerPlantas();
-    }    
+    }
   }, []);
 
   const obtenerPlantas = () => {

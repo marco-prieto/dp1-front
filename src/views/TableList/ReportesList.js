@@ -142,7 +142,7 @@ export default function OrderList() {
   const handleReporteCantidadPedidos = () => {
     const data = {
       fechaInicio: paramsCantidadPedidos.desdeCantidadPedidos + " 00:00:00",
-      fechaInicio: paramsCantidadPedidos.hastaCantidadPedidos + " 00:00:00",
+      fechaFin: paramsCantidadPedidos.hastaCantidadPedidos + " 00:00:00",
       tipo: 1, //dia a dia
     };
     console.log(data);
@@ -153,7 +153,10 @@ export default function OrderList() {
       data: data,
       responseType: "blob", // Important
     }).then((response) => {
-      FileDownload(response.data, "Reporte Capacidad de Atención Mensual.xlsx");
+      FileDownload(
+        response.data,
+        "Reporte Cantidad de Pedidos Entregados.xlsx"
+      );
     });
   };
 
