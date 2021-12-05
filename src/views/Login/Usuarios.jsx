@@ -126,6 +126,7 @@ export default function OrderList() {
   const onSubmit = (data, e) => {
     console.log(data);
     e.target.reset();
+    var existe = 0
 
     /* var dato = data
     dato.id = Math.random()*1000
@@ -133,8 +134,31 @@ export default function OrderList() {
     console.log(dato) */
 
     // //setPedidos([...pedidos, data]);
-
-    axios
+    usuarios.map(elemento=>{
+      if(elemento.nombreUsuario == data.nombreUsuario){
+        existe = 1
+        //e.target.reset();        
+      }
+    })
+    if(existe === 0){
+      axios
+          .post(`${url}/usuario/registrarUsuarioNuevo`, data)
+          .then((res) => {
+          //console.log(res);
+            console.log(res.data);
+            //e.target.reset();
+            obtenerUsuarios();
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      alert("El registro fue exitoso");
+    }
+    else{
+      alert('Usuario ya existente');      
+    }
+    e.target.reset()
+    /* axios
       .post(`${url}/usuario/registrarUsuarioNuevo`, data)
       .then((res) => {
         //console.log(res);
@@ -144,9 +168,8 @@ export default function OrderList() {
       })
       .catch((err) => {
         console.log(err);
-      });
+      }); */
 
-      alert("El registro fue exitoso");
       //handleClose();
   };
   const cerrarSesion = () => {
@@ -449,7 +472,7 @@ export default function OrderList() {
                   {...register("clave", {
                     required: {
                       value: true,
-                      message: "Kilometraje del Camión requerida",
+                      message: "Password requerido",
                     },                   
                   })}
                 />
