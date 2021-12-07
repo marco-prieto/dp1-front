@@ -22,9 +22,9 @@ import Button from "@material-ui/core/Button";
 import axios from "axios";
 import url from "../../config";
 import { Link } from "react-router-dom";
-import Cookies from 'universal-cookie'
+import Cookies from "universal-cookie";
 
-const cookies = new Cookies()
+const cookies = new Cookies();
 
 const styles = {
   cardCategoryWhite: {
@@ -264,25 +264,24 @@ export default function OrderList() {
   };
 
   const handleRegistrarPedidos = () => {
-    axios
-      .post(`${url}/pedido/registrarListaPedidos`, globalOrders)
-      .then((res) => {
-        console.log("Pedidos registradossssssss");
-      })
-      .catch((error) => {
-        alert("ERROR al registrar pedidos");
-        console.log(error);
-      });
+    console.log(globalOrders);
+    // axios
+    //   .post(`${url}/pedido/registrarListaPedidos`, globalOrders)
+    //   .then((res) => {
+    //     console.log("Pedidos registradossssssss");
+    //   })
+    //   .catch((error) => {
+    //     alert("ERROR al registrar pedidos");
+    //     console.log(error);
+    //   });
   };
 
   /* ELIMINAR */
 
   React.useEffect(() => {
-    if(!cookies.get('nombreUsuario')){
-      window.location.href="./login";
-    }
-    else{
-
+    if (!cookies.get("nombreUsuario")) {
+      window.location.href = "./login";
+    } else {
       obtenerPedidos();
     }
   }, []);
@@ -324,7 +323,7 @@ export default function OrderList() {
               <button className="btn btn-light btn-sm" onClick={handleOpen}>
                 Nuevo
               </button>
-              {/* <Button variant="contained" component="label">
+              <Button variant="contained" component="label">
                 Subir Archivo
                 <input
                   type="file"
@@ -340,7 +339,7 @@ export default function OrderList() {
                 }}
               >
                 ENVIAR
-              </button> */}
+              </button>
             </div>
 
             {/* <p className={classes.cardCategoryWhite}>
@@ -534,7 +533,7 @@ export default function OrderList() {
                       message: "El valor debe ser mayor a 0",
                     },
                     max: {
-                      value: 40,
+                      value: 1000,
                       message: "El valor debe ser maximo 40",
                     },
                   })}

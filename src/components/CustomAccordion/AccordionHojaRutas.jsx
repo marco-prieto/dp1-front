@@ -60,6 +60,13 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
   const [hRutaAll, setHRutaAll] = useState(null);
   const requestInterval = 20 * 1000; //en segundos
 
+  function startsWith(wordToCompare) {
+    return function (element) {
+      //console.log(element.codigoCamion, wordToCompare);
+      return element.codigoCamion.indexOf(wordToCompare) === 0;
+    };
+  }
+
   React.useEffect(() => {
     obtenerHojaRuta();
 
