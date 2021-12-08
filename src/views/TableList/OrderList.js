@@ -23,6 +23,7 @@ import axios from "axios";
 import url from "../../config";
 import { Link } from "react-router-dom";
 import Cookies from "universal-cookie";
+import { DataUsageSharp } from "@material-ui/icons";
 
 const cookies = new Cookies();
 
@@ -128,10 +129,25 @@ export default function OrderList() {
   } = useForm();
 
   /* *************************************************************************************************************  */
-  //Para hacer el post.. creo q queda comentar ese setpedidos
+
   const onSubmit = (data, e) => {
-    console.log(data);
-    //setPedidos([...pedidos, data]);
+    var dateNow = new Date(Date.now());
+    var today = dateNow.toLocaleString("es-ES").toString().split(" ");
+    var fecha = today[0].split("/");
+    var hora = today[1].split(":");
+
+    data["fechaPedido"] =
+      fecha[2] + "-" + parseElement(fecha[1]) + "-" + parseElement(fecha[0]);
+
+    data["hora"] =
+      parseElement(hora[0]) +
+      ":" +
+      parseElement(hora[1]) +
+      ":" +
+      parseElement(hora[2]);
+
+    //console.log(data);
+    setPedidos([...pedidos, data]);
     axios
       .post(`${url}/pedido/registrarPedidoNuevo`, data)
       .then((res) => {
@@ -406,54 +422,9 @@ export default function OrderList() {
         </Box> */}
         <Box sx={style2}>
           <h3>Agregar Pedido</h3>
-          <br />
+
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="row">
-              <div className="col-6">
-                <label>Fecha de Pedido</label>
-                <br />
-                <input
-                  type="date"
-                  name="fechaPedido"
-                  {...register("fechaPedido", {
-                    required: {
-                      value: true,
-                      message: "fechaPedido requerida",
-                    },
-                  })}
-                />
-                {errors.fechaPedido && (
-                  <span className="text-danger text-small d-block mb-2">
-                    {errors.fechaPedido.message}
-                  </span>
-                )}
-              </div>
-              <br />
-
-              <br />
-
-              <div className="col-6">
-                <label>Hora</label>
-                <br />
-                <input
-                  type="time"
-                  name="hora"
-                  step="1"
-                  {...register("hora", {
-                    required: {
-                      value: true,
-                      message: "Hora requerida",
-                    },
-                  })}
-                />
-                {errors.hora && (
-                  <span className="text-danger text-small d-block mb-2">
-                    {errors.hora.message}
-                  </span>
-                )}
-              </div>
-              <br />
-
               <div className="col-6">
                 <br />
                 <label>Coordenada X</label>

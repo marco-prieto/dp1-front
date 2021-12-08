@@ -19,6 +19,7 @@ import SimulationMap from "map/SimulationMap.jsx";
 import AccordionHRSimulacion from "../../components/CustomAccordion/AccordionHRSimulacion";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import CapacidadAtencion from "components/CustomIndicador/CapacidadAtencion";
+import HoraSimulacion from "components/CustomIndicador/HoraSimulacion";
 
 import axios from "axios";
 import url from "../../config";
@@ -605,8 +606,16 @@ export default function SimulacionLayout({ ...rest }) {
                     setFlagFinSimulacion={setFlagFinSimulacion}
                     setInfoColapso={setInfoColapso}
                   />
-                  <div>
-                    <CapacidadAtencion simulationType={simulationType} />
+                  <div className="d-flex">
+                    <div className="me-4">
+                      <CapacidadAtencion simulationType={simulationType} />
+                    </div>
+                    <div>
+                      <HoraSimulacion
+                        simulationType={simulationType}
+                        speed={globalVelocity}
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="mx-4">
