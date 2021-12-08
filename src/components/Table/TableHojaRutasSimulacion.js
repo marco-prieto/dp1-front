@@ -64,25 +64,25 @@ export default function CustomTable(props) {
       >
         Pedidos Atendidos
       </h4>
+      <div style={{ minWidth: "300px" }}>
+        <Button
+          variant="contained"
+          component="label"
+          color="primary"
+          onClick={() => {
+            obtenerHojaRutas(props.idRuta);
+            handleOpen();
+          }}
+        >
+          Hoja de Ruta
+        </Button>
+      </div>
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead
             className={classes[tableHeaderColor + "TableHeader"]}
             style={{ fontSize: "12px" }}
           >
-            <div style={{ minWidth: "300px" }}>
-              <Button
-                variant="contained"
-                component="label"
-                color="primary"
-                onClick={() => {
-                  obtenerHojaRutas(props.idRuta);
-                  handleOpen();
-                }}
-              >
-                Hoja de Ruta
-              </Button>
-            </div>
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
                 return (
