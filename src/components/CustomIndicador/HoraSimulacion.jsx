@@ -22,14 +22,16 @@ const CapacidadAtencion = ({ simulationType, speed }) => {
       .post(`${url}/algoritmo/tiempoSimulacion`, data)
       .then((resp) => {
         console.log(resp.data);
-        var fecha = resp.data["horaActual"].split("T")[0];
-        var horas = resp.data["horaActual"].split("T")[1];
+        if (resp.data["horaActual"] != null) {
+          var fecha = resp.data["horaActual"].split("T")[0];
+          var horas = resp.data["horaActual"].split("T")[1];
 
-        var dia = fecha.split("-")[2];
-        var hora = horas.split(":")[0];
-        var min = horas.split(":")[1];
+          var dia = fecha.split("-")[2];
+          var hora = horas.split(":")[0];
+          var min = horas.split(":")[1];
 
-        setHoraSimulacion(dia + "-" + hora + ":" + min);
+          setHoraSimulacion(dia + "-" + hora + ":" + min);
+        }
       })
       .catch((ex) => {
         console.log(ex);

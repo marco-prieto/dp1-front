@@ -226,6 +226,7 @@ const AccordionHojaRutas = ({ hojaRuta }) => {
                       "Ubicación (x,y)",
                     ]}
                     tableData={camion.pedidos}
+                    idRuta={camion.idRuta}
                   />
                 )}
               </AccordionDetails>

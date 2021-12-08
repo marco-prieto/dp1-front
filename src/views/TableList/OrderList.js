@@ -257,7 +257,8 @@ export default function OrderList() {
             estadoPedido: "Nuevo",
             cantidadGLP: demandGLP,
             plazoEntrega: slack,
-            nodo: { coordenadaX: x, coordenadaY: y },
+            ubicacionX: x,
+            ubicacionY: y,
           };
           //console.log(order)
 
@@ -280,16 +281,16 @@ export default function OrderList() {
   };
 
   const handleRegistrarPedidos = () => {
-    console.log(globalOrders);
-    // axios
-    //   .post(`${url}/pedido/registrarListaPedidos`, globalOrders)
-    //   .then((res) => {
-    //     console.log("Pedidos registradossssssss");
-    //   })
-    //   .catch((error) => {
-    //     alert("ERROR al registrar pedidos");
-    //     console.log(error);
-    //   });
+    //console.log(globalOrders);
+    axios
+      .post(`${url}/pedido/registrarListaPedidos`, globalOrders)
+      .then((res) => {
+        console.log("Pedidos registrados");
+      })
+      .catch((error) => {
+        alert("ERROR al registrar pedidos");
+        console.log(error);
+      });
   };
 
   /* ELIMINAR */

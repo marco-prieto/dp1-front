@@ -7,15 +7,54 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
+import { Modal } from "@material-ui/core";
+import { Box } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import shortid from "shortid";
 // core components
 import styles from "assets/jss/material-dashboard-react/components/tableStyle.js";
+import axios from "axios";
+import url from "../../config";
 
 const useStyles = makeStyles(styles);
 
 export default function CustomTable(props) {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
+  //Hoja rutas
+  const [rutas, setRutas] = React.useState(null);
+
+  const obtenerHojaRutas = (idRuta) => {
+    var data = { tipo: idRuta };
+    axios
+      .post(`${url}/algoritmo/obtenerNodosHojaRuta`, data) //flag sera 2 si hay colapso
+      .then((res) => {
+        console.log(res.data);
+        setRutas(res.data["nodos"]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const style2 = {
+    position: "absolute",
+    overflow: "scroll",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 900,
+    height: 600,
+    bgcolor: "background.paper",
+    border: "1px solid #000",
+    borderRadius: "5px",
+    boxShadow: 24,
+    p: 4,
+  };
+
   const { tableHead, tableData, tableHeaderColor } = props;
   return (
     <div className={classes.tableResponsive}>
@@ -31,6 +70,17 @@ export default function CustomTable(props) {
             className={classes[tableHeaderColor + "TableHeader"]}
             style={{ fontSize: "12px" }}
           >
+            <Button
+              variant="contained"
+              component="label"
+              color="primary"
+              onClick={() => {
+                obtenerHojaRutas(props.idRuta);
+                handleOpen();
+              }}
+            >
+              Hoja de Ruta
+            </Button>
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
                 return (
@@ -94,6 +144,23 @@ export default function CustomTable(props) {
           })}
         </TableBody>
       </Table>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style2}>
+          <h3>Hoja de Rutas</h3>
+          <br />
+          <div>
+            {rutas &&
+              rutas.map((r) => {
+                return <div key={r}>{r}</div>;
+              })}
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 }

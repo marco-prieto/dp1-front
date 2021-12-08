@@ -623,7 +623,7 @@ export default function SimulacionLayout({ ...rest }) {
                     className="d-flex justify-content-center"
                     style={{ marginTop: "-55px" }}
                   >
-                    Hoja de Rutas
+                    Lista de Pedidos
                   </h3>
                   <AccordionHRSimulacion simulationType={simulationType} />
                 </div>
