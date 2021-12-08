@@ -70,17 +70,20 @@ export default function CustomTable(props) {
             className={classes[tableHeaderColor + "TableHeader"]}
             style={{ fontSize: "12px" }}
           >
-            <Button
-              variant="contained"
-              component="label"
-              color="primary"
-              onClick={() => {
-                obtenerHojaRutas(props.idRuta);
-                handleOpen();
-              }}
-            >
-              Hoja de Ruta
-            </Button>
+            <div style={{ minWidth: "300px" }}>
+              <Button
+                variant="contained"
+                component="label"
+                color="primary"
+                onClick={() => {
+                  obtenerHojaRutas(props.idRuta);
+                  handleOpen();
+                }}
+              >
+                Hoja de Ruta
+              </Button>
+            </div>
+
             <TableRow className={classes.tableHeadRow}>
               {tableHead.map((prop, key) => {
                 return (
@@ -155,10 +158,43 @@ export default function CustomTable(props) {
         <Box sx={style2}>
           <h3>Hoja de Rutas</h3>
           <br />
+          <div
+            className="row"
+            style={{ fontSize: "20px", fontWeight: "100px" }}
+          >
+            <div className="col-4 d-flex justify-content-center">
+              Nodo Inicio
+            </div>
+            <div className="col-4 d-flex justify-content-center">Nodo Fin</div>
+            <div className="col-4 d-flex justify-content-center">
+              Punto de interés
+            </div>
+          </div>
           <div>
             {rutas &&
               rutas.map((r) => {
-                return <div key={r}>{r}</div>;
+                return (
+                  <div key={r.inicio}>
+                    <div
+                      className="row my-2 p-2"
+                      style={{
+                        backgroundColor: "#e7e7e4",
+                        borderRadius: "5px",
+                        fontSize: "20px",
+                      }}
+                    >
+                      <div className="col-4 d-flex justify-content-center">
+                        {r.inicio}
+                      </div>
+                      <div className="col-4 d-flex justify-content-center">
+                        {r.llegada}
+                      </div>
+                      <div className="col-4 d-flex justify-content-center">
+                        {r.tipo}
+                      </div>
+                    </div>
+                  </div>
+                );
               })}
           </div>
         </Box>

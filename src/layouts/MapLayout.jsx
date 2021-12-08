@@ -154,7 +154,7 @@ export default function Mapa({ ...rest }) {
                 className="d-flex justify-content-center"
                 style={{ marginTop: "-55px" }}
               >
-                Hoja de Rutas
+                Lista de Pedidos
               </h3>
               <AccordionHojaRutas hojaRuta={hojaRuta} />
             </div>
