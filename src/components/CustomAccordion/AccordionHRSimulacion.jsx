@@ -230,6 +230,7 @@ const AccordionHojaRutas = ({ simulationType }) => {
                   ]}
                   tableData={camion.pedidos}
                   idRuta={camion.idRuta}
+                  show={true}
                 />
               </AccordionDetails>
             </Accordion>

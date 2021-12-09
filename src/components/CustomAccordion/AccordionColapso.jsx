@@ -158,6 +158,7 @@ const AccordionHojaRutas = ({ hRuta }) => {
                     "Ubicación (x,y)",
                   ]}
                   tableData={camion.pedidos}
+                  show={false}
                 />
               </AccordionDetails>
             </Accordion>

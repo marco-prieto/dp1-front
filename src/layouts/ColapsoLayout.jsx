@@ -164,7 +164,7 @@ export default function ColapsoLayout({ props }) {
                 <h3 className="d-flex justify-content-center mb-4">
                   Hoja de Rutas Antes del Colapso Logístico
                 </h3>
-                <AccordionColapso hRuta={info.hojaRuta} />
+                {info.hojaRuta && <AccordionColapso hRuta={info.hojaRuta} />}
               </div>
 
               <div className="mt-5 pt-3" style={{ maxWidth: "1200px" }}>
@@ -172,7 +172,7 @@ export default function ColapsoLayout({ props }) {
                   Pedidos a ser atendidos en la siguiente ejecución del
                   algoritmo
                 </h3>
-                {info && (
+                {info && info.pedidosEnCola != null && (
                   <Table
                     tableHeaderColor="primary"
                     tableHead={[
