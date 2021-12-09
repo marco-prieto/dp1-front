@@ -161,12 +161,15 @@ export default function CustomTable(props) {
             className="row"
             style={{ fontSize: "20px", fontWeight: "100px" }}
           >
-            <div className="col-4 d-flex justify-content-center">
+            <div className="col-3 d-flex justify-content-center">
               Nodo Inicio
             </div>
-            <div className="col-4 d-flex justify-content-center">Nodo Fin</div>
-            <div className="col-4 d-flex justify-content-center">
+            <div className="col-3 d-flex justify-content-center">Nodo Fin</div>
+            <div className="col-3 d-flex justify-content-center">
               Punto de interés
+            </div>
+            <div className="col-3 d-flex justify-content-center">
+              Hora de Llegada
             </div>
           </div>
           <div>
@@ -179,17 +182,20 @@ export default function CustomTable(props) {
                       style={{
                         backgroundColor: "#e7e7e4",
                         borderRadius: "5px",
-                        fontSize: "20px",
+                        fontSize: "18px",
                       }}
                     >
-                      <div className="col-4 d-flex justify-content-center">
+                      <div className="col-3 d-flex justify-content-center">
                         {r.inicio}
                       </div>
-                      <div className="col-4 d-flex justify-content-center">
+                      <div className="col-3 d-flex justify-content-center">
                         {r.llegada}
                       </div>
-                      <div className="col-4 d-flex justify-content-center">
+                      <div className="col-3 d-flex justify-content-center">
                         {r.tipo}
+                      </div>
+                      <div className="col-3 d-flex justify-content-center">
+                        {r.fecha}
                       </div>
                     </div>
                   </div>
