@@ -337,10 +337,13 @@ export default function OrderList() {
               <a href="/mapa" className="mx-2">
                 <button className="btn btn-light btn-sm">Ver Mapa</button>
               </a>
-              <button className="btn btn-light btn-sm" onClick={handleOpen}>
+              <button
+                className="btn btn-light btn-sm me-2"
+                onClick={handleOpen}
+              >
                 Nuevo
               </button>
-              <Button variant="contained" component="label">
+              <Button variant="contained" component="label" className="me-2">
                 Subir Archivo
                 <input
                   type="file"
